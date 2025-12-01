@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js" defer></script>
+</head>
+<body>
+    <!-- Шапка сайта -->
+       <header class="header">
+        <div class="container">
+            <div class="header__inner">
+                <!-- Логотип -->
+                <a href="main.html" class="logo">
+                    <div class="logo__img">
+                        <img src="logo.jpg" alt="7company" width="40" height="40">
+                    </div>
+                    <span class="logo__text">7 company</span>
+                </a>
+
+                <!-- Навигация -->
+                <nav class="nav">
+                    <ul class="nav__list">
+                        <li class="nav__item">
+                            <a href="main.html" class="nav__link nav__link--active">Главная</a>
+                    <!-- </li>
+                        <li class="nav__item">
+                            <a href="catalog.html" class="nav__link">Каталог</a>
+                        </li> -->
+                            <li class="nav__item">
+                                <a href="services.html" class="nav__link">Услуги</a>
+                            </li>
+                            <li class="nav__item">
+                                <a href="contacts.html" class="nav__link">Контакты</a>
+                            </li>
+                        <!-- <li class="nav__item">
+                            <a href="compare.html" class="nav__link">
+                                <span class="compare-icon">⚖️</span> Сравнение
+                            </a>
+                        </li>  -->
+                    </ul>
+                </nav>
+                <!-- <button class="burger" aria-label="Открыть меню">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button> --> <!--для мобилок-->>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="main">
+        <!-- Герой-секция для контактов -->
+        <section class="page-hero contacts-hero">
+            <div class="container">
+                <h1 class="page-hero__title">Свяжитесь с нами</h1>
+                <p class="page-hero__text">Мы всегда рады помочь вам с выбором продукции и ответить на вопросы</p>
+            </div>
+        </section>
+
+        <!-- Основной контент контактов -->
+        <section class="contacts">
+            <div class="container">
+                <div class="contacts__wrapper">
+                    <!-- Контактная информация -->
+                    <div class="contacts__info">
+                        <h2 class="contacts__title">Контактная информация</h2>
+                        
+                        <div class="contact-item">
+                            <div class="contact-item__icon">📍</div>
+                            <div class="contact-item__content">
+                                <h3 class="contact-item__title">Адрес</h3>
+                                <p class="contact-item__text">г. Минск ул. Пушкина д. Колотушкина</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-item__icon">📞</div>
+                            <div class="contact-item__content">
+                                <h3 class="contact-item__title">Телефоны</h3>
+                                <p class="contact-item__text">
+                                   +375-00-000-00-00<br>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-item__icon">✉️</div>
+                            <div class="contact-item__content">
+                                <h3 class="contact-item__title">Электронная почта</h3>
+                                <p class="contact-item__text">
+                                    Общие вопросы: info@agrofarm.ru<br>
+                                    Отдел закупок: purchase@agrofarm.ru<br>
+                                    Техподдержка: support@agrofarm.ru
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-item__icon">🕒</div>
+                            <div class="contact-item__content">
+                                <h3 class="contact-item__title">Часы работы</h3>
+                                <p class="contact-item__text">
+                                    Понедельник - Пятница: 9:00 - 18:00<br>
+                                    <br>
+                                    Суббота-Воскресенье: выходной
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-item__icon">🚚</div>
+                            <div class="contact-item__content">
+                                <h3 class="contact-item__title">Доставка</h3>
+                                <p class="contact-item__text">
+                                    • По городу: 1-2 рабочих дня<br>
+                                    • По области: 2-3 рабочих дня<br>
+                                    • По России: 3-7 рабочих дней
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+ 
+                    <div class="contacts__form">
+                        <h2 class="contacts__title">Отправить запрос</h2>
+                        <p class="contacts__subtitle">Заполните форму и мы свяжемся с вами в течение 30 минут</p>
+                        
+                        <form class="contact-form" id="contactForm">
+                            <div class="form-group">
+                                <label for="name" class="form-label">ФИО *</label>
+                                <input type="text" id="name" name="name" class="form-input" placeholder="Иванов Иван Иванович" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="form-label">Электронная почта *</label>
+                                <input type="email" id="email" name="email" class="form-input" placeholder="example@mail.ru" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone" class="form-label">Телефон *</label>
+                                <input type="tel" id="phone" name="phone" class="form-input" placeholder="+375 (00) 000-00-00" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="company" class="form-label">Название компании/хозяйства</label>
+                                <input type="text" id="company" name="company" class="form-input" placeholder="ООО 'Родные поля'">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="subject" class="form-label">Тема обращения</label>
+                                <select id="subject" name="subject" class="form-select">
+                                    <option value="">Выберите тему</option>
+                                    <option value="order">Заказ продукции</option>
+                                    <option value="consultation">Консультация агронома</option>
+                                    <option value="service">Заказ услуги</option>
+                                    <option value="delivery">Вопрос по доставке</option>
+                                    <option value="other">Другое</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="message" class="form-label">Сообщение</label>
+                                <textarea id="message" name="message" class="form-textarea" rows="5" placeholder="Опишите ваш вопрос или запрос..."></textarea>
+                            </div>
+
+                            <div class="form-group form-checkbox">
+                                <input type="checkbox" id="agree" name="agree" class="form-checkbox__input" required>
+                                <label for="agree" class="form-checkbox__label">
+                                    Я согласен на обработку персональных данных
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-submit">Отправить запрос</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="map">
+            <div class="container">
+                <h2 class="section-title">Мы на карте</h2>
+                <div class="map-container">
+          
+                    <div class="map-placeholder">
+                        <div class="map-marker">
+                            <div class="map-marker__pin">📍</div>
+                            <div class="map-marker__info">
+                                <h3>7company</h3>
+                                <p>ул. Пушкина, д.Колотушкина</p>
+                            </div>
+                        </div>
+                        <div class="map-grid">
+                            <div class="map-cell"></div>
+                            <div class="map-cell"></div>
+                            <div class="map-cell map-cell--road"></div>
+                            <div class="map-cell"></div>
+                            <div class="map-cell map-cell--road"></div>
+                            <div class="map-cell map-cell--building">🏢</div>
+                            <div class="map-cell"></div>
+                            <div class="map-cell map-cell--road"></div>
+                            <div class="map-cell"></div>
+                            <div class="map-cell"></div>
+                            <div class="map-cell"></div>
+                            <div class="map-cell"></div>
+                        </div>
+                        <p class="map-notice">Здесь будет интерактивная карта (Яндекс.Карты или Google Maps)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Подвал -->
+  <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__col">
+                    <a href="main.html" class="footer-logo">7company</a>
+                    <p class="footer__text">Каталог медикаторов</p>
+                </div>
+                <div class="footer__col">
+                    <h3 class="footer__title">Контакты</h3>
+                    <ul class="footer__list">
+                        <li>📞 +375296052273</li>
+                        <li>✉️ example@mail.com</li>
+                        <li>📍 г. Минск, ул. Пушкина д. Колотушкина</li>
+                    </ul>
+                </div>
+                <div class="footer__col">
+                    <h3 class="footer__title">Навигация</h3>
+                    <ul class="footer__list">
+                        <li><a href="main.html">Главная</a></li>
+                        <!-- <li><a href="catalog.html">Каталог</a></li> -->
+                        <li><a href="services.html">Услуги</a></li> 
+                        <li><a href="contacts.html">Контакты</a></li> 
+                    </ul>
+                </div>
+                <div class="footer__col">
+                    <h3 class="footer__title">Часы работы</h3>
+                    <ul class="footer__list">
+                        <li>Пн-Пт: 9:00-18:00</li>
+                        <li>Сб-Вс: Выходной</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                <p>&copy; 2025 7company. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactForm = document.getElementById('contactForm');
+            
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+    
+                    const name = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const phone = document.getElementById('phone').value;
+                    
+                    if (!name || !email || !phone) {
+                        alert('Пожалуйста, заполните обязательные поля (ФИО, Email, Телефон)');
+                        return;
+                    }
+                    
+        
+                    const submitBtn = document.querySelector('.btn-submit');
+                    const originalText = submitBtn.textContent;
+                    
+                    submitBtn.textContent = 'Отправка...';
+                    submitBtn.disabled = true;
+                    
+                    setTimeout(() => {
+                        alert('Спасибо! Ваш запрос отправлен. Мы свяжемся с вами в течение 30 минут.');
+                        contactForm.reset();
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    }, 1500);
+                });
+            }
+            
+
+            const phoneInput = document.getElementById('phone');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    let formattedValue = '';
+                    
+                    if (value.length > 0) {
+                        formattedValue = '+375 (';
+                        if (value.length > 2) {
+                            formattedValue += value.substring(0, 2) + ') ';
+                            if (value.length > 4) {
+                                formattedValue += value.substring(2, 4) + '-';
+                                if (value.length > 6) {
+                                    formattedValue += value.substring(4, 6) + '-';
+                                    if (value.length > 8) {
+                                        formattedValue += value.substring(6, 8);
+                                    } else {
+                                        formattedValue += value.substring(6);
+                                    }
+                                } else {
+                                    formattedValue += value.substring(4);
+                                }
+                            } else {
+                                formattedValue += value.substring(2);
+                            }
+                        } else {
+                            formattedValue += value;
+                        }
+                    }
+                    
+                    e.target.value = formattedValue;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
