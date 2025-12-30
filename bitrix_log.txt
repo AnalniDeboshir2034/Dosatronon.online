@@ -1,0 +1,372 @@
+2025-12-18 19:33:39 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Петр Петрович
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375 (37) 53-75-33
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => examle@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Петр Петрович
+Email: examle@gmail.com
+Телефон: +375 (37) 53-75-33
+Сообщение: 
+
+Дата: 18.12.2025 19:33:39
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 43714
+    [time] => Array
+        (
+            [start] => 1766082828
+            [finish] => 1766082828.8146
+            [duration] => 0.81457996368408
+            [processing] => 0
+            [date_start] => 2025-12-18T21:33:48+03:00
+            [date_finish] => 2025-12-18T21:33:48+03:00
+            [operating_reset_at] => 1766083428
+            [operating] => 0.46876692771912
+        )
+
+)
+
+
+2025-12-18 19:34:22 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Пабло Иббиета
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375 (37) 57-98-77
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => aleksfinski@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Пабло Иббиета
+Email: aleksfinski@gmail.com
+Телефон: +375 (37) 57-98-77
+Сообщение: sad
+
+Дата: 18.12.2025 19:34:21
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 43716
+    [time] => Array
+        (
+            [start] => 1766082870
+            [finish] => 1766082871.0578
+            [duration] => 1.0577600002289
+            [processing] => 1
+            [date_start] => 2025-12-18T21:34:30+03:00
+            [date_finish] => 2025-12-18T21:34:31+03:00
+            [operating_reset_at] => 1766083470
+            [operating] => 0.86430597305298
+        )
+
+)
+
+
+2025-12-20 14:16:23 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Пабло Иббиета
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375296052273
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => aleksfinski@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Пабло Иббиета
+Email: aleksfinski@gmail.com
+Телефон: +375296052273
+Сообщение: 
+
+Дата: 20.12.2025 14:16:22
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 43774
+    [time] => Array
+        (
+            [start] => 1766236592
+            [finish] => 1766236593.896
+            [duration] => 1.8959529399872
+            [processing] => 1
+            [date_start] => 2025-12-20T16:16:32+03:00
+            [date_finish] => 2025-12-20T16:16:33+03:00
+            [operating_reset_at] => 1766237192
+            [operating] => 0.93537592887878
+        )
+
+)
+
+
+2025-12-20 14:18:13 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => XAMAC
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375 33 327 96 35
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => examle@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: XAMAC
+Email: examle@gmail.com
+Телефон: +375 33 327 96 35
+Сообщение: Тут некоторый текст
+
+Дата: 20.12.2025 14:18:13
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 43776
+    [time] => Array
+        (
+            [start] => 1766236703
+            [finish] => 1766236703.8905
+            [duration] => 0.89046001434326
+            [processing] => 0
+            [date_start] => 2025-12-20T16:18:23+03:00
+            [date_finish] => 2025-12-20T16:18:23+03:00
+            [operating_reset_at] => 1766237303
+            [operating] => 1.3674788475037
+        )
+
+)
+
+
+2025-12-20 14:47:26 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => ппапа
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375 33 327 96 35
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => barbararobinson1964@disamail.ru
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: ппапа
+Email: barbararobinson1964@disamail.ru
+Телефон: +375 33 327 96 35
+Сообщение: 
+
+Дата: 20.12.2025 14:47:25
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 43778
+    [time] => Array
+        (
+            [start] => 1766238455
+            [finish] => 1766238456.2633
+            [duration] => 1.2633199691772
+            [processing] => 1
+            [date_start] => 2025-12-20T16:47:35+03:00
+            [date_finish] => 2025-12-20T16:47:36+03:00
+            [operating_reset_at] => 1766239055
+            [operating] => 0.42444109916687
+        )
+
+)
+
+
+2025-12-22 16:27:13 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Рогозик Анна Иосифовна
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375257302324
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => maks2014612@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Рогозик Анна Иосифовна
+Email: maks2014612@gmail.com
+Телефон: +375257302324
+Сообщение: Хочу дозатрон себе
+
+Дата: 22.12.2025 16:27:12
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 43884
+    [time] => Array
+        (
+            [start] => 1766417234
+            [finish] => 1766417234.8864
+            [duration] => 0.88644409179688
+            [processing] => 0
+            [date_start] => 2025-12-22T18:27:14+03:00
+            [date_finish] => 2025-12-22T18:27:14+03:00
+            [operating_reset_at] => 1766417834
+            [operating] => 0.46385598182678
+        )
+
+)
+
+

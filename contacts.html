@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Контакты</title>
+    <title>ыКонтакты</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="js/script.js" defer></script>
 </head>
 <body>
-    <!-- Шапка сайта -->
-       <header class="header">
+
+    <header class="header">
         <div class="container">
             <div class="header__inner">
                 <!-- Логотип -->
-                <a href="main.html" class="logo">
+                <a href="index.php" class="logo">
                     <div class="logo__img">
                         <img src="logo.jpg" alt="7company" width="40" height="40">
                     </div>
@@ -24,17 +24,19 @@
                 <nav class="nav">
                     <ul class="nav__list">
                         <li class="nav__item">
-                            <a href="main.html" class="nav__link nav__link--active">Главная</a>
+                            <a href="index.php" class="nav__link nav__link--active">Главная</a>
                     <!-- </li>
                         <li class="nav__item">
                             <a href="catalog.html" class="nav__link">Каталог</a>
                         </li> -->
-                            <li class="nav__item">
-                                <a href="services.html" class="nav__link">Услуги</a>
-                            </li>
+                           
                             <li class="nav__item">
                                 <a href="contacts.html" class="nav__link">Контакты</a>
                             </li>
+                            <li>
+                                <a href="contacts.html" class="btn btn-primary">Заказать</a>
+                            </li>
+                            
                         <!-- <li class="nav__item">
                             <a href="compare.html" class="nav__link">
                                 <span class="compare-icon">⚖️</span> Сравнение
@@ -42,18 +44,11 @@
                         </li>  -->
                     </ul>
                 </nav>
-                <!-- <button class="burger" aria-label="Открыть меню">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button> --> <!--для мобилок-->>
             </div>
         </div>
     </header>
 
-    <!-- Основной контент -->
     <main class="main">
-        <!-- Герой-секция для контактов -->
         <section class="page-hero contacts-hero">
             <div class="container">
                 <h1 class="page-hero__title">Свяжитесь с нами</h1>
@@ -61,127 +56,163 @@
             </div>
         </section>
 
-        <!-- Основной контент контактов -->
-        <section class="contacts">
-            <div class="container">
-                <div class="contacts__wrapper">
-                    <!-- Контактная информация -->
-                    <div class="contacts__info">
-                        <h2 class="contacts__title">Контактная информация</h2>
+<section class="contacts">
+    <div class="container">
+        <h2 class="section-title">Свяжитесь с нами</h2>
+        <div class="contacts-split">
+
+            <div class="contacts-left">
+                <div class="contact-card">
+                    <div class="contact-header">
+                        <h3>Контакты</h3>
+                        <p>Мы всегда рады помочь вам</p>
+                    </div>
+                    
+                    <div class="contact-list">
+                        <div class="contact-list-item">
+                            <div class="contact-icon">📍</div>
+                            <div class="contact-details">
+                                <h4>Адрес</h4>
+                                <p> Город Адресс Дом</p><br>
+                            </div>
+                        </div>
                         
-                        <div class="contact-item">
-                            <div class="contact-item__icon">📍</div>
-                            <div class="contact-item__content">
-                                <h3 class="contact-item__title">Адрес</h3>
-                                <p class="contact-item__text">г. Минск ул. Пушкина д. Колотушкина</p>
-                            </div>
-                        </div>
-
-                        <div class="contact-item">
-                            <div class="contact-item__icon">📞</div>
-                            <div class="contact-item__content">
-                                <h3 class="contact-item__title">Телефоны</h3>
-                                <p class="contact-item__text">
-                                   +375-00-000-00-00<br>
+                        <div class="contact-list-item">
+                            <div class="contact-icon">📞</div>
+                            <div class="contact-details">
+                                <h4>Телефоны</h4>
+                                <p>
+                                    <strong>Отдел продаж:</strong> +375 (00) 123-45-67<br>
                                 </p>
                             </div>
                         </div>
-
-                        <div class="contact-item">
-                            <div class="contact-item__icon">✉️</div>
-                            <div class="contact-item__content">
-                                <h3 class="contact-item__title">Электронная почта</h3>
-                                <p class="contact-item__text">
-                                    Общие вопросы: info@agrofarm.ru<br>
-                                    Отдел закупок: purchase@agrofarm.ru<br>
-                                    Техподдержка: support@agrofarm.ru
+                        
+                        <div class="contact-list-item">
+                            <div class="contact-icon">✉️</div>
+                            <div class="contact-details">
+                                <h4>Электронная почта</h4>
+                                <p>
+                                    <strong>Общие вопросы:</strong> info@agrofarm.ru<br>
                                 </p>
                             </div>
                         </div>
-
-                        <div class="contact-item">
-                            <div class="contact-item__icon">🕒</div>
-                            <div class="contact-item__content">
-                                <h3 class="contact-item__title">Часы работы</h3>
-                                <p class="contact-item__text">
-                                    Понедельник - Пятница: 9:00 - 18:00<br>
-                                    <br>
-                                    Суббота-Воскресенье: выходной
+                        
+                        <div class="contact-list-item">
+                            <div class="contact-icon">🕒</div>
+                            <div class="contact-details">
+                                <h4>Часы работы</h4>
+                                <p>
+                                    <strong>Пн-Пт:</strong> 9:00 - 18:00<br>
+                                    <strong>Суббота-Воскресенье:</strong> выходной
                                 </p>
                             </div>
                         </div>
-
-                        <div class="contact-item">
-                            <div class="contact-item__icon">🚚</div>
-                            <div class="contact-item__content">
-                                <h3 class="contact-item__title">Доставка</h3>
-                                <p class="contact-item__text">
-                                    • По городу: 1-2 рабочих дня<br>
-                                    • По области: 2-3 рабочих дня<br>
-                                    • По России: 3-7 рабочих дней
+                        
+                        <div class="contact-list-item">
+                            <div class="contact-icon">🚚</div>
+                            <div class="contact-details">
+                                <h4>Доставка</h4>
+                                <p>
+                                    <strong>По городу:</strong> 1-2 рабочих дня<br>
                                 </p>
                             </div>
                         </div>
                     </div>
-
- 
-                    <div class="contacts__form">
-                        <h2 class="contacts__title">Отправить запрос</h2>
-                        <p class="contacts__subtitle">Заполните форму и мы свяжемся с вами в течение 30 минут</p>
-                        
-                        <form class="contact-form" id="contactForm">
-                            <div class="form-group">
-                                <label for="name" class="form-label">ФИО *</label>
-                                <input type="text" id="name" name="name" class="form-input" placeholder="Иванов Иван Иванович" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="email" class="form-label">Электронная почта *</label>
-                                <input type="email" id="email" name="email" class="form-input" placeholder="example@mail.ru" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="phone" class="form-label">Телефон *</label>
-                                <input type="tel" id="phone" name="phone" class="form-input" placeholder="+375 (00) 000-00-00" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="company" class="form-label">Название компании/хозяйства</label>
-                                <input type="text" id="company" name="company" class="form-input" placeholder="ООО 'Родные поля'">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="subject" class="form-label">Тема обращения</label>
-                                <select id="subject" name="subject" class="form-select">
-                                    <option value="">Выберите тему</option>
-                                    <option value="order">Заказ продукции</option>
-                                    <option value="consultation">Консультация агронома</option>
-                                    <option value="service">Заказ услуги</option>
-                                    <option value="delivery">Вопрос по доставке</option>
-                                    <option value="other">Другое</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="message" class="form-label">Сообщение</label>
-                                <textarea id="message" name="message" class="form-textarea" rows="5" placeholder="Опишите ваш вопрос или запрос..."></textarea>
-                            </div>
-
-                            <div class="form-group form-checkbox">
-                                <input type="checkbox" id="agree" name="agree" class="form-checkbox__input" required>
-                                <label for="agree" class="form-checkbox__label">
-                                    Я согласен на обработку персональных данных
-                                </label>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary btn-submit">Отправить запрос</button>
-                        </form>
+                </div>
+                
+                <div class="quick-contact">
+                    <h3>Быстрая связь</h3>
+                    <div class="quick-buttons">
+                        <a href="tel:+79991234567" class="quick-btn phone-btn">
+                            <span class="quick-icon">📞</span>
+                            <span>Позвонить</span>
+                        </a>
+                        <a href="mailto:info@agrofarm.ru" class="quick-btn email-btn">
+                            <span class="quick-icon">✉️</span>
+                            <span>Написать</span>
+                        </a>
                     </div>
                 </div>
             </div>
-        </section>
+            
 
+            <div class="contacts-right">
+                <div class="form-card">
+                    <div class="form-header">
+                        <h2>Отправить запрос</h2>
+                        <p class="form-subtitle">Заполните форму и мы свяжемся с вами в течение 30 минут</p>
+                    </div>
+                    
+                    <form class="contact-form-split" id="contactFormSplit">
+                        <div class="form-row-split">
+                            <div class="form-group-split">
+                                <label for="nameSplit" class="form-label-split">
+                                    ФИО *
+                                    <span class="form-required">обязательно</span>
+                                </label>
+                                <input type="text" id="nameSplit" name="name" class="form-input-split" 
+                                       placeholder="Иванов Иван Иванович" required>
+                                <div class="form-hint">Пример ввода</div>
+                            </div>
+                            
+                            <div class="form-group-split">
+                                <label for="emailSplit" class="form-label-split">
+                                    Электронная почта *
+                                    <span class="form-required">обязательно</span>
+                                </label>
+                                <input type="email" id="emailSplit" name="email" class="form-input-split" 
+                                       placeholder="example@mail.ru" required>
+                                <div class="form-hint">example@mail.ru</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row-split">
+                            <div class="form-group-split">
+                                <label for="phoneSplit" class="form-label-split">
+                                    Телефон *
+                                    <span class="form-required">обязательно</span>
+                                </label>
+                                <input type="tel" id="phoneSplit" name="phone" class="form-input-split" 
+                                       placeholder="+375 (00) 000-00-00" required>
+                                <div class="form-hint">Формат +375</div>
+                            </div>
+                        
+                        <div class="form-group-split full-width">
+                            <label for="messageSplit" class="form-label-split">Сообщение</label>
+                            <textarea id="messageSplit" name="message" class="form-textarea-split" 
+                                     placeholder="Опишите ваш вопрос или запрос..." 
+                                     rows="5"></textarea>
+                            <div class="textarea-counter-split">
+                                <span class="current-chars-split">0</span>/<span class="max-chars-split">1000</span> символов
+                            </div>
+                        </div>
+                        
+                        <div class="form-agreement-split">
+                            <div class="checkbox-wrapper-split">
+                                <input type="checkbox" id="agreeSplit" name="agree" class="form-checkbox-split" required>
+                                <label for="agreeSplit" class="checkbox-label-split">
+                                    <span class="checkbox-custom-split"></span>
+                                    <span class="checkbox-text-split">
+                                        Я согласен на обработку персональных данных
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-submit-split">
+                            <button type="submit" class="btn btn-submit-split">
+                                <span class="btn-text-split">Отправить запрос</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+            
 
+</section>
         <section class="map">
             <div class="container">
                 <h2 class="section-title">Мы на карте</h2>
@@ -216,12 +247,11 @@
         </section>
     </main>
 
-    <!-- Подвал -->
   <footer class="footer">
         <div class="container">
             <div class="footer__content">
                 <div class="footer__col">
-                    <a href="main.html" class="footer-logo">7company</a>
+                    <a href="index.php" class="footer-logo">7company</a>
                     <p class="footer__text">Каталог медикаторов</p>
                 </div>
                 <div class="footer__col">
@@ -235,9 +265,8 @@
                 <div class="footer__col">
                     <h3 class="footer__title">Навигация</h3>
                     <ul class="footer__list">
-                        <li><a href="main.html">Главная</a></li>
-                        <!-- <li><a href="catalog.html">Каталог</a></li> -->
-                        <li><a href="services.html">Услуги</a></li> 
+                        <li><a href="index.php">Главная</a></li>
+                        <li><a href="catalog.php">Каталог</a></li> 
                         <li><a href="contacts.html">Контакты</a></li> 
                     </ul>
                 </div>
