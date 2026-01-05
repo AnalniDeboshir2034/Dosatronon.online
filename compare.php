@@ -1,8 +1,10 @@
 <?php
 $host = 'localhost';
-$user = 'root';
-$pass = '';
-$db_name = 'catalog';
+$user = 'dosatronon_dosatronon';
+$pass = 'dosatronon_dosatronon';
+$db_name = 'dosatronon_catalog';
+
+
 
 $mysqli = new mysqli($host, $user, $pass, $db_name);
 if ($mysqli->connect_error) {

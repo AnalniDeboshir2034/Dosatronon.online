@@ -1,3 +1,74 @@
+// Бургер-меню
+(function() {
+    'use strict';
+    
+    function initBurgerMenu() {
+        const burgerBtn = document.getElementById('burgerBtn');
+        const mainNav = document.getElementById('mainNav');
+        
+        if (!burgerBtn || !mainNav) {
+            console.warn('Burger menu elements not found');
+            return;
+        }
+        
+        const navLinks = document.querySelectorAll('.nav__link');
+        
+        // Открытие/закрытие меню
+        burgerBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            burgerBtn.classList.toggle('active');
+            mainNav.classList.toggle('active');
+            
+            if (mainNav.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Закрытие меню при клике на ссылку
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                burgerBtn.classList.remove('active');
+                mainNav.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Закрытие меню при клике вне его области
+        document.addEventListener('click', function(e) {
+            if (mainNav.classList.contains('active') && 
+                !mainNav.contains(e.target) && 
+                !burgerBtn.contains(e.target) &&
+                window.innerWidth <= 768) {
+                burgerBtn.classList.remove('active');
+                mainNav.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Закрытие меню при изменении размера окна (если перешли на десктоп)
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                if (window.innerWidth > 768) {
+                    burgerBtn.classList.remove('active');
+                    mainNav.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            }, 100);
+        });
+    }
+    
+    // Инициализация при загрузке DOM
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initBurgerMenu);
+    } else {
+        initBurgerMenu();
+    }
+})();
+
 // Обработка формы в split макете
 document.addEventListener('DOMContentLoaded', function() {
     const contactFormSplit = document.getElementById('contactFormSplit');

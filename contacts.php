@@ -1,9 +1,7 @@
 <?php
 $BITRIX_WEBHOOK = 'https://k7s.bitrix24.by/rest/25370/dhzvmrk2o9q56985/crm.lead.add.json';
 
-// ============================================
-// ОБРАБОТКА ФОРМЫ
-// ============================================
+
 $form_success = false;
 $form_error = '';
 $form_data = [];
@@ -223,12 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
     </header>
 
     <main class="main">
-        <section class="page-hero contacts-hero">
-            <div class="container">
-                <h1 class="page-hero__title">Свяжитесь с нами</h1>
-                <p class="page-hero__text">Мы всегда рады помочь вам с выбором продукции и ответить на вопросы</p>
-            </div>
-        </section>
+        
 
         <section class="contacts">
             <div class="container">
