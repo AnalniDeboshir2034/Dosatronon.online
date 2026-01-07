@@ -78,92 +78,368 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Контакты | 7 company</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js" defer></script>
     <style>
-        /* Стили для уведомлений */
-        .form-notification {
+        /* ОБЩИЕ СТИЛИ СТРАНИЦЫ КОНТАКТОВ */
+        .page-contacts {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 15px;
+        }
+
+        /* СЕКЦИЯ КОНТАКТОВ */
+        .contacts {
+            margin: 40px 0;
+        }
+
+        .contacts-split {
+            display: flex;
+            gap: 40px;
+            margin-top: 30px;
+            align-items: flex-start;
+        }
+
+        @media (max-width: 992px) {
+            .contacts-split {
+                flex-direction: column;
+            }
+        }
+
+        /* ЛЕВАЯ КОЛОНКА - КОНТАКТЫ */
+        .contacts-left {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .contact-card {
+            background: hsl(220 35% 8%);
+            border: 1px solid hsl(200 30% 18%);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .contact-header h3 {
+            color: hsl(195 100% 50%);
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .contact-header p {
+            color: hsl(200 20% 70%);
+            margin-bottom: 25px;
+        }
+
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact-list-item {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .contact-icon {
+            font-size: 24px;
+            color: hsl(195 100% 50%);
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .contact-details h4 {
+            color: white;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .contact-details p {
+            color: hsl(200 20% 70%);
+            line-height: 1.5;
+        }
+
+        .contact-details strong {
+            color: white;
+        }
+
+        /* БЫСТРАЯ СВЯЗЬ */
+        .quick-contact {
+            background: hsl(220 35% 8%);
+            border: 1px solid hsl(200 30% 18%);
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .quick-contact h3 {
+            color: hsl(195 100% 50%);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .quick-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            flex: 1;
+            min-width: 150px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             padding: 15px;
+            background: hsl(200 30% 12%);
+            border: 1px solid hsl(200 30% 18%);
             border-radius: 8px;
-            margin: 20px 0;
-            text-align: center;
-            font-weight: 500;
-        }
-        
-        .form-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .form-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        /* Стили для подсветки полей */
-        .form-input-split.valid {
-            border-color: #4CAF50 !important;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1) !important;
-            background-color: rgba(76, 175, 80, 0.05) !important;
-        }
-        
-        .form-input-split.invalid {
-            border-color: #f44336 !important;
-            box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.1) !important;
-        }
-        
-        .form-hint {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
+            color: white;
+            text-decoration: none;
             transition: all 0.3s ease;
         }
-        
-        .form-hint.valid-hint {
-            color: #4CAF50;
-            font-weight: 500;
+
+        .quick-btn:hover {
+            background: hsl(195 100% 50%);
+            border-color: hsl(195 100% 50%);
+            color: hsl(220 40% 5%);
         }
-        
-        /* Счетчик символов */
-        .textarea-counter-split {
-            text-align: right;
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-            transition: all 0.3s ease;
+
+        .quick-icon {
+            font-size: 20px;
         }
-        
-        .textarea-counter-split.warning {
-            color: #ff9800;
+
+        /* ПРАВАЯ КОЛОНКА - ФОРМА */
+        .contacts-right {
+            flex: 1.5;
+            min-width: 300px;
         }
-        
-        .textarea-counter-split.error {
-            color: #f44336;
+
+        .form-card {
+            background: hsl(220 35% 8%);
+            border: 1px solid hsl(200 30% 18%);
+            border-radius: 12px;
+            padding: 30px;
         }
-        
-        .textarea-counter-split.valid {
-            color: #4CAF50;
+
+        .form-header h2 {
+            color: hsl(195 100% 50%);
+            margin-bottom: 10px;
+            font-size: 1.8rem;
         }
-        
-        /* Индикатор загрузки */
-        .form-loading {
-            display: none;
-            text-align: center;
-            padding: 10px;
-            color: #666;
+
+        .form-subtitle {
+            color: hsl(200 20% 70%);
+            margin-bottom: 25px;
         }
-        
-        .form-loading.active {
+
+        /* СТИЛИ ФОРМЫ */
+        .contact-form-split {
+            /* Стили для уведомлений */
+            .form-notification {
+                padding: 15px;
+                border-radius: 8px;
+                margin: 20px 0;
+                text-align: center;
+                font-weight: 500;
+            }
+            
+            .form-success {
+                background: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+            }
+            
+            .form-error {
+                background: #f8d7da;
+                color: #721c24;
+                border: 1px solid #f5c6cb;
+            }
+            
+            /* Стили для подсветки полей */
+            .form-input-split.valid {
+                border-color: #4CAF50 !important;
+                box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1) !important;
+                background-color: rgba(76, 175, 80, 0.05) !important;
+            }
+            
+            .form-input-split.invalid {
+                border-color: #f44336 !important;
+                box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.1) !important;
+            }
+            
+            .form-hint {
+                font-size: 12px;
+                color: #666;
+                margin-top: 5px;
+                transition: all 0.3s ease;
+            }
+            
+            .form-hint.valid-hint {
+                color: #4CAF50;
+                font-weight: 500;
+            }
+            
+            /* Счетчик символов */
+            .textarea-counter-split {
+                text-align: right;
+                font-size: 12px;
+                color: #666;
+                margin-top: 5px;
+                transition: all 0.3s ease;
+            }
+            
+            .textarea-counter-split.warning {
+                color: #ff9800;
+            }
+            
+            .textarea-counter-split.error {
+                color: #f44336;
+            }
+            
+            .textarea-counter-split.valid {
+                color: #4CAF50;
+            }
+            
+            /* Индикатор загрузки */
+            .form-loading {
+                display: none;
+                text-align: center;
+                padding: 10px;
+                color: #666;
+            }
+            
+            .form-loading.active {
+                display: block;
+            }
+        }
+
+        /* Группы полей формы */
+        .form-row-split {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row-split {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        .form-group-split {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group-split.full-width {
+            width: 100%;
+        }
+
+        /* Лейблы */
+        .form-label-split {
+            font-size: 0.9rem;
+            color: hsl(200 20% 70%);
             display: block;
         }
-        
+
+        .form-required {
+            color: #ff6b6b;
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+
+        /* Inputs и textarea */
+        .form-input-split,
+        .form-textarea-split {
+            appearance: none;
+            background: hsl(200 30% 12%);
+            border: 1px solid hsl(200 30% 18%);
+            border-radius: 8px;
+            padding: 12px 14px;
+            color: white;
+            font-size: 0.95rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .form-input-split:focus,
+        .form-textarea-split:focus {
+            outline: 2px solid hsl(195 100% 50%);
+            outline-offset: 2px;
+        }
+
+        .form-textarea-split {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Счетчик символов */
+        .textarea-counter-split {
+            font-size: 0.8rem;
+            color: hsl(200 20% 60%);
+            text-align: right;
+        }
+
+        /* Чекбокс */
+        .form-agreement-split {
+            margin: 25px 0;
+        }
+
+        .checkbox-wrapper-split {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .form-checkbox-split {
+            margin-top: 3px;
+            accent-color: hsl(195 100% 50%);
+            width: 18px;
+            height: 18px;
+        }
+
+        .checkbox-label-split {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+            color: hsl(200 20% 70%);
+            font-size: 0.9rem;
+        }
+
+        /* Кнопка отправки */
+        .form-submit-split {
+            margin-top: 30px;
+        }
+
+        .btn-submit-split {
+            width: 100%;
+            padding: 15px;
+            background: hsl(195 100% 50%);
+            color: hsl(220 40% 5%);
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit-split:hover {
+            box-shadow: 0 0 20px hsl(195 100% 50% / 0.4);
+        }
+
         /* Стили для карты */
         .map-container {
             width: 100%;
             height: 400px;
             border-radius: 12px;
             overflow: hidden;
-            border: 1px solid #ddd;
+            border: 1px solid hsl(200 30% 18%);
             margin-top: 20px;
         }
         
@@ -172,56 +448,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
             height: 100%;
         }
         
-        .map-info {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
         @media (max-width: 768px) {
             .map-container {
                 height: 300px;
             }
         }
     </style>
+
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <div class="header__inner">
-                <a href="index.php" class="logo">
-                    <div class="logo__img">
-                        <img src="logo.jpg" alt="7company" width="40" height="40">
-                    </div>
-                    <span class="logo__text">7 company</span>
-                </a>
+    <div class="page-contacts">
+     <div class="container">
+        <div class="header__inner">
 
-                <nav class="nav">
-                    <ul class="nav__list">
-                        <li class="nav__item">
-                            <a href="index.php" class="nav__link">Главная</a>
-                        </li>
-                        <li class="nav__item">
-                            <a href="catalog.php" class="nav__link">Каталог</a>
-                        </li>
-                        <li class="nav__item">
-                            <a href="contacts.php" class="nav__link nav__link--active">Контакты</a>
-                        </li>
-                         <li>
-                            <a href="compare.php" class="nav__link">Сравнение</a>
-                        </li>
-                        <li>
-                            <a href="#contactFormSplit" class="btn btn-primary">Заказать</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+            <button class="burger-btn" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false" aria-controls="mainNav">
+                <span class="burger-btn__line"></span>
+                <span class="burger-btn__line"></span>
+                <span class="burger-btn__line"></span>
+            </button>
+
+
+            <a href="index.php" class="logo">
+                <div class="logo__img">
+                    <img src="logo.jpg" alt="7company" width="40" height="40" loading="lazy">
+                </div>
+                <span class="logo__text">7 company</span>
+            </a>
+
+   
+
+
+            <div class="nav-overlay" id="navOverlay"></div>
+
+
+            <nav class="nav" id="mainNav" aria-label="Основная навигация">
+                <ul class="nav__list">
+                    <li class="nav__item">
+                        <a href="index.php" class="nav__link nav__link--active">Главная</a>
+                    </li>
+                    <li class="nav__item has-dropdown">
+                        <a href="catalog.php" class="catalog-link" id="catalogLink">
+                            Каталог
+                        </a>
+                        <ul class="dropdown-menu" id="catalogDropdown">
+                            <li><a href="catalog.php?category=all">Все модели</a></li>
+                            <li><a href="catalog.php?category=DIA">DIA</a></li>
+                            <li><a href="catalog.php?category=D07">D07</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav__item">
+                        <a href="contacts.php" class="nav__link">Контакты</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="compare.php" class="nav__link">Сравнение</a>
+                    </li>
+                    <li class="nav__item nav__item--search">
+                        <div class="sidebar-search">
+                            <div class="search-box">
+                                <input type="text" id="searchInput" placeholder="Поиск по названию...">
+                                <button id="searchBtn" type="button">🔍</button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+                     <a href="contacts.php" class="btn btn-primary header__order-btn">Заказать</a>
         </div>
-    </header>
-
+    </div>
     <main class="main">
-        
+       
 
         <section class="contacts">
             <div class="container">
@@ -375,7 +670,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                                     <div class="checkbox-wrapper-split">
                                         <input type="checkbox" id="agreeSplit" name="agree" class="form-checkbox-split" required>
                                         <label for="agreeSplit" class="checkbox-label-split">
-                                            <span class="checkbox-custom-split"></span>
                                             <span class="checkbox-text-split">
                                                 Я согласен на обработку персональных данных
                                             </span>
@@ -387,7 +681,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                                     <div class="form-loading" id="formLoading">
                                         ⏳ Отправка запроса...
                                     </div>
-                                    <button type="submit" class="btn btn-submit-split" id="submitBtn">
+                                    <button type="submit" class="btn-submit-split" id="submitBtn">
                                         <span class="btn-text-split">Отправить запрос</span>
                                     </button>
                                 </div>
@@ -404,7 +698,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                 <div class="map-container">
                     <div id="map"></div>
                 </div>
-                <div style="text-align: center; margin-top: 15px; color: #666;">
+                <div style="text-align: center; margin-top: 15px; color: hsl(200 20% 70%);">
                     <p>📍 г. Минск, ул. Толбухина д.2</p>
                 </div>
             </div>
@@ -766,10 +1060,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
             // Запускаем карту
             initMap();
         });
+         const catalogLink = document.getElementById('catalogLink');
+    const catalogDropdown = document.getElementById('catalogDropdown');
+    
+    if (catalogLink && catalogDropdown && window.innerWidth <= 992) {
+        catalogLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.classList.toggle('active');
+            catalogDropdown.classList.toggle('active');
+        });
+        
+        // Закрытие при клике вне меню
+        document.addEventListener('click', function(e) {
+            if (!catalogLink.contains(e.target) && !catalogDropdown.contains(e.target)) {
+                catalogLink.classList.remove('active');
+                catalogDropdown.classList.remove('active');
+            }
+        });
+    }
         (function(w,d,u){
                 var s=d.createElement('script');s.async=true;s.src=u+'?'+(Date.now()/60000|0);
                 var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);
         })(window,document,'https://cdn-ru.bitrix24.by/b15313854/crm/site_button/loader_6_ykawzi.js');
     </script>
+    </div>
 </body>
 </html>

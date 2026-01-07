@@ -1,62 +1,164 @@
-// Бургер-меню
+// Бургер-меню с поддержкой доступности и ресайза
 (function() {
     'use strict';
+    
+    let isMenuOpen = false;
+    let focusableElements = [];
+    let firstFocusableElement = null;
+    let lastFocusableElement = null;
+    
+    function isMobile() {
+        return window.innerWidth <= 992;
+    }
+    
+    function getFocusableElements(container) {
+        const focusableSelectors = [
+            'a[href]',
+            'button:not([disabled])',
+            'textarea:not([disabled])',
+            'input:not([disabled])',
+            'select:not([disabled])',
+            '[tabindex]:not([tabindex="-1"])'
+        ];
+        return Array.from(container.querySelectorAll(focusableSelectors.join(', ')));
+    }
+    
+    function trapFocus(container) {
+        focusableElements = getFocusableElements(container);
+        if (focusableElements.length > 0) {
+            firstFocusableElement = focusableElements[0];
+            lastFocusableElement = focusableElements[focusableElements.length - 1];
+            firstFocusableElement.focus();
+        }
+    }
+    
+    function releaseFocus() {
+        focusableElements = [];
+        firstFocusableElement = null;
+        lastFocusableElement = null;
+    }
+    
+    function openMenu(burgerBtn, mainNav, navOverlay) {
+        isMenuOpen = true;
+        burgerBtn.classList.add('active');
+        mainNav.classList.add('active');
+        if (navOverlay) navOverlay.classList.add('active');
+        document.body.classList.add('menu-open');
+        
+        // ARIA
+        burgerBtn.setAttribute('aria-expanded', 'true');
+        mainNav.setAttribute('aria-hidden', 'false');
+        
+        // Фокус-трап
+        if (isMobile()) {
+            trapFocus(mainNav);
+        }
+    }
+    
+    function closeMenu(burgerBtn, mainNav, navOverlay) {
+        isMenuOpen = false;
+        burgerBtn.classList.remove('active');
+        mainNav.classList.remove('active');
+        if (navOverlay) navOverlay.classList.remove('active');
+        document.body.classList.remove('menu-open');
+        
+        // ARIA
+        burgerBtn.setAttribute('aria-expanded', 'false');
+        mainNav.setAttribute('aria-hidden', 'true');
+        
+        // Возвращаем фокус на кнопку
+        burgerBtn.focus();
+        releaseFocus();
+    }
     
     function initBurgerMenu() {
         const burgerBtn = document.getElementById('burgerBtn');
         const mainNav = document.getElementById('mainNav');
+        const navOverlay = document.getElementById('navOverlay');
         
         if (!burgerBtn || !mainNav) {
-            console.warn('Burger menu elements not found');
             return;
         }
         
-        const navLinks = document.querySelectorAll('.nav__link');
+        // Инициализация ARIA
+        burgerBtn.setAttribute('aria-expanded', 'false');
+        burgerBtn.setAttribute('aria-controls', 'mainNav');
+        mainNav.setAttribute('aria-hidden', isMobile() ? 'true' : 'false');
         
         // Открытие/закрытие меню
         burgerBtn.addEventListener('click', function(e) {
             e.stopPropagation();
-            burgerBtn.classList.toggle('active');
-            mainNav.classList.toggle('active');
-            
-            if (mainNav.classList.contains('active')) {
-                document.body.style.overflow = 'hidden';
+            if (isMenuOpen) {
+                closeMenu(burgerBtn, mainNav, navOverlay);
             } else {
-                document.body.style.overflow = '';
+                openMenu(burgerBtn, mainNav, navOverlay);
             }
         });
         
-        // Закрытие меню при клике на ссылку
+        // Закрытие по клику на оверлей
+        if (navOverlay) {
+            navOverlay.addEventListener('click', function() {
+                if (isMenuOpen && isMobile()) {
+                    closeMenu(burgerBtn, mainNav, navOverlay);
+                }
+            });
+        }
+        
+        // Закрытие по Esc
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isMenuOpen && isMobile()) {
+                closeMenu(burgerBtn, mainNav, navOverlay);
+            }
+        });
+        
+        // Фокус-трап внутри меню
+        if (mainNav) {
+            mainNav.addEventListener('keydown', function(e) {
+                if (!isMenuOpen || !isMobile()) return;
+                
+                if (e.key === 'Tab') {
+                    if (e.shiftKey) {
+                        // Shift + Tab
+                        if (document.activeElement === firstFocusableElement) {
+                            e.preventDefault();
+                            lastFocusableElement.focus();
+                        }
+                    } else {
+                        // Tab
+                        if (document.activeElement === lastFocusableElement) {
+                            e.preventDefault();
+                            firstFocusableElement.focus();
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Закрытие меню при клике на ссылку (только на мобилке)
+        const navLinks = mainNav.querySelectorAll('.nav__link:not(.catalog-link)');
         navLinks.forEach(link => {
             link.addEventListener('click', function() {
-                burgerBtn.classList.remove('active');
-                mainNav.classList.remove('active');
-                document.body.style.overflow = '';
+                if (isMobile()) {
+                    closeMenu(burgerBtn, mainNav, navOverlay);
+                }
             });
         });
         
-        // Закрытие меню при клике вне его области
-        document.addEventListener('click', function(e) {
-            if (mainNav.classList.contains('active') && 
-                !mainNav.contains(e.target) && 
-                !burgerBtn.contains(e.target) &&
-                window.innerWidth <= 768) {
-                burgerBtn.classList.remove('active');
-                mainNav.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-        
-        // Закрытие меню при изменении размера окна (если перешли на десктоп)
+        // Обработка resize
         let resizeTimer;
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(function() {
-                if (window.innerWidth > 768) {
-                    burgerBtn.classList.remove('active');
-                    mainNav.classList.remove('active');
-                    document.body.style.overflow = '';
+                const wasMobile = isMobile();
+                const nowMobile = window.innerWidth <= 992;
+                
+                // Если перешли с мобилки на десктоп - закрываем меню
+                if (wasMobile && !nowMobile && isMenuOpen) {
+                    closeMenu(burgerBtn, mainNav, navOverlay);
                 }
+                
+                // Обновляем ARIA
+                mainNav.setAttribute('aria-hidden', nowMobile && !isMenuOpen ? 'true' : 'false');
             }, 100);
         });
     }
@@ -125,7 +227,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Имитация отправки
             const submitBtn = document.querySelector('.btn-submit-split');
+            if (!submitBtn) return;
+            
             const btnText = submitBtn.querySelector('.btn-text-split');
+            if (!btnText) return;
+            
             const originalText = btnText.textContent;
             
             submitBtn.disabled = true;
@@ -206,7 +312,12 @@ document.addEventListener('DOMContentLoaded', function() {
         errorDiv.textContent = message;
         
         const formHeader = document.querySelector('.form-header');
-        formHeader.insertAdjacentElement('afterend', errorDiv);
+        if (formHeader) {
+            formHeader.insertAdjacentElement('afterend', errorDiv);
+        } else {
+            // Если form-header не найден, добавляем в начало body
+            document.body.insertAdjacentElement('afterbegin', errorDiv);
+        }
         
         setTimeout(() => errorDiv.remove(), 5000);
     }

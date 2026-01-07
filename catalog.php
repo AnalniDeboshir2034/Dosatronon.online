@@ -1,8 +1,9 @@
 <?php
 $host = 'localhost';
-$user = 'root';
-$pass = '';
-$db_name = 'catalog';
+$user = 'dosatronon_dosatronon';
+$pass = 'dosatronon_dosatronon';
+$db_name = 'dosatronon_catalog';
+
 
 $mysqli = new mysqli($host, $user, $pass, $db_name);
 if ($mysqli->connect_error) die("Ошибка подключения: " . $mysqli->connect_error);
@@ -96,6 +97,7 @@ $final_filters = array_merge(['all' => 'Все товары'], $available_filter
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Каталог медикаторов | 7 company</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js" defer></script>
     <style>
         .catalog-header {
             background: linear-gradient(135deg, hsl(220 40% 5%), hsl(200 70% 10%));
@@ -505,28 +507,63 @@ $final_filters = array_merge(['all' => 'Все товары'], $available_filter
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <div class="header__inner">
-                <a href="index.php" class="logo">
-                    <div class="logo__img">
-                        <img src="logo.jpg" alt="7company" width="40" height="40">
-                    </div>
-                    <span class="logo__text">7 company</span>
-                </a>
+    <div class="container">
+        <div class="header__inner">
+            <!-- Бургер-кнопка -->
+            <button class="burger-btn" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false" aria-controls="mainNav">
+                <span class="burger-btn__line"></span>
+                <span class="burger-btn__line"></span>
+                <span class="burger-btn__line"></span>
+            </button>
 
-                <nav class="nav">
-                    <ul class="nav__list">
-                        <li><a href="index.php" class="nav__link">Главная</a></li>
-                        <li><a href="catalog.php" class="nav__link nav__link--active">Каталог</a></li>
-                        <li><a href="contacts.php" class="nav__link">Контакты</a></li>
-                        <li><a href="compare.php" class="nav__link">Сравнение</a></li>
-                        <li><a href="contacts.php" class="btn btn-primary">Заказать</a></li>
-                    </ul>
-                </nav>
-            </div>
+            <!-- Логотип -->
+            <a href="index.php" class="logo">
+                <div class="logo__img">
+                    <img src="logo.jpg" alt="7company" width="40" height="40" loading="lazy">
+                </div>
+                <span class="logo__text">7 company</span>
+            </a>
+
+   
+
+            <!-- Затемнение фона -->
+            <div class="nav-overlay" id="navOverlay"></div>
+
+            <!-- Навигация -->
+            <nav class="nav" id="mainNav" aria-label="Основная навигация">
+                <ul class="nav__list">
+                    <li class="nav__item">
+                        <a href="index.php" class="nav__link nav__link--active">Главная</a>
+                    </li>
+                    <li class="nav__item has-dropdown">
+                        <a href="catalog.php" class="catalog-link" id="catalogLink">
+                            Каталог
+                        </a>
+                        <ul class="dropdown-menu" id="catalogDropdown">
+                            <li><a href="catalog.php?category=all">Все модели</a></li>
+                            <li><a href="catalog.php?category=DIA">DIA</a></li>
+                            <li><a href="catalog.php?category=D07">D07</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav__item">
+                        <a href="contacts.php" class="nav__link">Контакты</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="compare.php" class="nav__link">Сравнение</a>
+                    </li>
+                    <li class="nav__item nav__item--search">
+                        <div class="sidebar-search">
+                            <div class="search-box">
+                                <input type="text" id="searchInput" placeholder="Поиск по названию...">
+                                <button id="searchBtn" type="button">🔍</button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+                     <a href="contacts.php" class="btn btn-primary header__order-btn">Заказать</a>
         </div>
-    </header>
+    </div>
 
     <main class="main">
         <section class="catalog-header">

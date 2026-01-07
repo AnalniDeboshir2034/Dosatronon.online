@@ -64,548 +64,361 @@ if ($result) {
     <title>7 company - Каталог медикаторов</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
-    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js" defer></script>
+
     <script src="js/script.js" defer></script>
- <style>
-    /* ===== ОСНОВНЫЕ СТИЛИ ===== */
-    .burger-btn {
-        display: none;
-        flex-direction: column;
-        justify-content: space-around;
-        width: 30px;
-        height: 30px;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-        z-index: 1001;
-    
-    }
-    .burger-btn__line {
-        width: 100%;
-        height: 3px;
-        background: hsl(200 100% 98%);
-        border-radius: 3px;
-        transition: all 0.3s ease;
-    }
-    
-    .burger-btn.active .burger-btn__line:nth-child(1) {
-        transform: rotate(45deg) translate(8px, 8px);
-    }
-    
-    .burger-btn.active .burger-btn__line:nth-child(2) {
-        opacity: 0;
-    }
-    
-    .burger-btn.active .burger-btn__line:nth-child(3) {
-        transform: rotate(-45deg) translate(7px, -7px);
-    }
-    
-    /* Навигация всегда видима */
-    .nav {
-        display: flex;
-    }
-    
-    /* Затемнение фона */
-    .nav-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.8);
-        backdrop-filter: blur(5px);
-        z-index: 999;
-    }
-    
-    .nav-overlay.active {
-        display: block;
-    }
-    
-    /* ===== МОБИЛЬНАЯ ВЕРСИЯ (до 1024px) ===== */
-    @media (max-width: 1024px) {
-        /* Показываем бургер */
-        .burger-btn {
-            display: flex;
-            order: 1;
-        }
-        
-        /* Горизонтальный хеддер */
-        .header__inner {
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            gap: 15px !important;
-            min-height: 70px !important;
-        }
-        
-        .logo {
-            flex: 1 !important;
-            order: 2 !important;
-            text-align: center !important;
-        }
-        
-        .header__order-btn {
-            order: 3 !important;
-            flex-shrink: 0 !important;
-            padding: 10px 15px !important;
-            font-size: 0.9rem !important;
-        }
-        
-        /* Скрываем навигацию по умолчанию */
-        .nav {
-            position: fixed !important;
-            top: 0 !important;
-            left: -100% !important;
-            width: 320px !important;
-            max-width: 85% !important;
-            height: 100vh !important;
-            background: hsl(220 40% 5%) !important;
-            z-index: 1000 !important;
-            transition: left 0.3s ease !important;
-            overflow-y: auto !important;
-            padding: 80px 25px 30px 25px !important;
-        }
-        
-        .nav.active {
-            left: 0 !important;
-            box-shadow: 5px 0 30px rgba(0,0,0,0.5);
-        }
-        
-        /* Вертикальное меню */
-        .nav__list {
-            flex-direction: column !important;
-            gap: 0 !important;
-            width: 100% !important;
-        }
-        
-        .nav__item {
-            width: 100% !important;
-            border-bottom: 1px solid hsl(200 30% 18%) !important;
-        }
-        
-        .nav__item:last-child {
-            border-bottom: none !important;
-        }
-        
-        /* Ссылки в меню */
-        .nav__link, .catalog-link {
-            display: block !important;
-            padding: 18px 0 !important;
-            color: var(--muted-foreground) !important;
-            text-decoration: none !important;
-            font-size: 1.1rem !important;
-            width: 100% !important;
-            text-align: left !important;
-            background: none !important;
-            border: none !important;
-            cursor: pointer !important;
-            font-family: inherit !important;
-        }
-        
-        .catalog-link {
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-        }
-        
-        .catalog-link::after {
-            content: '▾' !important;
-            transition: transform 0.3s ease !important;
-        }
-        
-        .catalog-link.active::after {
-            transform: rotate(180deg) !important;
-        }
-        
-        /* Выпадающее меню каталога */
-        .dropdown-menu {
-            display: none !important;
-            padding-left: 20px !important;
-            list-style: none !important;
-            margin: 10px 0 !important;
-        }
-        
-        .dropdown-menu.active {
-            display: block !important;
-        }
-        
-        .dropdown-menu li {
-            border-bottom: none !important;
-        }
-        
-        .dropdown-menu a {
-            display: block !important;
-            padding: 15px 0 !important;
-            color: hsl(200 20% 70%) !important;
-            text-decoration: none !important;
-        }
-        
-        .dropdown-menu a:hover {
-            color: var(--primary) !important;
-        }
-        
-        /* Поиск в мобильном меню */
-        .nav__item--search {
-            padding: 20px 0 !important;
-        }
-        
-        .search-box {
-            flex-direction: column !important;
-            width: 100% !important;
-            gap: 10px !important;
-        }
-        
-        .search-box input {
-            width: 100% !important;
-            padding: 14px !important;
-            border-radius: 8px !important;
-        }
-        
-        .search-box button {
-            width: 100% !important;
-            padding: 14px !important;
-            border-radius: 8px !important;
-            margin-top: 5px !important;
-        }
-        
-        /* Блокируем скролл при открытом меню */
-        body.menu-open {
-            overflow: hidden !important;
-        }
-    }
-    
-    /* ===== ДЕСКТОПНАЯ ВЕРСИЯ (от 1025px) ===== */
-    @media (min-width: 1025px) {
-        /* Скрываем бургер и оверлей */
-        .burger-btn, .nav-overlay {
-            display: none !important;
-        }
-        
-        /* Горизонтальное меню */
-        .nav {
-            display: flex !important;
-            position: relative !important;
-            height: auto !important;
-            width: auto !important;
-            background: transparent !important;
-            padding: 0 !important;
-        }
-        
-        .nav__list {
-            display: flex !important;
-            flex-direction: row !important;
-            gap: 30px !important;
-            align-items: center !important;
-        }
-        
-        .nav__item {
-            position: relative !important;
-            border-bottom: none !important;
-            width: auto !important;
-        }
-        
-        /* Ссылки в меню */
-        .nav__link, .catalog-link {
-            color: var(--muted-foreground) !important;
-            text-decoration: none !important;
-            padding: 8px 0 !important;
-            position: relative !important;
-            font-size: 1rem !important;
-            transition: color 0.3s ease !important;
-        }
-        
-        .nav__link:hover, .catalog-link:hover {
-            color: var(--foreground) !important;
-        }
-        
-        .nav__link::before, .catalog-link::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: width 0.3s ease;
-        }
-        
-        .nav__link:hover::before, .catalog-link:hover::before {
-            width: 100%;
-        }
-        
-        /* Каталог с выпадающим меню */
-        .catalog-link {
-            display: flex !important;
-            align-items: center !important;
-            gap: 5px !important;
-        }
-        
-        .catalog-link::after {
-            content: '▾' !important;
-            font-size: 0.8rem !important;
-            transition: transform 0.3s ease !important;
-        }
-        
-        .nav__item.has-dropdown:hover .catalog-link::after {
-            transform: rotate(180deg) !important;
-        }
-        
-        /* Выпадающее меню (появляется при наведении) */
-        .dropdown-menu {
-            position: absolute !important;
-            top: 100% !important;
-            left: 0 !important;
-            min-width: 220px !important;
-            background: hsl(220 40% 8%) !important;
-            border: 1px solid hsl(200 30% 20%) !important;
-            border-radius: var(--radius) !important;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.7) !important;
-            padding: 10px 0 !important;
-            margin-top: 15px !important;
-            opacity: 0 !important;
-            visibility: hidden !important;
-            transform: translateY(-10px) !important;
-            transition: all 0.3s ease !important;
-            z-index: 1000 !important;
-            display: block !important;
-        }
-        
-        .nav__item.has-dropdown:hover .dropdown-menu {
-            opacity: 1 !important;
-            visibility: visible !important;
-            transform: translateY(0) !important;
-        }
-        
-        .dropdown-menu::before {
-            content: '';
-            position: absolute;
-            top: -6px;
-            left: 20px;
-            width: 12px;
-            height: 12px;
-            background: hsl(220 40% 8%);
-            border-left: 1px solid hsl(200 30% 20%);
-            border-top: 1px solid hsl(200 30% 20%);
-            transform: rotate(45deg);
-        }
-        
-        .dropdown-menu li {
-            padding: 0;
-            margin: 0;
-        }
-        
-        .dropdown-menu a {
-            display: block;
-            padding: 12px 20px;
-            color: hsl(200 20% 70%);
-            text-decoration: none;
-            transition: all 0.2s ease;
-            font-size: 0.95rem;
-        }
-        
-        .dropdown-menu a:hover {
-            color: var(--primary);
-            background: hsl(195 100% 50% / 0.1);
-            padding-left: 25px;
-        }
-        
-        /* Поиск на десктопе */
-        .search-box {
-            display: flex;
-            align-items: center;
-            gap: 0;
-        }
-        
-        .search-box input {
-            width: 200px;
-            padding: 10px 15px;
-            background: hsl(220 40% 10%);
-            border: 1px solid hsl(200 30% 25%);
-            border-radius: 8px 0 0 8px;
-            color: var(--foreground);
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-        
-        .search-box input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px hsl(195 100% 50% / 0.1);
-        }
-        
-        .search-box input::placeholder {
-            color: hsl(200 20% 45%);
-        }
-        
-        .search-box button {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, hsl(195 100% 50%), hsl(180 100% 50%));
-            border: none;
-            border-radius: 0 8px 8px 0;
-            color: var(--primary-foreground);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .search-box button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px hsl(195 100% 50% / 0.3);
-        }
-    }
-    
-    /* ===== ОБЩИЕ СТИЛИ ===== */
-    .image-placeholder {
-        width: 100%;
-        height: 200px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background: #f5f5f5;
-        color: #666;
-        border-radius: 8px;
-    }
-    
-    .placeholder-icon {
-        font-size: 3rem;
-        margin-bottom: 10px;
-    }
-    
-    .product-link {
-        color: inherit;
-        text-decoration: none;
-        transition: color 0.2s;
-    }
-    
-    .product-link:hover {
-        color: #2196F3;
-    }
-    
-    .spec-item {
-        display: inline-block;
-        margin-bottom: 5px;
-        font-size: 0.9rem;
-        color: #555;
-    }
-    
-    .btn-success {
-        background-color: #4CAF50 !important;
-        color: white !important;
-        border-color: #4CAF50 !important;
-    }
-    
-    .notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #4CAF50;
-        color: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        z-index: 10000;
-        animation: slideIn 0.3s ease;
-    }
-    
-    @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    
-    @keyframes slideOut {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
-    }
-    
-    .product-card__image img {
-        width: 100%;
-        height: 200px;
-        object-fit: contain;
-        background: #f9f9f9;
-        border-radius: 8px 8px 0 0;
-    }
-    
-    .product-card__actions {
-        display: flex;
-        gap: 10px;
-        margin-top: 15px;
-    }
-    
-    .product-card__actions .btn {
-        flex: 1;
-        padding: 10px;
-        font-size: 0.9rem;
-    }
-    @media (max-width: 640px) {
-    .header__inner {
-        padding: 10px 15px !important;
-        gap: 10px !important;
-        min-height: 60px !important;
-    }
-    
-    /* Уменьшаем логотип */
-    .logo__img {
-        width: 32px !important;
-        height: 32px !important;
-        flex-shrink: 0 !important;
-    }
-    
-    .logo__text {
-        font-size: 0.9rem !important;
-        white-space: nowrap !important;
-    }
-    
-    /* Делаем кнопку "Заказать" компактнее */
-    .header__order-btn {
-        padding: 8px 12px !important;
-        font-size: 0.85rem !important;
-        min-width: auto !important;
-        flex-shrink: 0 !important;
-    }
-    
-    /* Настраиваем бургер-кнопку */
-    .burger-btn {
-        width: 26px !important;
-        height: 26px !important;
-        flex-shrink: 0 !important;
-    }
-    
-    .burger-btn__line {
-        height: 2px !important;
-    }
-    
-    /* Уменьшаем отступы в меню */
-    .nav {
-        width: 280px !important;
-        padding: 70px 20px 20px 20px !important;
-    }
-    
-    /* Адаптируем каталог товаров на главной */
-    .products__grid {
-        grid-template-columns: 1fr !important;
-        gap: 20px !important;
-    }
-    
-    .product-card__actions {
-        flex-direction: column !important;
-    }
-    
-    .product-card__actions .btn {
-        width: 100% !important;
-    }
-    }
-</style>
 
 </head>
 <body>
+    <style>
+/* === СЕКЦИЯ ПОПУЛЯРНЫЕ ТОВАРЫ === */
+
+/* Grid для десктопа */
+.products-grid-desktop {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+/* Swiper для мобилки - скрыт на десктопе */
+.products-swiper-mobile {
+    display: none;
+    position: relative;
+    padding: 0 60px 40px;
+    margin-bottom: 20px;
+}
+
+/* Контейнер свайпера */
+.products-swiper {
+    padding: 10px;
+}
+
+/* === КАРТОЧКА ТОВАРА (точь-в-точь как в каталоге) === */
+.product-card {
+    background: var(--card);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+}
+
+/* === ИЗОБРАЖЕНИЕ ТОВАРА === */
+.product-card__image {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background: hsl(200 30% 12%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-card__image img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    padding: 10px;
+    transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-card__image img {
+    transform: scale(1.05);
+}
+
+/* Плейсхолдер для отсутствующего изображения */
+.image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-foreground);
+}
+
+.placeholder-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    opacity: 0.7;
+}
+
+.image-placeholder p {
+    color: var(--muted-foreground);
+    font-size: 14px;
+    margin: 0;
+}
+
+/* === ТЕКСТ КАРТОЧКИ === */
+.product-card__content {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card__title {
+    color: var(--foreground);
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    line-height: 1.4;
+    text-align: center;
+    height: 42px;
+    overflow: hidden;
+}
+
+.product-card__title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.product-card__title a:hover {
+    color: var(--primary);
+}
+
+/* Описание/спецификации */
+.product-card__desc {
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    text-align: center;
+    flex: 1;
+}
+
+.spec-item {
+    display: block;
+    margin-bottom: 5px;
+    line-height: 1.4;
+    color: var(--muted-foreground);
+}
+
+/* Цена */
+.product-card__price {
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 20px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+/* === КНОПКИ (точные цвета как в каталоге) === */
+.product-card__actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+}
+
+/* Базовая стилизация кнопок как в каталоге */
+.product-card__actions .btn {
+    flex: 1;
+    padding: 10px;
+    font-size: 0.9rem;
+    text-align: center;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+/* Кнопка "В сравнение" - точь-в-точь как в каталоге */
+.product-card__actions .btn-secondary {
+    background: transparent;
+    border: 2px solid var(--border);
+    color: var(--muted-foreground);
+}
+
+.product-card__actions .btn-secondary:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Кнопка "Подробнее" - точь-в-точь как в каталоге */
+.product-card__actions .btn-primary {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.product-card__actions .btn-primary:hover {
+    background: hsl(195 100% 40%);
+}
+
+/* Кнопка когда товар в сравнении */
+.product-card__actions .btn-success {
+    background: #4CAF50;
+    color: white;
+    border: none;
+}
+
+.product-card__actions .btn-success:hover {
+    background: #45a049;
+}
+
+/* === КНОПКИ СЛАЙДЕРА === */
+.products-swiper .swiper-button-next,
+.products-swiper .swiper-button-prev {
+    width: 40px;
+    height: 40px;
+    background: var(--primary); /* Голубой как кнопка "Подробнее" */
+    border-radius: 50%;
+    color: var(--primary-foreground); /* Темный текст */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    top: 50%;
+    margin-top: -20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+    transition: all 0.2s;
+    z-index: 10;
+}
+
+.products-swiper .swiper-button-next:hover,
+.products-swiper .swiper-button-prev:hover {
+    opacity: 1;
+    background: hsl(195 100% 40%);
+    transform: scale(1.05);
+}
+
+.products-swiper .swiper-button-prev {
+    left: 10px;
+}
+
+.products-swiper .swiper-button-next {
+    right: 10px;
+}
+
+.products-swiper .swiper-button-prev:after,
+.products-swiper .swiper-button-next:after {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.products-swiper .swiper-button-disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* === КНОПКА "ВЕСЬ КАТАЛОГ" === */
+.text-center .btn-large {
+    display: inline-block;
+    padding: 12px 30px;
+    background: var(--primary); /* Такой же голубой как "Подробнее" */
+    color: var(--primary-foreground);
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 1rem;
+}
+
+.text-center .btn-large:hover {
+    background: hsl(195 100% 40%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 188, 235, 0.3);
+}
+
+/* === АДАПТИВНОСТЬ === */
+
+/* На мобилке показываем свайпер, скрываем grid */
+@media (max-width: 991px) {
+    .products-grid-desktop {
+        display: none !important;
+    }
+    
+    .products-swiper-mobile {
+        display: block;
+    }
+    
+    .product-card__image {
+        height: 200px;
+    }
+    
+    .product-card__content {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .products-swiper-mobile {
+        padding: 0 50px 40px;
+    }
+    
+    .product-card__image {
+        height: 180px;
+    }
+    
+    .product-card__title {
+        font-size: 1.2rem;
+        height: 38px;
+    }
+}
+
+@media (max-width: 576px) {
+    .products-swiper-mobile {
+        padding: 0 40px 40px;
+    }
+    
+    .product-card__image {
+        height: 160px;
+    }
+    
+    .product-card__actions {
+        flex-direction: column;
+    }
+    
+    /* На совсем маленьких скрываем стрелки */
+    .products-swiper .swiper-button-next,
+    .products-swiper .swiper-button-prev {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .products-swiper-mobile {
+        padding: 0 20px 30px;
+    }
+    
+    .product-card__image {
+        height: 140px;
+    }
+    
+    .product-card__content {
+        padding: 12px;
+    }
+    
+    .product-card__title {
+        font-size: 1.1rem;
+        height: 36px;
+    }
+    
+    .product-card__actions .btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+}
+</style>
    <header class="header">
     <div class="container">
         <div class="header__inner">
             <!-- Бургер-кнопка -->
-            <button class="burger-btn" id="burgerBtn" aria-label="Открыть меню">
+            <button class="burger-btn" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false" aria-controls="mainNav">
                 <span class="burger-btn__line"></span>
                 <span class="burger-btn__line"></span>
                 <span class="burger-btn__line"></span>
@@ -614,7 +427,7 @@ if ($result) {
             <!-- Логотип -->
             <a href="index.php" class="logo">
                 <div class="logo__img">
-                    <img src="logo.jpg" alt="7company" width="40" height="40">
+                    <img src="logo.jpg" alt="7company" width="40" height="40" loading="lazy">
                 </div>
                 <span class="logo__text">7 company</span>
             </a>
@@ -625,7 +438,7 @@ if ($result) {
             <div class="nav-overlay" id="navOverlay"></div>
 
             <!-- Навигация -->
-            <nav class="nav" id="mainNav">
+            <nav class="nav" id="mainNav" aria-label="Основная навигация">
                 <ul class="nav__list">
                     <li class="nav__item">
                         <a href="index.php" class="nav__link nav__link--active">Главная</a>
@@ -694,122 +507,141 @@ if ($result) {
                         </ul>
                     </div>
                     <div class="about__image">
-                        <img src="logo.jpg" alt="7 company">
+                        <img src="logo.jpg" alt="7 company" loading="lazy">
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="products">
-            <div class="container">
-                <h2 class="section-title">Популярные товары</h2>
-                <div class="products__grid">
-                    <?php if (count($products) > 0): ?>
-                        <?php foreach ($products as $product): ?>
-                        <div class="product-card">
-                            <div class="product-card__image">
-                                <?php if ($product['img_found']): ?>
-                                    <img src="<?php echo htmlspecialchars($product['img_found']); ?>" 
-                                         alt="<?php echo htmlspecialchars($product['name']); ?>"
-                                         loading="lazy">
-                                <?php elseif (!empty($product['img']) && $product['img'] != '-'): ?>
-                                    <img src="images/products/<?php echo htmlspecialchars($product['img']); ?>" 
-                                         alt="<?php echo htmlspecialchars($product['name']); ?>"
-                                         loading="lazy">
-                                <?php else: ?>
-                                    <div class="image-placeholder">
-                                        <span class="placeholder-icon">🏭</span>
-                                        <p>Нет изображения</p>
-                                    </div>
-                                <?php endif; ?>
+<section class="products">
+    <div class="container">
+        <h2 class="section-title">Популярные товары</h2>
+        
+        <!-- Grid для десктопа (показывается только на ПК) -->
+        <div class="products-grid-desktop">
+            <?php if (count($products) > 0): ?>
+                <?php 
+                // Берем только 3 товара для десктопа
+                $desktopProducts = array_slice($products, 0, 3);
+                ?>
+                <?php foreach ($desktopProducts as $product): ?>
+                <div class="product-card">
+                    <div class="product-card__image">
+                        <?php if ($product['img_found']): ?>
+                            <img src="<?php echo htmlspecialchars($product['img_found']); ?>" 
+                                 alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                 loading="lazy">
+                        <?php elseif (!empty($product['img']) && $product['img'] != '-'): ?>
+                            <img src="images/products/<?php echo htmlspecialchars($product['img']); ?>" 
+                                 alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                 loading="lazy">
+                        <?php else: ?>
+                            <div class="image-placeholder">
+                                <span class="placeholder-icon">🏭</span>
+                                <p>Нет изображения</p>
                             </div>
-                            <div class="product-card__content">
-                                <h3 class="product-card__title">
-                                    <a href="product.php?id=<?php echo $product['id']; ?>" class="product-link">
-                                        <?php echo htmlspecialchars($product['name']); ?>
-                                    </a>
-                                </h3>
-                                <p class="product-card__desc">
-                                    <?php if (!empty($product['d_dosing'])): ?>
-                                        <span class="spec-item">📏 Дозировка: <?php echo htmlspecialchars($product['d_dosing']); ?></span><br>
+                        <?php endif; ?>
+                    </div>
+                    <div class="product-card__content">
+                        <h3 class="product-card__title">
+                            <a href="product.php?id=<?php echo $product['id']; ?>" class="product-link">
+                                <?php echo htmlspecialchars($product['name']); ?>
+                            </a>
+                        </h3>
+                        <p class="product-card__desc">
+                            <?php if (!empty($product['d_dosing'])): ?>
+                                <span class="spec-item">📏 <?php echo htmlspecialchars($product['d_dosing']); ?></span><br>
+                            <?php endif; ?>
+                            <?php if (!empty($product['performance'])): ?>
+                                <span class="spec-item">⚡ <?php echo htmlspecialchars($product['performance']); ?></span>
+                            <?php endif; ?>
+                        </p>
+                        <div class="product-card__price">Подробности по запросу</div>
+                        <div class="product-card__actions">
+                            <button class="btn btn-secondary" 
+                                    data-product-id="<?php echo $product['id']; ?>"
+                                    data-product-name="<?php echo htmlspecialchars($product['name']); ?>">
+                                В сравнение
+                            </button>
+                            <a href="product.php?id=<?php echo $product['id']; ?>" class="btn btn-primary">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+        
+        <!-- Swiper для мобилки (скрыт на десктопе) -->
+        <div class="products-swiper-mobile">
+            <div class="swiper products-swiper">
+                <div class="swiper-wrapper">
+                    <?php if (count($products) > 0): ?>
+                        <?php 
+                        // Берем первые 3 товара для цикла 0-2
+                        $mobileProducts = array_slice($products, 0, 3);
+                        ?>
+                        <?php foreach ($mobileProducts as $product): ?>
+                        <div class="swiper-slide">
+                            <div class="product-card">
+                                <div class="product-card__image">
+                                    <?php if ($product['img_found']): ?>
+                                        <img src="<?php echo htmlspecialchars($product['img_found']); ?>" 
+                                             alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                             loading="lazy">
+                                    <?php elseif (!empty($product['img']) && $product['img'] != '-'): ?>
+                                        <img src="images/products/<?php echo htmlspecialchars($product['img']); ?>" 
+                                             alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                             loading="lazy">
+                                    <?php else: ?>
+                                        <div class="image-placeholder">
+                                            <span class="placeholder-icon">🏭</span>
+                                            <p>Нет изображения</p>
+                                        </div>
                                     <?php endif; ?>
-                                    <?php if (!empty($product['performance'])): ?>
-                                        <span class="spec-item">⚡ Производительность: <?php echo htmlspecialchars($product['performance']); ?></span>
-                                    <?php endif; ?>
-                                </p>
-                                <div class="product-card__price">Подробности по запросу</div>
-                                <div class="product-card__actions">
-                                    <button class="btn btn-secondary" 
-                                            data-product-id="<?php echo $product['id']; ?>"
-                                            data-product-name="<?php echo htmlspecialchars($product['name']); ?>">
-                                        В сравнение
-                                    </button>
-                                    <a href="product.php?id=<?php echo $product['id']; ?>" class="btn btn-primary">Подробнее</a>
+                                </div>
+                                <div class="product-card__content">
+                                    <h3 class="product-card__title">
+                                        <a href="product.php?id=<?php echo $product['id']; ?>" class="product-link">
+                                            <?php echo htmlspecialchars($product['name']); ?>
+                                        </a>
+                                    </h3>
+                                    <p class="product-card__desc">
+                                        <?php if (!empty($product['d_dosing'])): ?>
+                                            <span class="spec-item">📏 <?php echo htmlspecialchars($product['d_dosing']); ?></span><br>
+                                        <?php endif; ?>
+                                        <?php if (!empty($product['performance'])): ?>
+                                            <span class="spec-item">⚡ <?php echo htmlspecialchars($product['performance']); ?></span>
+                                        <?php endif; ?>
+                                    </p>
+                                    <div class="product-card__price">Подробности по запросу</div>
+                                    <div class="product-card__actions">
+                                        <button class="btn btn-secondary" 
+                                                data-product-id="<?php echo $product['id']; ?>"
+                                                data-product-name="<?php echo htmlspecialchars($product['name']); ?>">
+                                            В сравнение
+                                        </button>
+                                        <a href="product.php?id=<?php echo $product['id']; ?>" class="btn btn-primary">Подробнее</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <?php endforeach; ?>
-                    <?php else: ?>
-                        <div class="product-card">
-                            <div class="product-card__image">
-                                <img src="medikator.jpg" alt="Медикатор" loading="lazy">
-                            </div>
-                            <div class="product-card__content">
-                                <h3 class="product-card__title">Dosatron DIA4AL VF</h3>
-                                <p class="product-card__desc">
-                                    <span class="spec-item">📏 Дозировка: 0.2-4%</span><br>
-                                    <span class="spec-item">⚡ Производительность: 5-120 л/ч</span>
-                                </p>
-                                <div class="product-card__price">Подробности по запросу</div>
-                                <div class="product-card__actions">
-                                    <button class="btn btn-secondary" data-product-id="1" data-product-name="Dosatron DIA4AL VF">В сравнение</button>
-                                    <a href="product.php?id=1" class="btn btn-primary">Подробнее</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="product-card">
-                            <div class="product-card__image">
-                                <img src="medikator.jpg" alt="Медикатор" loading="lazy">
-                            </div>
-                            <div class="product-card__content">
-                                <h3 class="product-card__title">Повагоп DBREE</h3>
-                                <p class="product-card__desc">
-                                    <span class="spec-item">📏 Дозировка: 0.5-2%</span><br>
-                                    <span class="spec-item">⚡ Производительность: 3-50 л/ч</span>
-                                </p>
-                                <div class="product-card__price">Подробности по запросу</div>
-                                <div class="product-card__actions">
-                                    <button class="btn btn-secondary" data-product-id="2" data-product-name="Повагоп DBREE">В сравнение</button>
-                                    <a href="product.php?id=2" class="btn btn-primary">Подробнее</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="product-card">
-                            <div class="product-card__image">
-                                <img src="medikator.jpg" alt="Медикатор" loading="lazy">
-                            </div>
-                            <div class="product-card__content">
-                                <h3 class="product-card__title">Dosatron D25RE2</h3>
-                                <p class="product-card__desc">
-                                    <span class="spec-item">📏 Дозировка: 0.2-6%</span><br>
-                                    <span class="spec-item">⚡ Производительность: 50-300 л/ч</span>
-                                </p>
-                                <div class="product-card__price">Подробности по запросу</div>
-                                <div class="product-card__actions">
-                                    <button class="btn btn-secondary" data-product-id="3" data-product-name="Dosatron D25RE2">В сравнение</button>
-                                    <a href="product.php?id=3" class="btn btn-primary">Подробнее</a>
-                                </div>
-                            </div>
-                        </div>
                     <?php endif; ?>
                 </div>
-                <div class="text-center">
-                    <a href="catalog.php" class="btn btn-large">Весь каталог →</a>
-                </div>
+                
+                <!-- Кнопки навигации -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
             </div>
-        </section>
+        </div>
+        
+        <div class="text-center" style="margin-top: 30px;">
+            <a href="catalog.php" class="btn btn-large">Весь каталог →</a>
+        </div>
+    </div>
+</section>
+
+
 
         <section class="reviews">
             <div class="container">
@@ -821,7 +653,7 @@ if ($result) {
                                 <div class="review-card">
                                     <div class="review-card__header">
                                         <div class="review-card__avatar">
-                                            JC
+                                            
                                         </div>
                                         <div class="review-card__info">
                                             <h4 class="review-card__name">Исус Христосович</h4>
@@ -929,216 +761,317 @@ if ($result) {
             </div>
         </div>
     </footer>
+    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
 <script>
-    // Обработчик для кнопок сравнения
-    document.querySelectorAll('.btn-secondary[data-product-id]').forEach(button => {
-        button.addEventListener('click', function() {
+// Удалить defer с этого скрипта и добавить в конец body
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM загружен');
+    
+    // 1. ИНИЦИАЛИЗАЦИЯ СЛАЙДЕРОВ
+    
+    // Мобильный свайпер товаров (только на мобиле)
+    if (document.querySelector('.products-swiper')) {
+        console.log('Проверяем устройства...');
+        console.log('Ширина экрана:', window.innerWidth, 'px');
+        
+        // Проверяем мобильное устройство
+        if (window.innerWidth <= 991) {
+            console.log('✅ Мобильное устройство, инициализируем свайпер товаров');
+            
+            const productsSwiper = new Swiper('.products-swiper', {
+                loop: true,                    // Бесконечная прокрутка
+                speed: 400,                    // Скорость анимации
+                slidesPerView: 1,              // 1 слайд на экране
+                spaceBetween: 15,              // Отступ между слайдами
+                centeredSlides: true,          // Центрируем активный слайд
+                grabCursor: true,              // Курсор "рука" при наведении
+                allowTouchMove: true,          // Разрешаем свайп пальцем
+                
+                // Навигация стрелками
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                    disabledClass: 'swiper-button-disabled'
+                },
+                
+                // События для отладки
+                on: {
+                    init: function() {
+                        console.log('✅ Свайпер товаров инициализирован!');
+                        console.log('Всего слайдов: ' + this.slides.length);
+                        console.log('Зацикливание: ' + this.params.loop);
+                        
+                        // Принудительно показываем кнопки
+                        const nextBtn = this.navigation.nextEl;
+                        const prevBtn = this.navigation.prevEl;
+                        if (nextBtn) {
+                            nextBtn.style.display = 'flex';
+                            nextBtn.style.opacity = '1';
+                            console.log('Кнопка Next:', nextBtn);
+                        }
+                        if (prevBtn) {
+                            prevBtn.style.display = 'flex';
+                            prevBtn.style.opacity = '1';
+                            console.log('Кнопка Prev:', prevBtn);
+                        }
+                    },
+                    
+                    slideChange: function() {
+                        console.log('Текущий слайд: ' + (this.realIndex + 1) + ' из ' + this.slides.length);
+                    }
+                }
+            });
+            
+            // Тестируем клики на кнопках
+            const nextBtn = document.querySelector('.products-swiper .swiper-button-next');
+            const prevBtn = document.querySelector('.products-swiper .swiper-button-prev');
+            
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function(e) {
+                    console.log('Клик по кнопке NEXT');
+                    e.stopPropagation();
+                });
+            }
+            
+            if (prevBtn) {
+                prevBtn.addEventListener('click', function(e) {
+                    console.log('Клик по кнопке PREV');
+                    e.stopPropagation();
+                });
+            }
+            
+            // Тестируем свайп
+            const swiperEl = document.querySelector('.products-swiper');
+            if (swiperEl) {
+                swiperEl.addEventListener('touchstart', function() {
+                    console.log('Touch started (свайп начат)');
+                });
+                
+                swiperEl.addEventListener('touchend', function() {
+                    console.log('Touch ended (свайп закончен)');
+                });
+                
+                // Для десктопа (если тестируешь мышкой)
+                swiperEl.addEventListener('mousedown', function() {
+                    console.log('Mouse down (начало свайпа мышкой)');
+                });
+                
+                swiperEl.addEventListener('mouseup', function() {
+                    console.log('Mouse up (конец свайпа мышкой)');
+                });
+            }
+        } else {
+            console.log('🖥️ Десктопное устройство, свайпер не нужен');
+        }
+    }
+    
+    // Слайдер отзывов (работает всегда)
+    if (document.querySelector('.reviews-swiper')) {
+        console.log('Инициализируем слайдер отзывов...');
+        
+        new Swiper('.reviews-swiper', {
+            loop: true,
+            speed: 600,
+            autoplay: { 
+                delay: 5000,
+                disableOnInteraction: false 
+            },
+            slidesPerView: 1,
+            spaceBetween: 20,
+            grabCursor: true,
+            breakpoints: {
+                768: { 
+                    slidesPerView: 2,
+                    spaceBetween: 20 
+                },
+                992: { 
+                    slidesPerView: 3,
+                    spaceBetween: 20 
+                }
+            },
+            on: {
+                init: function() {
+                    console.log('✅ Слайдер отзывов инициализирован');
+                }
+            }
+        });
+    }
+    
+    // 2. ФУНКЦИОНАЛ СРАВНЕНИЯ ТОВАРОВ
+    
+    const compareButtons = document.querySelectorAll('.btn-secondary[data-product-id]');
+    compareButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.stopPropagation();
             const productId = this.getAttribute('data-product-id');
             const productName = this.getAttribute('data-product-name');
             
             let compareItems = JSON.parse(localStorage.getItem('compareItems')) || [];
-            
             const exists = compareItems.some(item => item.id == productId);
+            
             if (!exists) {
-                compareItems.push({
-                    id: productId,
-                    name: productName,
-                    date: new Date().toISOString()
+                compareItems.push({ 
+                    id: productId, 
+                    name: productName, 
+                    date: new Date().toISOString() 
                 });
                 localStorage.setItem('compareItems', JSON.stringify(compareItems));
-                
                 this.textContent = '✓ В сравнении';
                 this.classList.add('btn-success');
                 this.classList.remove('btn-secondary');
-                
                 showNotification(`Товар "${productName}" добавлен в сравнение!`);
             } else {
                 compareItems = compareItems.filter(item => item.id != productId);
                 localStorage.setItem('compareItems', JSON.stringify(compareItems));
-                
                 this.textContent = 'В сравнение';
                 this.classList.remove('btn-success');
                 this.classList.add('btn-secondary');
-                
                 showNotification(`Товар "${productName}" удален из сравнения!`);
             }
         });
     });
     
-    // Функция уведомлений
-    function showNotification(message) {
-        const notification = document.createElement('div');
-        notification.className = 'notification';
-        notification.textContent = message;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease';
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
-    }
-
-    // Основной код
-    document.addEventListener('DOMContentLoaded', function() {
-        // Инициализация слайдера отзывов
-        if (document.querySelector('.reviews-swiper')) {
-            new Swiper('.reviews-swiper', {
-                loop: true,
-                speed: 600,
-                autoplay: { delay: 5000 },
-                slidesPerView: 1,
-                spaceBetween: 20,
-                breakpoints: {
-                    768: { slidesPerView: 2 },
-                    992: { slidesPerView: 3 }
-                }
-            });
-        }
-        
-        // Получаем элементы
-        const burgerBtn = document.getElementById('burgerBtn');
-        const mainNav = document.getElementById('mainNav');
-        const navOverlay = document.getElementById('navOverlay');
-        const catalogLink = document.getElementById('catalogLink');
-        const catalogDropdown = document.getElementById('catalogDropdown');
-        
-        // Проверяем, мобилка или десктоп
-        const isMobile = window.innerWidth <= 1024;
-        
-        // ===== ФУНКЦИИ ДЛЯ МЕНЮ =====
-        
-        // Открытие/закрытие бургер-меню
-        function toggleMenu() {
-            burgerBtn.classList.toggle('active');
-            mainNav.classList.toggle('active');
-            navOverlay.classList.toggle('active');
-            document.body.classList.toggle('menu-open');
-        }
-        
-        // Закрытие меню
-        function closeMenu() {
-            burgerBtn.classList.remove('active');
-            mainNav.classList.remove('active');
-            navOverlay.classList.remove('active');
-            document.body.classList.remove('menu-open');
-            
-            // Закрываем выпадающее меню каталога
-            if (catalogDropdown) {
-                catalogDropdown.classList.remove('active');
-                catalogLink.classList.remove('active');
-            }
-        }
-        
-        // ===== ОБРАБОТЧИКИ СОБЫТИЙ =====
-        
-        // Бургер-кнопка
-        if (burgerBtn) {
-            burgerBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                toggleMenu();
-            });
-        }
-        
-        // Затемнение фона
-        if (navOverlay) {
-            navOverlay.addEventListener('click', closeMenu);
-        }
-        
-        // Выпадающее меню каталога на МОБИЛКЕ
-        if (catalogLink && catalogDropdown && isMobile) {
-            catalogLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // Переключаем выпадающее меню
-                catalogLink.classList.toggle('active');
-                catalogDropdown.classList.toggle('active');
-            });
-            
-            // Закрытие при клике на ссылки в выпадающем меню
-            catalogDropdown.addEventListener('click', function(e) {
-                if (e.target.tagName === 'A') {
-                    closeMenu();
-                }
-            });
-        }
-        
-        // Закрытие меню при клике на обычные ссылки на МОБИЛКЕ
-        if (isMobile) {
-            document.querySelectorAll('.nav__link').forEach(link => {
-                if (!link.classList.contains('catalog-link')) {
-                    link.addEventListener('click', closeMenu);
-                }
-            });
-        }
-        
-        // Поиск
-        const searchBtn = document.getElementById('searchBtn');
-        const searchInput = document.getElementById('searchInput');
-        
-        if (searchBtn && searchInput) {
-            function performSearch() {
-                const searchTerm = searchInput.value.trim();
-                if (searchTerm) {
-                    window.location.href = `catalog.php?search=${encodeURIComponent(searchTerm)}`;
-                }
-            }
-            
-            searchBtn.addEventListener('click', performSearch);
-            
-            searchInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    performSearch();
-                }
-            });
-            
-            // На мобилке закрываем меню после поиска
-            if (isMobile) {
-                searchBtn.addEventListener('click', function() {
-                    closeMenu();
-                });
-            }
-        }
-        
-        // Закрытие меню при изменении размера окна
-        let resizeTimer;
-        window.addEventListener('resize', function() {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(function() {
-                // Если перешли с мобилки на десктоп - закрываем меню
-                if (window.innerWidth > 1024) {
-                    closeMenu();
-                }
-            }, 100);
-        });
-        
-        // Обновление кнопок сравнения
-        updateCompareButtons();
-    });
-    
     // Функция обновления кнопок сравнения
     function updateCompareButtons() {
         const compareItems = JSON.parse(localStorage.getItem('compareItems')) || [];
-        
-        document.querySelectorAll('.btn-secondary[data-product-id]').forEach(button => {
+        compareButtons.forEach(button => {
             const productId = button.getAttribute('data-product-id');
-            const exists = compareItems.some(item => item.id == productId);
-            
-            if (exists) {
+            if (compareItems.some(item => item.id == productId)) {
                 button.textContent = '✓ В сравнении';
                 button.classList.add('btn-success');
                 button.classList.remove('btn-secondary');
             }
         });
     }
+    
+    updateCompareButtons();
+    
+    // 3. ВЫПАДАЮЩЕЕ МЕНЮ КАТАЛОГА НА МОБИЛКЕ
+    
+    const catalogLink = document.getElementById('catalogLink');
+    const catalogDropdown = document.getElementById('catalogDropdown');
+    
+    if (catalogLink && catalogDropdown && window.innerWidth <= 992) {
+        catalogLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.classList.toggle('active');
+            catalogDropdown.classList.toggle('active');
+        });
+        
+        // Закрытие при клике вне меню
+        document.addEventListener('click', function(e) {
+            if (!catalogLink.contains(e.target) && !catalogDropdown.contains(e.target)) {
+                catalogLink.classList.remove('active');
+                catalogDropdown.classList.remove('active');
+            }
+        });
+    }
+    
+    // 4. ПОИСК ПО ТОВАРАМ
+    
+    const searchBtn = document.getElementById('searchBtn');
+    const searchInput = document.getElementById('searchInput');
+    
+    if (searchBtn && searchInput) {
+        function performSearch() {
+            const searchTerm = searchInput.value.trim();
+            if (searchTerm) {
+                window.location.href = `catalog.php?search=${encodeURIComponent(searchTerm)}`;
+            }
+        }
+        
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    }
+    
+    // 5. ФУНКЦИЯ УВЕДОМЛЕНИЙ
+    
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = message;
+        
+        // Стили для уведомления
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+            max-width: 300px;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+    
+    // 6. БУРГЕР МЕНЮ (если есть)
+    const burgerBtn = document.getElementById('burgerBtn');
+    const navOverlay = document.getElementById('navOverlay');
+    const mainNav = document.getElementById('mainNav');
+    
+    if (burgerBtn && mainNav) {
+        burgerBtn.addEventListener('click', function() {
+            this.classList.toggle('active');
+            mainNav.classList.toggle('active');
+            if (navOverlay) navOverlay.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+            
+            // Обновляем aria атрибуты
+            const isExpanded = this.classList.contains('active');
+            this.setAttribute('aria-expanded', isExpanded);
+        });
+        
+        if (navOverlay) {
+            navOverlay.addEventListener('click', function() {
+                burgerBtn.classList.remove('active');
+                mainNav.classList.remove('active');
+                this.classList.remove('active');
+                document.body.classList.remove('menu-open');
+                burgerBtn.setAttribute('aria-expanded', 'false');
+            });
+        }
+    }
+    
+    // 7. ОБРАБОТЧИК ИЗМЕНЕНИЯ РАЗМЕРА ОКНА
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            console.log('Размер окна изменен:', window.innerWidth, 'px');
+            
 
-    // Bitrix24 виджет
-    (function(w,d,u){
-        var s=d.createElement('script');s.async=true;s.src=u+'?'+(Date.now()/60000|0);
-        var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);
-    })(window,document,'https://cdn-ru.bitrix24.by/b15313854/crm/site_button/loader_6_ykawzi.js');
+        }, 250);
+    });
+});
+
+// 8. BITRIX24 ВИДЖЕТ (не трогаем)
+(function(w,d,u){
+    var s=d.createElement('script');s.async=true;s.src=u+'?'+(Date.now()/60000|0);
+    var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);
+})(window,document,'https://cdn-ru.bitrix24.by/b15313854/crm/site_button/loader_6_ykawzi.js');
+
 </script>
+
 
 </body>
 </html>

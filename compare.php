@@ -104,6 +104,7 @@ if (!empty($compare_ids)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сравнение товаров | 7 company</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js" defer></script>
     <style>
         .compare-page {
             max-width: 1400px;
@@ -380,26 +381,63 @@ if (!empty($compare_ids)) {
 <body>
 
     <header class="header">
-        <div class="container">
-            <div class="header__inner">
-                <a href="index.php" class="logo">
-                    <div class="logo__img">
-                        <img src="logo.jpg" alt="7company" width="40" height="40">
-                    </div>
-                    <span class="logo__text">7 company</span>
-                </a>
+    <div class="container">
+        <div class="header__inner">
 
-                <nav class="nav">
-                    <ul class="nav__list">
-                        <li><a href="index.php" class="nav__link">Главная</a></li>
-                        <li><a href="catalog.php" class="nav__link">Каталог</a></li>
-                        <li><a href="contacts.php" class="nav__link">Контакты</a></li>
-                        <li><a href="compare.php" class="nav__link nav__link--active">Сравнение</a></li>
-                        <li><a href="contacts.php" class="btn btn-primary">Заказать</a></li>
-                    </ul>
-                </nav>
-            </div>
+            <button class="burger-btn" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false" aria-controls="mainNav">
+                <span class="burger-btn__line"></span>
+                <span class="burger-btn__line"></span>
+                <span class="burger-btn__line"></span>
+            </button>
+
+
+            <a href="index.php" class="logo">
+                <div class="logo__img">
+                    <img src="logo.jpg" alt="7company" width="40" height="40" loading="lazy">
+                </div>
+                <span class="logo__text">7 company</span>
+            </a>
+
+   
+
+
+            <div class="nav-overlay" id="navOverlay"></div>
+
+
+            <nav class="nav" id="mainNav" aria-label="Основная навигация">
+                <ul class="nav__list">
+                    <li class="nav__item">
+                        <a href="index.php" class="nav__link nav__link--active">Главная</a>
+                    </li>
+                    <li class="nav__item has-dropdown">
+                        <a href="catalog.php" class="catalog-link" id="catalogLink">
+                            Каталог
+                        </a>
+                        <ul class="dropdown-menu" id="catalogDropdown">
+                            <li><a href="catalog.php?category=all">Все модели</a></li>
+                            <li><a href="catalog.php?category=DIA">DIA</a></li>
+                            <li><a href="catalog.php?category=D07">D07</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav__item">
+                        <a href="contacts.php" class="nav__link">Контакты</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="compare.php" class="nav__link">Сравнение</a>
+                    </li>
+                    <li class="nav__item nav__item--search">
+                        <div class="sidebar-search">
+                            <div class="search-box">
+                                <input type="text" id="searchInput" placeholder="Поиск по названию...">
+                                <button id="searchBtn" type="button">🔍</button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+                     <a href="contacts.php" class="btn btn-primary header__order-btn">Заказать</a>
         </div>
+    </div>
     </header>
 
     <main class="main">
@@ -407,7 +445,7 @@ if (!empty($compare_ids)) {
             <div class="compare-header">
                 <h1>Сравнение товаров</h1>
                 <p>Сравните характеристики выбранных медикаторов</p>
-                <a href="srav.html"class="nav__link">Общая Сравнительная Таблица</a>
+                <a href="srav.html"class="btn btn-primary header__order-btn">Общая Сравнительная Таблица</a>
             </div>
             
             <?php if (empty($compare_items)): ?>
@@ -562,6 +600,7 @@ if (!empty($compare_ids)) {
     </footer>
 
     <script>
+        
         document.addEventListener('DOMContentLoaded', function() {
             const compareItems = JSON.parse(localStorage.getItem('compareItems')) || [];
             const urlParams = new URLSearchParams(window.location.search);
