@@ -1,10 +1,12 @@
 <?php
+// Включаем отладку
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 $host = 'localhost';
-$user = 'dosatronon_dosatronon';
-$pass = 'dosatronon_dosatronon';
-$db_name = 'dosatronon_catalog';
-
-
+$user = 'a7comby_dosatron_user';
+$pass = 'dosatron_user';
+$db_name = 'a7comby_dosatron';
 
 $mysqli = new mysqli($host, $user, $pass, $db_name);
 if ($mysqli->connect_error) {
@@ -83,17 +85,37 @@ if (!empty($compare_ids)) {
     $sql = "SELECT * FROM medicator WHERE id IN ($placeholders)";
     
     $stmt = $mysqli->prepare($sql);
-    $types = str_repeat('i', count($compare_ids));
-    $stmt->bind_param($types, ...$compare_ids);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    while ($row = $result->fetch_assoc()) {
-        $row['img_found'] = findFile($row['img'] ?? '');
-        $compare_items[] = $row;
+    if ($stmt) {
+        $types = str_repeat('i', count($compare_ids));
+        $stmt->bind_param($types, ...$compare_ids);
+        $stmt->execute();
+        
+        // Вместо get_result() используем bind_result()
+        $stmt->store_result();
+        
+        // Получаем информацию о колонках
+        $meta = $stmt->result_metadata();
+        $fields = array();
+        $fieldReferences = array();
+        
+        while ($field = $meta->fetch_field()) {
+            $fields[$field->name] = null;
+            $fieldReferences[] = &$fields[$field->name];
+        }
+        
+        call_user_func_array(array($stmt, 'bind_result'), $fieldReferences);
+        
+        while ($stmt->fetch()) {
+            $row = array();
+            foreach ($fields as $key => $value) {
+                $row[$key] = $value;
+            }
+            $row['img_found'] = findFile($row['img'] ?? '');
+            $compare_items[] = $row;
+        }
+        
+        $stmt->close();
     }
-    
-    $stmt->close();
 }
 ?>
 
@@ -103,8 +125,8 @@ if (!empty($compare_ids)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сравнение товаров | 7 company</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/script.js" defer></script>
+    <link rel="stylesheet" href="cs/style.css">
+    <script src="j/script.js" defer></script>
     <style>
         .compare-page {
             max-width: 1400px;

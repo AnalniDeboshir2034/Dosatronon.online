@@ -1,14 +1,29 @@
 <?php
+// Включаем отображение всех ошибок
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+echo "<!-- Начало выполнения PHP -->";
+
+// Проверяем соединение с базой данных
 $host = 'localhost';
-$user = 'dosatronon_dosatronon';
-$pass = 'dosatronon_dosatronon';
-$db_name = 'dosatronon_catalog';
+$user = 'a7comby_dosatron_user';
+$pass = 'dosatron_user';
+$db_name = 'a7comby_dosatron';
 
+echo "<!-- Подключаемся к базе данных -->";
 
-$mysqli = new mysqli($host, $user, $pass, $db_name);
-if ($mysqli->connect_error) die("Ошибка подключения: " . $mysqli->connect_error);
+// Подключение к базе данных
+$mysqli = @new mysqli($host, $user, $pass, $db_name);
+
+if ($mysqli->connect_error) {
+    die("Ошибка подключения к базе данных: " . $mysqli->connect_error);
+}
+
 $mysqli->set_charset("utf8mb4");
+echo "<!-- Подключение успешно -->";
 
+// Функция поиска файла
 function findFile($dbPath) {
     if (empty($dbPath) || $dbPath == '-' || $dbPath == 'NULL') {
         return null;
@@ -41,39 +56,61 @@ function findFile($dbPath) {
     return null;
 }
 
-$selected_filter = $_GET['filter'] ?? 'all';
-$where_conditions = [];
-$params = [];
-$types = '';
+echo "<!-- Получаем параметр фильтра -->";
+$selected_filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
 
+// Подготовка SQL запроса
 if ($selected_filter != 'all' && !empty($selected_filter)) {
-    $where_conditions[] = "filtr LIKE ?";
-    $params[] = "%$selected_filter%";
-    $types .= "s";
-}
-
-$sql = "SELECT * FROM medicator";
-if (!empty($where_conditions)) {
-    $sql .= " WHERE " . implode(" AND ", $where_conditions);
-}
-$sql .= " ORDER BY name ASC";
-
-$stmt = $mysqli->prepare($sql);
-if (!empty($params)) {
-    $stmt->bind_param($types, ...$params);
-}
-$stmt->execute();
-$result = $stmt->get_result();
-
-$products = [];
-if ($result) {
-    while ($row = $result->fetch_assoc()) {
-        $row['img_found'] = findFile($row['img'] ?? '');
-        $products[] = $row;
+    $sql = "SELECT * FROM medicator WHERE filtr LIKE ? ORDER BY name ASC";
+    $stmt = $mysqli->prepare($sql);
+    if ($stmt) {
+        $search_param = "%" . $selected_filter . "%";
+        $stmt->bind_param("s", $search_param);
+        $stmt->execute();
+        $stmt->store_result();
+        
+        // Получаем колонки
+        $meta = $stmt->result_metadata();
+        $fields = [];
+        $fieldReferences = [];
+        
+        while ($field = $meta->fetch_field()) {
+            $fields[$field->name] = null;
+            $fieldReferences[] = &$fields[$field->name];
+        }
+        
+        call_user_func_array([$stmt, 'bind_result'], $fieldReferences);
+        
+        $products = [];
+        while ($stmt->fetch()) {
+            $row = [];
+            foreach ($fields as $key => $value) {
+                $row[$key] = $value;
+            }
+            $row['img_found'] = findFile($row['img'] ?? '');
+            $products[] = $row;
+        }
+        
+        $stmt->close();
+    } else {
+        echo "<!-- Ошибка подготовки запроса: " . $mysqli->error . " -->";
+        $products = [];
+    }
+} else {
+    $sql = "SELECT * FROM medicator ORDER BY name ASC";
+    $result = $mysqli->query($sql);
+    
+    $products = [];
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $row['img_found'] = findFile($row['img'] ?? '');
+            $products[] = $row;
+        }
+        $result->free();
     }
 }
 
-$stmt->close();
+echo "<!-- Получено товаров: " . count($products) . " -->";
 
 $available_filters = [
     'DIA' => 'DIA Серия',
@@ -96,8 +133,8 @@ $final_filters = array_merge(['all' => 'Все товары'], $available_filter
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Каталог медикаторов | 7 company</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/script.js" defer></script>
+    <link rel="stylesheet" href="cs/style.css">
+    <script src="j/script.js" defer></script>
     <style>
         .catalog-header {
             background: linear-gradient(135deg, hsl(220 40% 5%), hsl(200 70% 10%));

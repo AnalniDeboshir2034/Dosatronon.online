@@ -77,8 +77,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Контакты | 7 company</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/script.js" defer></script>
+    <link rel="stylesheet" href="cs/style.css">
+    <script src="j/script.js" defer></script>
     <style>
         /* ОБЩИЕ СТИЛИ СТРАНИЦЫ КОНТАКТОВ */
         .page-contacts {

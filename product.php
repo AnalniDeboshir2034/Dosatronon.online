@@ -1,87 +1,109 @@
 <?php
+// Включаем отладку
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // ============================================
 // ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ
 // ============================================
 $host = 'localhost';
-$user = 'dosatronon_dosatronon';
-$pass = 'dosatronon_dosatronon';
-$db_name = 'dosatronon_catalog';
+$user = 'a7comby_dosatron_user';
+$pass = 'dosatron_user';
+$db_name = 'a7comby_dosatron';
 
 // Подключаемся к MySQL
 $mysqli = new mysqli($host, $user, $pass, $db_name);
 
 // Проверяем подключение
 if ($mysqli->connect_error) {
-    die("Ошибка подключения к базе данных");
+    die("Ошибка подключения к базе данных: " . $mysqli->connect_error);
 }
 
 // Устанавливаем кодировку
 $mysqli->set_charset("utf8mb4");
 
 // ============================================
+// ФУНКЦИЯ ДЛЯ ПОИСКА ФАЙЛОВ
+// ============================================
+function findFile($dbPath) {
+    if (empty($dbPath) || $dbPath == '-' || $dbPath == 'NULL') {
+        return null;
+    }
+    
+    // Берем только имя файла
+    $fileName = basename($dbPath);
+    
+    // Папки для поиска
+    $searchFolders = [
+        '',                      // Корень проекта
+        'images/',              // Папка images
+        'img/',                 // Папка img
+        'products/',            // Папка products
+        'uploads/',             // Папка uploads
+        'diagrams/',            // Папка diagrams
+        'pdfs/',                // Папка pdfs
+        'images/products/',     // Вложенная images/products
+        'img/products/',        // Вложенная img/products
+    ];
+    
+    // Проверяем все варианты
+    foreach ($searchFolders as $folder) {
+        $fullPath = $folder . $fileName;
+        $fullPath = str_replace('\\', '/', $fullPath);
+        $fullPath = preg_replace('#/+#', '/', $fullPath);
+        
+        if (file_exists($fullPath) && is_file($fullPath)) {
+            return $fullPath;
+        }
+    }
+    
+    return null;
+}
+
+// ============================================
 // ПОЛУЧАЕМ ID ТОВАРА ИЗ URL
 // ============================================
 $product_id = isset($_GET['id']) ? intval($_GET['id']) : 1;
+$product = null;
 
 // Запрос к базе данных
 $sql = "SELECT * FROM medicator WHERE id = ?";
 $stmt = $mysqli->prepare($sql);
-$stmt->bind_param("i", $product_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-// Если товар не найден
-if ($result->num_rows === 0) {
-    $product = null;
-} else {
-    $product = $result->fetch_assoc();
+if ($stmt) {
+    $stmt->bind_param("i", $product_id);
+    $stmt->execute();
     
-    // ============================================
-    // ФУНКЦИЯ ДЛЯ ПОИСКА ФАЙЛОВ
-    // ============================================
-    function findFile($dbPath) {
-        if (empty($dbPath) || $dbPath == '-' || $dbPath == 'NULL') {
-            return null;
+    // Вместо get_result() используем bind_result()
+    $stmt->store_result();
+    
+    if ($stmt->num_rows > 0) {
+        // Получаем информацию о колонках
+        $meta = $stmt->result_metadata();
+        $fields = array();
+        $fieldReferences = array();
+        
+        while ($field = $meta->fetch_field()) {
+            $fields[$field->name] = null;
+            $fieldReferences[] = &$fields[$field->name];
         }
         
-        // Берем только имя файла
-        $fileName = basename($dbPath);
+        call_user_func_array(array($stmt, 'bind_result'), $fieldReferences);
         
-        // Папки для поиска
-        $searchFolders = [
-            '',                      // Корень проекта
-            'images/',              // Папка images
-            'img/',                 // Папка img
-            'products/',            // Папка products
-            'uploads/',             // Папка uploads
-            'diagrams/',            // Папка diagrams
-            'pdfs/',                // Папка pdfs
-            'images/products/',     // Вложенная images/products
-            'img/products/',        // Вложенная img/products
-        ];
-        
-        // Проверяем все варианты
-        foreach ($searchFolders as $folder) {
-            $fullPath = $folder . $fileName;
-            $fullPath = str_replace('\\', '/', $fullPath);
-            $fullPath = preg_replace('#/+#', '/', $fullPath);
-            
-            if (file_exists($fullPath) && is_file($fullPath)) {
-                return $fullPath;
+        if ($stmt->fetch()) {
+            $product = array();
+            foreach ($fields as $key => $value) {
+                $product[$key] = $value;
             }
+            
+            // Ищем файлы
+            $product['img_found'] = findFile($product['img'] ?? '');
+            $product['diag_found'] = findFile($product['diag'] ?? '');
+            $product['pdf_found'] = findFile($product['pdf'] ?? '');
         }
-        
-        return null;
     }
     
-    // Ищем файлы
-    $product['img_found'] = findFile($product['img'] ?? '');
-    $product['diag_found'] = findFile($product['diag'] ?? '');
-    $product['pdf_found'] = findFile($product['pdf'] ?? '');
+    $stmt->close();
 }
-
-// Закрываем запрос
-$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -90,10 +112,11 @@ $stmt->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $product ? htmlspecialchars($product['name']) . ' | 7 company' : 'Товар не найден | 7 company'; ?></title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="cs/style.css">
+    <script src="j/script.js" defer></script>
     <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
     <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js" defer></script>
-    <script src="js/script.js" defer></script>
+
     <style>
         /* Стили для страницы товара */
         .product-page {
@@ -440,11 +463,7 @@ $stmt->close();
                 <span class="logo__text">7 company</span>
             </a>
 
-   
-
-
             <div class="nav-overlay" id="navOverlay"></div>
-
 
             <nav class="nav" id="mainNav" aria-label="Основная навигация">
                 <ul class="nav__list">
@@ -679,13 +698,32 @@ $stmt->close();
                         // Получаем похожие товары
                         $similar_sql = "SELECT * FROM medicator WHERE id != ? LIMIT 4";
                         $similar_stmt = $mysqli->prepare($similar_sql);
-                        $similar_stmt->bind_param("i", $product_id);
-                        $similar_stmt->execute();
-                        $similar_result = $similar_stmt->get_result();
                         
-                        while ($similar = $similar_result->fetch_assoc()):
-                            // Ищем изображение для похожего товара
-                            $similarImg = findFile($similar['img'] ?? '');
+                        if ($similar_stmt) {
+                            $similar_stmt->bind_param("i", $product_id);
+                            $similar_stmt->execute();
+                            $similar_stmt->store_result();
+                            
+                            // Получаем информацию о колонках
+                            $meta = $similar_stmt->result_metadata();
+                            $fields = array();
+                            $fieldReferences = array();
+                            
+                            while ($field = $meta->fetch_field()) {
+                                $fields[$field->name] = null;
+                                $fieldReferences[] = &$fields[$field->name];
+                            }
+                            
+                            call_user_func_array(array($similar_stmt, 'bind_result'), $fieldReferences);
+                            
+                            while ($similar_stmt->fetch()) {
+                                $similar = array();
+                                foreach ($fields as $key => $value) {
+                                    $similar[$key] = $value;
+                                }
+                                
+                                // Ищем изображение для похожего товара
+                                $similarImg = findFile($similar['img'] ?? '');
                         ?>
                         <div class="similar-card">
                             <div class="similar-image">
@@ -706,7 +744,7 @@ $stmt->close();
                                     </a>
                                 </h3>
                                 <p style="color: var(--muted-foreground); font-size: 0.9rem; margin-bottom: 15px;">
-                                    <?php echo htmlspecialchars($similar['d_dosing']); ?>
+                                    <?php echo htmlspecialchars($similar['d_dosing'] ?? ''); ?>
                                 </p>
                                 <div style="display: flex; gap: 10px;">
                                     <a href="product.php?id=<?php echo $similar['id']; ?>" 
@@ -716,6 +754,7 @@ $stmt->close();
                                     </a>
                                     <button class="btn btn-secondary" 
                                             data-product-id="<?php echo $similar['id']; ?>"
+                                            data-product-name="<?php echo htmlspecialchars($similar['name']); ?>"
                                             style="flex: 1;">
                                         В сравнение
                                     </button>
@@ -723,8 +762,9 @@ $stmt->close();
                             </div>
                         </div>
                         <?php 
-                        endwhile; 
-                        $similar_stmt->close();
+                            }
+                            $similar_stmt->close();
+                        }
                         ?>
                     </div>
                 </div>
@@ -775,13 +815,15 @@ $stmt->close();
         document.querySelectorAll('[data-product-id]').forEach(button => {
             button.addEventListener('click', function() {
                 const productId = this.getAttribute('data-product-id');
-                const productCard = this.closest('.similar-card');
-                let productName = '';
+                const productName = this.getAttribute('data-product-name');
                 
-                if (productCard) {
-                    const titleElement = productCard.querySelector('h3');
-                    if (titleElement) {
-                        productName = titleElement.textContent.trim();
+                if (!productName) {
+                    const productCard = this.closest('.similar-card');
+                    if (productCard) {
+                        const titleElement = productCard.querySelector('h3');
+                        if (titleElement) {
+                            productName = titleElement.textContent.trim();
+                        }
                     }
                 }
                 
@@ -817,7 +859,7 @@ $stmt->close();
         
         // Для кнопки сравнения на странице товара
         const compareBtn = document.querySelector('.btn-compare');
-        if (compareBtn && !compareBtn.closest('.similar-card')) {
+        if (compareBtn) {
             compareBtn.addEventListener('click', function() {
                 const productId = this.getAttribute('data-product-id');
                 const productName = document.querySelector('.product-title').textContent.trim();

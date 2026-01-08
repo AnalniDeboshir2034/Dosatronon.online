@@ -1,8 +1,9 @@
 <?php
+// Упрощаем подключение - убираем сложную логику
 $host = 'localhost';
-$user = 'dosatronon_dosatronon';
-$pass = 'dosatronon_dosatronon';
-$db_name = 'dosatronon_catalog';
+$user = 'a7comby_dosatron_user';
+$pass = 'dosatron_user';
+$db_name = 'a7comby_dosatron';
 
 $mysqli = new mysqli($host, $user, $pass, $db_name);
 
@@ -54,6 +55,30 @@ if ($result) {
         $products[] = $row;
     }
 }
+
+// Функция поиска файла (упрощенная)
+function findFileSimple($img) {
+    if (empty($img) || $img == '-' || $img == 'NULL') {
+        return null;
+    }
+    
+    $fileName = basename($img);
+    $paths = [
+        'images/' . $fileName,
+        'img/' . $fileName,
+        'products/' . $fileName,
+        'uploads/' . $fileName,
+        $fileName
+    ];
+    
+    foreach ($paths as $path) {
+        if (file_exists($path)) {
+            return $path;
+        }
+    }
+    
+    return null;
+}
 ?>
 
 <!DOCTYPE html>
@@ -62,10 +87,10 @@ if ($result) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>7 company - Каталог медикаторов</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="cs/style.css">
+    <script src="j/script.js" defer></script>
     <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
 
-    <script src="js/script.js" defer></script>
 
 </head>
 <body>
