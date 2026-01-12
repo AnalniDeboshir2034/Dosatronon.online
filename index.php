@@ -974,25 +974,25 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 3. ВЫПАДАЮЩЕЕ МЕНЮ КАТАЛОГА НА МОБИЛКЕ
     
-    const catalogLink = document.getElementById('catalogLink');
-    const catalogDropdown = document.getElementById('catalogDropdown');
+    // const catalogLink = document.getElementById('catalogLink');
+    // const catalogDropdown = document.getElementById('catalogDropdown');
     
-    if (catalogLink && catalogDropdown && window.innerWidth <= 992) {
-        catalogLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            this.classList.toggle('active');
-            catalogDropdown.classList.toggle('active');
-        });
+    // if (catalogLink && catalogDropdown && window.innerWidth <= 992) {
+    //     catalogLink.addEventListener('click', function(e) {
+    //         e.preventDefault();
+    //         e.stopPropagation();
+    //         this.classList.toggle('active');
+    //         catalogDropdown.classList.toggle('active');
+    //     });
         
-        // Закрытие при клике вне меню
-        document.addEventListener('click', function(e) {
-            if (!catalogLink.contains(e.target) && !catalogDropdown.contains(e.target)) {
-                catalogLink.classList.remove('active');
-                catalogDropdown.classList.remove('active');
-            }
-        });
-    }
+    //     // Закрытие при клике вне меню
+    //     document.addEventListener('click', function(e) {
+    //         if (!catalogLink.contains(e.target) && !catalogDropdown.contains(e.target)) {
+    //             catalogLink.classList.remove('active');
+    //             catalogDropdown.classList.remove('active');
+    //         }
+    //     });
+    // }
     
     // 4. ПОИСК ПО ТОВАРАМ
     
