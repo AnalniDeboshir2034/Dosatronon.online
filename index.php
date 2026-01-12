@@ -271,7 +271,7 @@ function findFileSimple($img) {
     color: var(--primary);
 }
 
-/* Кнопка "Подробнее" - точь-в-точь как в каталоге */
+
 .product-card__actions .btn-primary {
     background: var(--primary);
     color: var(--primary-foreground);
@@ -795,7 +795,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 1. ИНИЦИАЛИЗАЦИЯ СЛАЙДЕРОВ
     
-    // Мобильный свайпер товаров (только на мобиле)
+
     if (document.querySelector('.products-swiper')) {
         console.log('Проверяем устройства...');
         console.log('Ширина экрана:', window.innerWidth, 'px');
@@ -1050,32 +1050,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // 6. БУРГЕР МЕНЮ (если есть)
-    const burgerBtn = document.getElementById('burgerBtn');
-    const navOverlay = document.getElementById('navOverlay');
-    const mainNav = document.getElementById('mainNav');
+    // const burgerBtn = document.getElementById('burgerBtn');
+    // const navOverlay = document.getElementById('navOverlay');
+    // const mainNav = document.getElementById('mainNav');
     
-    if (burgerBtn && mainNav) {
-        burgerBtn.addEventListener('click', function() {
-            this.classList.toggle('active');
-            mainNav.classList.toggle('active');
-            if (navOverlay) navOverlay.classList.toggle('active');
-            document.body.classList.toggle('menu-open');
+    // if (burgerBtn && mainNav) {
+    //     burgerBtn.addEventListener('click', function() {
+    //         this.classList.toggle('active');
+    //         mainNav.classList.toggle('active');
+    //         if (navOverlay) navOverlay.classList.toggle('active');
+    //         document.body.classList.toggle('menu-open');
             
-            // Обновляем aria атрибуты
-            const isExpanded = this.classList.contains('active');
-            this.setAttribute('aria-expanded', isExpanded);
-        });
+    //         // Обновляем aria атрибуты
+    //         const isExpanded = this.classList.contains('active');
+    //         this.setAttribute('aria-expanded', isExpanded);
+    //     });
         
-        if (navOverlay) {
-            navOverlay.addEventListener('click', function() {
-                burgerBtn.classList.remove('active');
-                mainNav.classList.remove('active');
-                this.classList.remove('active');
-                document.body.classList.remove('menu-open');
-                burgerBtn.setAttribute('aria-expanded', 'false');
-            });
-        }
-    }
+    //     if (navOverlay) {
+    //         navOverlay.addEventListener('click', function() {
+    //             burgerBtn.classList.remove('active');
+    //             mainNav.classList.remove('active');
+    //             this.classList.remove('active');
+    //             document.body.classList.remove('menu-open');
+    //             burgerBtn.setAttribute('aria-expanded', 'false');
+    //         });
+    //     }
+    // }
     
     // 7. ОБРАБОТЧИК ИЗМЕНЕНИЯ РАЗМЕРА ОКНА
     let resizeTimer;

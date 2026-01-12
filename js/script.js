@@ -259,41 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 btnText.textContent = originalText;
             }, 2000);
         });
-        
-        // Маска для телефона
-        // const phoneInput = document.getElementById('phoneSplit');
-        // if (phoneInput) {
-        //     phoneInput.addEventListener('input', function(e) {
-        //         let value = e.target.value.replace(/\D/g, '');
-        //         let formattedValue = '';
-                
-        //         if (value.length > 0) {
-        //             formattedValue = '+375 (';
-        //             if (value.length > 2) {
-        //                 formattedValue += value.substring(0, 2) + ') ';
-        //                 if (value.length > 4) {
-        //                     formattedValue += value.substring(2, 4) + '-';
-        //                     if (value.length > 6) {
-        //                         formattedValue += value.substring(4, 6) + '-';
-        //                         if (value.length > 8) {
-        //                             formattedValue += value.substring(6, 8);
-        //                         } else {
-        //                             formattedValue += value.substring(6);
-        //                         }
-        //                     } else {
-        //                         formattedValue += value.substring(4);
-        //                     }
-        //                 } else {
-        //                     formattedValue += value.substring(2);
-        //                 }
-        //             } else {
-        //                 formattedValue += value;
-        //             }
-        //         }
-                
-        //         e.target.value = formattedValue;
-        //     });
-        // }
+
     }
     
     function showError(message) {
@@ -367,3 +333,31 @@ successStyles.textContent = `
     }
 `;
 document.head.appendChild(successStyles);
+
+document.addEventListener('click', function(e) {
+
+    if (window.innerWidth > 992) return;
+    
+    const burgerBtn = document.getElementById('burgerBtn');
+    const mainNav = document.getElementById('mainNav');
+    const navOverlay = document.getElementById('navOverlay');
+    
+
+    if (!burgerBtn || !burgerBtn.classList.contains('active')) return;
+    
+
+    const clicked = e.target;
+
+    if (!burgerBtn.contains(clicked) && !mainNav.contains(clicked) && 
+        (!navOverlay || !navOverlay.contains(clicked))) {
+        
+
+        burgerBtn.classList.remove('active');
+        mainNav.classList.remove('active');
+        if (navOverlay) navOverlay.classList.remove('active');
+        document.body.classList.remove('menu-open');
+
+        burgerBtn.setAttribute('aria-expanded', 'false');
+        if (mainNav) mainNav.setAttribute('aria-hidden', 'true');
+    }
+});
