@@ -598,7 +598,7 @@ $final_filters = array_merge(['all' => 'Все товары'], $available_filter
                     </li>
                 </ul>
             </nav>
-                     <a href="contacts.php" class="btn btn-primary header__order-btn">Заказать</a>
+                     <a href="contacts.php#contactFormSplit" class="btn btn-primary header__order-btn">Заказать</a>
         </div>
     </div>
 
@@ -735,7 +735,7 @@ $final_filters = array_merge(['all' => 'Все товары'], $available_filter
         </div>
     </main>
 
-     <footer class="footer">
+         <footer class="footer">
         <div class="container">
             <div class="footer__content">
                 <div class="footer__col">
@@ -745,7 +745,8 @@ $final_filters = array_merge(['all' => 'Все товары'], $available_filter
                 <div class="footer__col">
                     <h3 class="footer__title">Контакты</h3>
                     <ul class="footer__list">
-                        <li>📞 +375 (29) 605-22-73</li>
+                        <li>📞 +375 33 680 07 07
+                        <br>   +375 29 883 00 07</li>
                         <li>✉️ info@7company.by</li>
                         <li>📍 г. Минск, ул. Толбухина д.2</li>
                     </ul>
@@ -772,7 +773,6 @@ $final_filters = array_merge(['all' => 'Все товары'], $available_filter
             </div>
         </div>
     </footer>
-
 
     <script>
         document.getElementById('searchBtn').addEventListener('click', function() {

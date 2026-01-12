@@ -1,48 +1,90 @@
 <?php
 session_start();
-require_once 'config.php';
+require_once 'includes/config.php';
 
 if (!isset($_SESSION['admin_logged_in'])) {
     header('Location: login.php');
     exit();
 }
 
+// Функция для сохранения файлов на сервер
+function saveFile($file) {
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        return null;
+    }
+    
+    $uploadDir = 'uploads/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+    
+    $originalName = basename($file['name']);
+    $safeName = uniqid() . '_' . preg_replace('/[^a-zA-Z0-9\._-]/', '_', $originalName);
+    $destination = $uploadDir . $safeName;
+    
+    if (move_uploaded_file($file['tmp_name'], $destination)) {
+        return $safeName;
+    }
+    
+    return null;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        $name = $_POST['name'];
-        $d_dosing = $_POST['d_dosing'];
-        $performance = $_POST['performance'];
-        $pressure_temperature_connections = $_POST['pressure_temperature_connections'];
-        $m_seal = $_POST['m_seal'];
-        $m_case = $_POST['m_case'];
+        // Получаем данные из формы
+        $name = $mysqli->real_escape_string($_POST['name']);
+        $d_dosing = $mysqli->real_escape_string($_POST['d_dosing']);
+        $performance = $mysqli->real_escape_string($_POST['performance']);
+        $pressure = $mysqli->real_escape_string($_POST['pressure']);
+        $temperature = $mysqli->real_escape_string($_POST['temperature']);
+        $connections = $mysqli->real_escape_string($_POST['connections']);
+        $m_seal = $mysqli->real_escape_string($_POST['m_seal']);
+        $m_case = $mysqli->real_escape_string($_POST['m_case']);
+        $dop = $mysqli->real_escape_string($_POST['dop']);
+        $opis = $mysqli->real_escape_string($_POST['opis']);
+        $filtr = $mysqli->real_escape_string($_POST['filtr']);
         
-
-        function saveFile($file) {
-            if ($file['error'] === UPLOAD_ERR_OK) {
-
-                return basename($file['name']);
-            }
-            return null;
+        // Обработка файлов
+        $img = null;
+        $diag = null;
+        $pdf = null;
+        
+        if (isset($_FILES['img']) && $_FILES['img']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $img = saveFile($_FILES['img']);
         }
         
-        $img = isset($_FILES['img']) ? saveFile($_FILES['img']) : null;
-        $diag = isset($_FILES['diag']) ? saveFile($_FILES['diag']) : null;
-        $pdf = isset($_FILES['pdf']) ? saveFile($_FILES['pdf']) : null;
-        $filtr = isset($_FILES['filtr']) ? saveFile($_FILES['filtr']) : null;
+        if (isset($_FILES['diag']) && $_FILES['diag']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $diag = saveFile($_FILES['diag']);
+        }
         
-        $stmt = $pdo->prepare("INSERT INTO medicator (name, d_dosing, performance, pressure_temperature_connections, m_seal, m_case, img, diag, pdf, filtr) 
-                               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        if (isset($_FILES['pdf']) && $_FILES['pdf']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $pdf = saveFile($_FILES['pdf']);
+        }
         
-        $stmt->execute([
-            $name, $d_dosing, $performance, $pressure_temperature_connections,
-            $m_seal, $m_case, $img, $diag, $pdf, $filtr
-        ]);
+        // Подготовленный запрос
+        $stmt = $mysqli->prepare("INSERT INTO medicator (name, d_dosing, performance, pressure, temperature, connections, m_seal, m_case, dop, img, diag, pdf, opis, filtr) 
+                                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         
-        $_SESSION['success'] = "Запись успешно добавлена!";
-        header('Location: admin.php');
-        exit();
+        if (!$stmt) {
+            throw new Exception($mysqli->error);
+        }
         
-    } catch(PDOException $e) {
+        $stmt->bind_param("ssssssssssssss", 
+            $name, $d_dosing, $performance, $pressure, $temperature,
+            $connections, $m_seal, $m_case, $dop, $img, $diag, $pdf, $opis, $filtr
+        );
+        
+        if ($stmt->execute()) {
+            $_SESSION['success'] = "Запись успешно добавлена!";
+            header('Location: adminpanel.php');
+            exit();
+        } else {
+            throw new Exception($stmt->error);
+        }
+        
+        $stmt->close();
+        
+    } catch(Exception $e) {
         $_SESSION['error'] = "Ошибка: " . $e->getMessage();
     }
 }
@@ -53,189 +95,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Добавить запись - medicator</title>
-    <style>
-        :root {
-            --bg-dark: #0d1117;
-            --bg-card: #161b22;
-            --bg-input: #0d1117;
-            --border: #30363d;
-            --primary: #58a6ff;
-            --text: #c9d1d9;
-            --text-muted: #8b949e;
-        }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-dark);
-            color: var(--text);
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .header h1 {
-            color: var(--text);
-            font-size: 1.5rem;
-        }
-        
-        .btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            background: var(--bg-card);
-            color: var(--text);
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-        
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-        
-        .btn-primary:hover {
-            background: #1f6feb;
-            color: white;
-        }
-        
-        .form-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 30px;
-        }
-        
-        .form-group {
-            margin-bottom: 24px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text);
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 10px 12px;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: var(--text);
-            font-size: 14px;
-        }
-        
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
-        }
-        
-        .file-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-        }
-        
-        .file-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .file-input-wrapper {
-            border: 2px dashed var(--border);
-            border-radius: 6px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            background: var(--bg-input);
-        }
-        
-        .file-input-wrapper:hover {
-            border-color: var(--primary);
-        }
-        
-        .file-input {
-            display: none;
-        }
-        
-        .file-icon {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: var(--text-muted);
-        }
-        
-        .file-label {
-            color: var(--text);
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 5px;
-        }
-        
-        .file-hint {
-            color: var(--text-muted);
-            font-size: 12px;
-        }
-        
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-        }
-        
-        .alert {
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            border: 1px solid;
-        }
-        
-        .alert-error {
-            background: rgba(248, 81, 73, 0.1);
-            border-color: #da3633;
-            color: #f85149;
-        }
-    </style>
+    <link rel="stylesheet" href="cs/admin.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>➕ Добавить новую запись</h1>
-            <a href="admin.php" class="btn">← Назад</a>
+            <a href="adminpanel.php" class="btn">← Назад</a>
         </div>
         
         <?php if (isset($_SESSION['error'])): ?>
@@ -261,50 +127,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             
             <div class="form-group">
-                <label for="pressure_temperature_connections">pressure_temperature_connections *</label>
-                <input type="text" id="pressure_temperature_connections" name="pressure_temperature_connections" 
-                       placeholder="5-40°C, Наружная резьба" required>
+                <label for="pressure">pressure *</label>
+                <input type="text" id="pressure" name="pressure" placeholder="0,3-6 бар" required>
             </div>
             
             <div class="form-group">
-                <label for="m_seal">m_seal</label>
-                <input type="text" id="m_seal" name="m_seal" placeholder="VITON для животных препаратов">
+                <label for="temperature">temperature *</label>
+                <input type="text" id="temperature" name="temperature" placeholder="5-40°C" required>
             </div>
             
             <div class="form-group">
-                <label for="m_case">m_case</label>
-                <input type="text" id="m_case" name="m_case" placeholder="Полипропилен">
+                <label for="connections">connections *</label>
+                <input type="text" id="connections" name="connections" placeholder="G¾\" наружная" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="m_seal">m_seal *</label>
+                <input type="text" id="m_seal" name="m_seal" placeholder="VITON – для кислот, масел, ветеринарных препаратов" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="m_case">m_case *</label>
+                <input type="text" id="m_case" name="m_case" placeholder="Полиацеталь" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="dop">dop *</label>
+                <input type="text" id="dop" name="dop" placeholder="-" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="opis">opis *</label>
+                <textarea id="opis" name="opis" rows="4" placeholder="Описание..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="filtr">filtr *</label>
+                <input type="text" id="filtr" name="filtr" placeholder="DIA" required>
             </div>
             
             <div class="file-section">
-                <h3 style="margin-bottom: 20px; color: var(--text);">Файлы</h3>
+                <h3 style="margin-bottom: 20px; color: var(--text);">Файлы *</h3>
                 <div class="file-grid">
                     <div class="file-input-wrapper" onclick="this.querySelector('input').click()">
-                        <div class="file-label">img</div>
+                        <div class="file-label">img *</div>
                         <div class="file-hint">Изображение</div>
-                        <input type="file" class="file-input" name="img" accept="image/*">
+                        <input type="file" class="file-input" name="img" accept="image/*" required>
                     </div>
                     
                     <div class="file-input-wrapper" onclick="this.querySelector('input').click()">
-                        <div class="file-label">diag</div>
+                        <div class="file-label">diag *</div>
                         <div class="file-hint">Диаграмма</div>
-                        <input type="file" class="file-input" name="diag" accept="image/*,.pdf">
+                        <input type="file" class="file-input" name="diag" accept="image/*" required>
                     </div>
                     
                     <div class="file-input-wrapper" onclick="this.querySelector('input').click()">
                         <div class="file-icon">📄</div>
-                        <div class="file-label">pdf</div>
+                        <div class="file-label">pdf *</div>
                         <div class="file-hint">PDF документ</div>
-                        <input type="file" class="file-input" name="pdf" accept=".pdf">
-                    </div>
-                    
-                    <div class="file-input-wrapper" onclick="this.querySelector('input').click()">
-                        <div class="file-icon">⚗️</div>
-                        <div class="file-label">filtr</div>
-                        <div class="file-hint">Фильтр</div>
-                        <input type="file" class="file-input" name="filtr" accept="image/*,.pdf">
+                        <input type="file" class="file-input" name="pdf" accept=".pdf" required>
                     </div>
                 </div>
+                <p style="color: var(--text-muted); font-size: 12px; margin-top: 10px;">* Все файлы обязательны для загрузки</p>
             </div>
             
             <div class="form-actions">

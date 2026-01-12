@@ -261,39 +261,39 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         // Маска для телефона
-        const phoneInput = document.getElementById('phoneSplit');
-        if (phoneInput) {
-            phoneInput.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                let formattedValue = '';
+        // const phoneInput = document.getElementById('phoneSplit');
+        // if (phoneInput) {
+        //     phoneInput.addEventListener('input', function(e) {
+        //         let value = e.target.value.replace(/\D/g, '');
+        //         let formattedValue = '';
                 
-                if (value.length > 0) {
-                    formattedValue = '+375 (';
-                    if (value.length > 2) {
-                        formattedValue += value.substring(0, 2) + ') ';
-                        if (value.length > 4) {
-                            formattedValue += value.substring(2, 4) + '-';
-                            if (value.length > 6) {
-                                formattedValue += value.substring(4, 6) + '-';
-                                if (value.length > 8) {
-                                    formattedValue += value.substring(6, 8);
-                                } else {
-                                    formattedValue += value.substring(6);
-                                }
-                            } else {
-                                formattedValue += value.substring(4);
-                            }
-                        } else {
-                            formattedValue += value.substring(2);
-                        }
-                    } else {
-                        formattedValue += value;
-                    }
-                }
+        //         if (value.length > 0) {
+        //             formattedValue = '+375 (';
+        //             if (value.length > 2) {
+        //                 formattedValue += value.substring(0, 2) + ') ';
+        //                 if (value.length > 4) {
+        //                     formattedValue += value.substring(2, 4) + '-';
+        //                     if (value.length > 6) {
+        //                         formattedValue += value.substring(4, 6) + '-';
+        //                         if (value.length > 8) {
+        //                             formattedValue += value.substring(6, 8);
+        //                         } else {
+        //                             formattedValue += value.substring(6);
+        //                         }
+        //                     } else {
+        //                         formattedValue += value.substring(4);
+        //                     }
+        //                 } else {
+        //                     formattedValue += value.substring(2);
+        //                 }
+        //             } else {
+        //                 formattedValue += value;
+        //             }
+        //         }
                 
-                e.target.value = formattedValue;
-            });
-        }
+        //         e.target.value = formattedValue;
+        //     });
+        // }
     }
     
     function showError(message) {

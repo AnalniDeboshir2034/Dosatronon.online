@@ -1,15 +1,24 @@
 <?php
-define('DB_HOST', 'localhost');
-define('DB_USER', 'a7comby_dosatron_user');     // XAMPP по умолчанию
-define('DB_PASS', 'dosatron_user');         // XAMPP по умолчанию пустой пароль
-define('DB_NAME', 'a7comby_dosatron');  // БД
+
+$host = 'localhost';
+$user = 'a7comby_dosatron_user';
+$pass = 'dosatron_user';
+$db_name = 'a7comby_dosatron';
 
 
-define('SITE_URL', 'http://dosatron.online');
-define('SITE_NAME', 'Каталог медикаторов');
+$mysqli = new mysqli($host, $user, $pass, $db_name);
 
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+if ($mysqli->connect_error) {
+    die("❌ Ошибка подключения к БД: " . $mysqli->connect_error . 
+        "<br>Проверь:<br>" .
+        "Хост: $host<br>" .
+        "БД: $db_name<br>" .
+        "Пользователь: $user");
+}
+
+
+$mysqli->set_charset("utf8mb4");
+
+$pdo = null;
 ?>
-

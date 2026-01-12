@@ -78,8 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Контакты | 7 company</title>
     <link rel="stylesheet" href="cs/style.css">
-    <script src="j/script.js" defer></script>
-    <style>
+    <script src="j/script.js?v=<?php echo filemtime('j/script.js'); ?>" defer></script>   
+     <style>
         /* ОБЩИЕ СТИЛИ СТРАНИЦЫ КОНТАКТОВ */
         .page-contacts {
             max-width: 1200px;
@@ -346,12 +346,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
             display: block;
         }
 
-        .form-required {
-            color: #ff6b6b;
-            font-size: 0.8rem;
-            margin-left: 5px;
-        }
-
         /* Inputs и textarea */
         .form-input-split,
         .form-textarea-split {
@@ -554,7 +548,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                                     <div class="contact-details">
                                         <h4>Телефоны</h4>
                                         <p>
-                                            <strong>Отдел продаж:</strong> +375 (29) 605-22-73<br>
+                                            <strong>Отдел продаж:</strong> +375 33 680 07 07<br>+375 29 883 00 07<br>
                                         </p>
                                     </div>
                                 </div>
@@ -563,8 +557,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                                     <div class="contact-icon">✉️</div>
                                     <div class="contact-details">
                                         <h4>Электронная почта</h4>
-                                        <p>
-                                            <strong>Общие вопросы:</strong> info@7company.by<br>
+                                        <p> info@7company.by<br>
                                         </p>
                                     </div>
                                 </div>
@@ -596,7 +589,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                         <div class="quick-contact">
                             <h3>Быстрая связь</h3>
                             <div class="quick-buttons">
-                                <a href="tel:+375296052273" class="quick-btn phone-btn">
+                                <a href="tel:+375 33 680 07 07" class="quick-btn phone-btn">
                                     <span class="quick-icon">📞</span>
                                     <span>Позвонить</span>
                                 </a>
@@ -620,7 +613,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                                     <div class="form-group-split">
                                         <label for="nameSplit" class="form-label-split">
                                             ФИО *
-                                            <span class="form-required">обязательно</span>
                                         </label>
                                         <input type="text" id="nameSplit" name="name" class="form-input-split" 
                                                placeholder="Иванов Иван Иванович" 
@@ -632,7 +624,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                                     <div class="form-group-split">
                                         <label for="emailSplit" class="form-label-split">
                                             Электронная почта *
-                                            <span class="form-required">обязательно</span>
+
                                         </label>
                                         <input type="email" id="emailSplit" name="email" class="form-input-split" 
                                                placeholder="example@mail.ru" 
@@ -646,7 +638,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                                     <div class="form-group-split">
                                         <label for="phoneSplit" class="form-label-split">
                                             Телефон *
-                                            <span class="form-required">обязательно</span>
                                         </label>
                                         <input type="tel" id="phoneSplit" name="phone" class="form-input-split" 
                                                placeholder="+375 (29) 123-45-67" 
@@ -704,7 +695,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
             </div>
         </section>
     </main>
-
     <footer class="footer">
         <div class="container">
             <div class="footer__content">
@@ -715,7 +705,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                 <div class="footer__col">
                     <h3 class="footer__title">Контакты</h3>
                     <ul class="footer__list">
-                        <li>📞 +375 (29) 605-22-73</li>
+                        <li>📞 +375 33 680 07 07
+                        <br>   +375 29 883 00 07</li>
                         <li>✉️ info@7company.by</li>
                         <li>📍 г. Минск, ул. Толбухина д.2</li>
                     </ul>
@@ -742,11 +733,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
             </div>
         </div>
     </footer>
-
-
     <script src="https://api-maps.yandex.ru/2.1/?apikey=ваш_ключ_яндекс_карт&lang=ru_RU" type="text/javascript"></script>
     
     <script>
+        setTimeout(() => {
+    const phoneInput = document.getElementById('phoneSplit');
+    console.log('=== PHONE INPUT DEBUG ===');
+    console.log('Input element:', phoneInput);
+    
+    if (phoneInput) {
+        // Проверяем обработчики событий
+        const events = ['input', 'keydown', 'keyup', 'change', 'blur'];
+        events.forEach(eventType => {
+            const handlers = getEventListeners ? getEventListeners(phoneInput)[eventType] : 'unknown';
+            console.log(`${eventType} handlers:`, handlers ? handlers.length : 0);
+        });
+        
+        // Мониторим изменения значения
+        let lastValue = phoneInput.value;
+        Object.defineProperty(phoneInput, 'value', {
+            get() {
+                return this._value || '';
+            },
+            set(newValue) {
+                console.log('VALUE SET CALLED:', newValue, 'old:', this._value);
+                console.trace('Stack trace:');
+                this._value = newValue;
+                // Обновляем атрибут
+                this.setAttribute('value', newValue);
+            }
+        });
+        
+        // Начинаем следить
+        phoneInput._value = lastValue;
+        
+        // Также следим через интервал
+        setInterval(() => {
+            const currentValue = phoneInput._value || phoneInput.value;
+            if (currentValue !== lastValue) {
+                console.log('INTERVAL DETECTED CHANGE:', lastValue, '->', currentValue);
+                lastValue = currentValue;
+            }
+        }, 100);
+    }
+}, 1000);
         document.addEventListener('DOMContentLoaded', function() {
             // ВАЛИДАЦИЯ ПОЛЕЙ С ПОДСВЕТКОЙ
             const nameInput = document.getElementById('nameSplit');
@@ -820,38 +850,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
             }
             
             // Функция валидации телефона
-            function validatePhone() {
-                const phone = phoneInput.value.trim();
-                const phoneHint = document.querySelector('.phone-hint');
-                const phoneDigits = phone.replace(/\D/g, '');
-                
-                // Простая проверка на количество цифр
-                if (phoneDigits.length >= 9) {
-                    phoneInput.classList.add('valid');
-                    phoneInput.classList.remove('invalid');
-                    if (phoneHint) {
-                        phoneHint.textContent = '✓ Номер введен корректно';
-                        phoneHint.classList.add('valid-hint');
-                    }
-                    return true;
-                } else {
-                    phoneInput.classList.remove('valid');
-                    if (phone.length > 0) {
-                        phoneInput.classList.add('invalid');
-                        if (phoneHint) {
-                            phoneHint.textContent = 'Номер должен содержать минимум 9 цифр';
-                            phoneHint.classList.remove('valid-hint');
-                        }
-                    } else {
-                        phoneInput.classList.remove('invalid');
-                        if (phoneHint) {
-                            phoneHint.textContent = 'Пример: +375 (29) 123-45-67';
-                            phoneHint.classList.remove('valid-hint');
-                        }
-                    }
-                    return false;
-                }
+            // Функция валидации телефона
+// Функция валидации телефона
+function validatePhone() {
+    const phone = phoneInput.value.trim();
+    const phoneHint = document.querySelector('.phone-hint');
+    const phoneDigits = phone.replace(/\D/g, '');
+    
+    // Простая проверка на количество цифр (от 9 до 15)
+    if (phoneDigits.length >= 9 && phoneDigits.length <= 15) {
+        phoneInput.classList.add('valid');
+        phoneInput.classList.remove('invalid');
+        if (phoneHint) {
+            phoneHint.textContent = '✓ Номер введен корректно';
+            phoneHint.classList.add('valid-hint');
+        }
+        return true;
+    } else {
+        phoneInput.classList.remove('valid');
+        if (phone.length > 0) {
+            phoneInput.classList.add('invalid');
+            if (phoneHint) {
+                phoneHint.textContent = 'Номер должен содержать от 9 до 15 цифр';
+                phoneHint.classList.remove('valid-hint');
             }
+        } else {
+            phoneInput.classList.remove('invalid');
+            if (phoneHint) {
+                phoneHint.textContent = 'Введите номер телефона';
+                phoneHint.classList.remove('valid-hint');
+            }
+        }
+        
+        return false;
+    }
+}
             
             // Счетчик символов для textarea
             const counter = document.querySelector('.textarea-counter-split');
@@ -900,30 +933,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                 emailInput.addEventListener('blur', validateEmail);
             }
             
-            if (phoneInput) {
-                // Маска телефона (простая)
-                phoneInput.addEventListener('input', function(e) {
-                    // Разрешаем только: цифры, плюс, пробел, скобки, дефис
-                    this.value = this.value.replace(/[^\d+()\s-]/g, '');
-                    validatePhone();
-                });
-                
+  if (phoneInput) {
+    // Упрощенная маска - разрешаем все символы
+    phoneInput.addEventListener('input', function(e) {
+        // Убираем только буквы и спецсимволы, оставляем цифры и основные знаки
+        this.value = this.value.replace(/[^\d+()\-\s]/g, '');
+        validatePhone();
+    });
+    
+    phoneInput.addEventListener('blur', validatePhone);
+    
+    // При вставке
+    phoneInput.addEventListener('paste', function(e) {
+        e.preventDefault();
+        const pasted = (e.clipboardData || window.clipboardData).getData('text');
+        // Очищаем от мусора
+        const cleaned = pasted.replace(/[^\d+()\-\s]/g, '');
+        
+        const start = this.selectionStart;
+        const end = this.selectionEnd;
+        const current = this.value;
+        
+        this.value = current.substring(0, start) + cleaned + current.substring(end);
+        validatePhone();
+    });
+}
                 phoneInput.addEventListener('blur', validatePhone);
                 
                 // При вставке
-                phoneInput.addEventListener('paste', function(e) {
-                    e.preventDefault();
-                    const pasted = (e.clipboardData || window.clipboardData).getData('text');
-                    const cleaned = pasted.replace(/[^\d+()\s-]/g, '');
-                    
-                    const start = this.selectionStart;
-                    const end = this.selectionEnd;
-                    const current = this.value;
-                    
-                    this.value = current.substring(0, start) + cleaned + current.substring(end);
-                    validatePhone();
-                });
-            }
+           
             
             if (messageTextarea && counter && currentChars) {
                 messageTextarea.addEventListener('input', updateCounter);
@@ -1045,7 +1083,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                     });
                 } catch (error) {
                     console.log('Ошибка загрузки карты:', error);
-                    // Если карта не загрузилась, показываем статическое изображение
+
                     document.getElementById('map').innerHTML = `
                         <div style="width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;text-align:center;">
                             <div style="font-size:48px;margin-bottom:20px;">📍</div>
@@ -1056,8 +1094,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                     `;
                 }
             }
-            
-            // Запускаем карту
             initMap();
         });
          const catalogLink = document.getElementById('catalogLink');

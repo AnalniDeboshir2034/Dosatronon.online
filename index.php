@@ -1,5 +1,4 @@
 <?php
-// Упрощаем подключение - убираем сложную логику
 $host = 'localhost';
 $user = 'a7comby_dosatron_user';
 $pass = 'dosatron_user';
@@ -494,7 +493,7 @@ function findFileSimple($img) {
                     </li>
                 </ul>
             </nav>
-                     <a href="contacts.php" class="btn btn-primary header__order-btn">Заказать</a>
+                     <a href="contacts.php#contactFormSplit" class="btn btn-primary header__order-btn">Заказать</a>
         </div>
     </div>
 </header>
@@ -759,7 +758,8 @@ function findFileSimple($img) {
                 <div class="footer__col">
                     <h3 class="footer__title">Контакты</h3>
                     <ul class="footer__list">
-                        <li>📞 +375 (29) 605-22-73</li>
+                        <li>📞 +375 33 680 07 07
+                        <br>   +375 29 883 00 07</li>
                         <li>✉️ info@7company.by</li>
                         <li>📍 г. Минск, ул. Толбухина д.2</li>
                     </ul>

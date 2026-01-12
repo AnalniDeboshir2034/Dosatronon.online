@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $login = $_POST['login'] ?? '';
     $password = $_POST['password'] ?? '';
     
-    if ($login === 'admin' && $password === 'admin') {
+    if ($login === 'admin' && $password === 'adminADMIN') {
         $_SESSION['admin_logged_in'] = true;
         header('Location: adminpanel.php');
         exit();
@@ -19,12 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Вход в админку</title>
-    <style>
-        body { background: #1a1a2e; color: white; font-family: Arial; }
-        .login-box { max-width: 400px; margin: 100px auto; background: #162447; padding: 40px; border-radius: 10px; }
-        input { width: 100%; padding: 10px; margin: 10px 0; }
-        button { background: #00b4d8; color: white; border: none; padding: 10px; width: 100%; }
-    </style>
+    <link rel="stylesheet" href="cs/admin.css">
+
 </head>
 <body>
     <div class="login-box">
@@ -35,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="password" name="password" placeholder="Пароль" required>
             <button type="submit">Войти</button>
         </form>
-        <p style="margin-top:20px;color:#8d99ae;font-size:0.9rem;">Логин: admin | Пароль: admin123</p>
+        <p style="margin-top:20px;color:#8d99ae;font-size:0.9rem;">Логин: admin | Пароль: adminADMIN</p>
     </div>
 </body>
 </html>

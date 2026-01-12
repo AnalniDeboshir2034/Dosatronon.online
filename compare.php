@@ -457,7 +457,7 @@ if (!empty($compare_ids)) {
                     </li>
                 </ul>
             </nav>
-                     <a href="contacts.php" class="btn btn-primary header__order-btn">Заказать</a>
+                     <a href="contacts.php#contactFormSplit" class="btn btn-primary header__order-btn">Заказать</a>
         </div>
     </div>
     </header>
@@ -593,17 +593,18 @@ if (!empty($compare_ids)) {
                 <div class="footer__col">
                     <h3 class="footer__title">Контакты</h3>
                     <ul class="footer__list">
-                        <li>📞 +375296052273</li>
-                        <li>✉️ example@mail.com</li>
-                        <li>📍 г. Минск, ул. Пушкина д. Колотушкина</li>
+                        <li>📞 +375 33 680 07 07
+                        <br>   +375 29 883 00 07</li>
+                        <li>✉️ info@7company.by</li>
+                        <li>📍 г. Минск, ул. Толбухина д.2</li>
                     </ul>
                 </div>
                 <div class="footer__col">
                     <h3 class="footer__title">Навигация</h3>
                     <ul class="footer__list">
                         <li><a href="index.php">Главная</a></li>
-                        <li><a href="catalog.php">Каталог</a></li>
-                        <li><a href="contacts.php">Контакты</a></li>
+                        <li><a href="catalog.php">Каталог</a></li> 
+                        <li><a href="contacts.php">Контакты</a></li> 
                         <li><a href="compare.php">Сравнение</a></li>
                     </ul>
                 </div>
