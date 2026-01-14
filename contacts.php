@@ -71,12 +71,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
     }
 }
 ?>
+<?php
+function getContent($section) {
+    // Подключаем парсер
+    require_once 'includes/content_parser.php';
+    return getContentSection($section, '');
+}
+
+
+$contact_phone = getContent('contact_phone');
+$contact_email = getContent('contact_email');
+$contact_address = getContent('contact_address');
+$working_hours = getContent('working_hours');
+$meta_desc = getContent('meta_description');
+$meta_keys = getContent('meta_keywords');
+$page_title = getContent('header_title');
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Контакты | 7 company</title>
+    <title><?php echo $page_title; ?></title>
+    <meta name="description" content="<?php echo $meta_desc; ?>">
+    <meta name="keywords" content="<?php echo $meta_keys; ?>">
     <link rel="stylesheet" href="cs/style.css">
     <script src="j/script.js?v=<?php echo filemtime('j/script.js'); ?>" defer></script>   
      <style>
@@ -452,63 +469,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
 </head>
 <body>
     <div class="page-contacts">
-     <div class="container">
-        <div class="header__inner">
-
-            <button class="burger-btn" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false" aria-controls="mainNav">
-                <span class="burger-btn__line"></span>
-                <span class="burger-btn__line"></span>
-                <span class="burger-btn__line"></span>
-            </button>
-
-
-            <a href="index.php" class="logo">
-                <div class="logo__img">
-                    <img src="logo.jpg" alt="7company" width="40" height="40" loading="lazy">
-                </div>
-                <span class="logo__text">7 company</span>
-            </a>
-
-   
-
-
-            <div class="nav-overlay" id="navOverlay"></div>
-
-
-            <nav class="nav" id="mainNav" aria-label="Основная навигация">
-                <ul class="nav__list">
-                    <li class="nav__item">
-                        <a href="index.php" class="nav__link nav__link--active">Главная</a>
-                    </li>
-                    <li class="nav__item has-dropdown">
-                        <a href="catalog.php" class="catalog-link" id="catalogLink">
-                            Каталог
-                        </a>
-                        <ul class="dropdown-menu" id="catalogDropdown">
-                            <li><a href="catalog.php?category=all">Все модели</a></li>
-                            <li><a href="catalog.php?category=DIA">DIA</a></li>
-                            <li><a href="catalog.php?category=D07">D07</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav__item">
-                        <a href="contacts.php" class="nav__link">Контакты</a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="compare.php" class="nav__link">Сравнение</a>
-                    </li>
-                    <li class="nav__item nav__item--search">
-                        <div class="sidebar-search">
-                            <div class="search-box">
-                                <input type="text" id="searchInput" placeholder="Поиск по названию...">
-                                <button id="searchBtn" type="button">🔍</button>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-                     <a href="contacts.php" class="btn btn-primary header__order-btn">Заказать</a>
-        </div>
-    </div>
+            <?php include 'includes/header.php'; ?>
     <main class="main">
        
 
@@ -548,7 +509,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                                     <div class="contact-details">
                                         <h4>Телефоны</h4>
                                         <p>
-                                            <strong>Отдел продаж:</strong> +375 33 680 07 07<br>+375 29 883 00 07<br>
+                                            <strong>Отдел продаж:</strong><?php echo nl2br(htmlspecialchars($contact_phone));?> <br>
                                         </p>
                                     </div>
                                 </div>
@@ -557,7 +518,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                                     <div class="contact-icon">✉️</div>
                                     <div class="contact-details">
                                         <h4>Электронная почта</h4>
-                                        <p> info@7company.by<br>
+                                        <p> <?php echo nl2br(htmlspecialchars($contact_email));?><br>
                                         </p>
                                     </div>
                                 </div>
@@ -567,8 +528,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                                     <div class="contact-details">
                                         <h4>Часы работы</h4>
                                         <p>
-                                            <strong>Пн-Пт:</strong> 9:00 - 18:00<br>
-                                            <strong>Суббота-Воскресенье:</strong> выходной
+                                          <?php echo nl2br(htmlspecialchars($working_hours));?>
                                         </p>
                                     </div>
                                 </div>
@@ -695,44 +655,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
             </div>
         </section>
     </main>
-    <footer class="footer">
-        <div class="container">
-            <div class="footer__content">
-                <div class="footer__col">
-                    <a href="index.php" class="footer-logo">7company</a>
-                    <p class="footer__text">Каталог медикаторов</p>
-                </div>
-                <div class="footer__col">
-                    <h3 class="footer__title">Контакты</h3>
-                    <ul class="footer__list">
-                        <li>📞 +375 33 680 07 07
-                        <br>   +375 29 883 00 07</li>
-                        <li>✉️ info@7company.by</li>
-                        <li>📍 г. Минск, ул. Толбухина д.2</li>
-                    </ul>
-                </div>
-                <div class="footer__col">
-                    <h3 class="footer__title">Навигация</h3>
-                    <ul class="footer__list">
-                        <li><a href="index.php">Главная</a></li>
-                        <li><a href="catalog.php">Каталог</a></li> 
-                        <li><a href="contacts.php">Контакты</a></li> 
-                        <li><a href="compare.php">Сравнение</a></li>
-                    </ul>
-                </div>
-                <div class="footer__col">
-                    <h3 class="footer__title">Часы работы</h3>
-                    <ul class="footer__list">
-                        <li>Пн-Пт: 9:00-18:00</li>
-                        <li>Сб-Вс: Выходной</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer__bottom">
-                <p>&copy; 2025 7company. Все права защищены.</p>
-            </div>
-        </div>
-    </footer>
+    <?php include 'includes/footer.php'; ?>
     <script src="https://api-maps.yandex.ru/2.1/?apikey=ваш_ключ_яндекс_карт&lang=ru_RU" type="text/javascript"></script>
     
     <script>
@@ -1054,13 +977,13 @@ function validatePhone() {
                 try {
                     ymaps.ready(function() {
                         const map = new ymaps.Map('map', {
-                            center: [53.902284, 27.561831], // Координаты Минска
+                            center: [53.926112, 27.614706], // Координаты Минска
                             zoom: 12,
                             controls: ['zoomControl', 'fullscreenControl']
                         });
                         
                         // Точка с адресом
-                        const marker = new ymaps.Placemark([53.902284, 27.561831], {
+                        const marker = new ymaps.Placemark([53.926112, 27.614706], {
                             balloonContent: '<strong>7 company</strong><br>г. Минск, ул. Толбухина д.2'
                         }, {
                             preset: 'islands#blueDotIcon'
@@ -1089,7 +1012,7 @@ function validatePhone() {
                             <div style="font-size:48px;margin-bottom:20px;">📍</div>
                             <h3>7 company</h3>
                             <p>г. Минск, ул. Толбухина д.2</p>
-                            <p style="margin-top:20px;color:#666;">Координаты: 53.902284, 27.561831</p>
+                            <p style="margin-top:20px;color:#666;">Координаты: 53.926112, 27.614706</p>
                         </div>
                     `;
                 }

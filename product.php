@@ -447,63 +447,11 @@ if ($stmt) {
 <body>
     <!-- ШАПКА САЙТА -->
      <div class="container">
-        <div class="header__inner">
-
-            <button class="burger-btn" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false" aria-controls="mainNav">
-                <span class="burger-btn__line"></span>
-                <span class="burger-btn__line"></span>
-                <span class="burger-btn__line"></span>
-            </button>
-
-
-            <a href="index.php" class="logo">
-                <div class="logo__img">
-                    <img src="logo.jpg" alt="7company" width="40" height="40" loading="lazy">
-                </div>
-                <span class="logo__text">7 company</span>
-            </a>
-
-            <div class="nav-overlay" id="navOverlay"></div>
-
-            <nav class="nav" id="mainNav" aria-label="Основная навигация">
-                <ul class="nav__list">
-                    <li class="nav__item">
-                        <a href="index.php" class="nav__link nav__link--active">Главная</a>
-                    </li>
-                    <li class="nav__item has-dropdown">
-                        <a href="catalog.php" class="catalog-link" id="catalogLink">
-                            Каталог
-                        </a>
-                        <ul class="dropdown-menu" id="catalogDropdown">
-                            <li><a href="catalog.php?category=all">Все модели</a></li>
-                            <li><a href="catalog.php?category=DIA">DIA</a></li>
-                            <li><a href="catalog.php?category=D07">D07</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav__item">
-                        <a href="contacts.php" class="nav__link">Контакты</a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="compare.php" class="nav__link">Сравнение</a>
-                    </li>
-                    <li class="nav__item nav__item--search">
-                        <div class="sidebar-search">
-                            <div class="search-box">
-                                <input type="text" id="searchInput" placeholder="Поиск по названию...">
-                                <button id="searchBtn" type="button">🔍</button>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-                  <a href="contacts.php#contactFormSplit"  class="btn btn-primary header__order-btn">Заказать</a>
-        </div>
-    </div>
+        <?php include 'includes/header.php'; ?>
 
     <!-- ОСНОВНОЙ КОНТЕНТ -->
     <main class="main">
         <?php if (!$product): ?>
-            <!-- Если товар не найден -->
             <section class="not-found" style="padding: 100px 0; text-align: center;">
                 <div class="container">
                     <h1 style="color: var(--foreground); margin-bottom: 20px;">Товар не найден</h1>
@@ -518,7 +466,6 @@ if ($stmt) {
                 </div>
             </section>
         <?php else: ?>
-            <!-- Хлебные крошки -->
             <nav style="background: var(--card); padding: 15px 0; border-bottom: 1px solid var(--border);">
                 <div class="container">
                     <a href="index.php" style="color: var(--muted-foreground); text-decoration: none;">Главная</a>
@@ -770,45 +717,8 @@ if ($stmt) {
         <?php endif; ?>
     </main>
 
-    <!-- ПОДВАЛ -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer__content">
-                <div class="footer__col">
-                    <a href="index.php" class="footer-logo">7company</a>
-                    <p class="footer__text">Каталог медикаторов</p>
-                </div>
-                <div class="footer__col">
-                    <h3 class="footer__title">Контакты</h3>
-                    <ul class="footer__list">
-                        <li>📞 +375 33 680 07 07
-                        <br>   +375 29 883 00 07</li>
-                        <li>✉️ info@7company.by</li>
-                        <li>📍 г. Минск, ул. Толбухина д.2</li>
-                    </ul>
-                </div>
-                <div class="footer__col">
-                    <h3 class="footer__title">Навигация</h3>
-                    <ul class="footer__list">
-                        <li><a href="index.php">Главная</a></li>
-                        <li><a href="catalog.php">Каталог</a></li> 
-                        <li><a href="contacts.php">Контакты</a></li> 
-                        <li><a href="compare.php">Сравнение</a></li>
-                    </ul>
-                </div>
-                <div class="footer__col">
-                    <h3 class="footer__title">Часы работы</h3>
-                    <ul class="footer__list">
-                        <li>Пн-Пт: 9:00-18:00</li>
-                        <li>Сб-Вс: Выходной</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer__bottom">
-                <p>&copy; 2025 7company. Все права защищены.</p>
-            </div>
-        </div>
-    </footer>
+
+       <?php include 'includes/footer.php'; ?>
 
     <script>
         // Добавление в сравнение

@@ -74,21 +74,37 @@ function findFileSimple($img) {
         if (file_exists($path)) {
             return $path;
         }
-    }
+    
     
     return null;
 }
+}
+?>
+<?php
+// ПЕРЕД HTML кодом добавь:
+function getContent($section) {
+    // Подключаем парсер
+    require_once 'includes/content_parser.php';
+    return getContentSection($section, '');
+}
+
+$meta_desc = getContent('meta_description');
+$meta_keys = getContent('meta_keywords');
+$page_title = getContent('header_title');
+$about_text = getContent('about_text')
 ?>
 
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7 company - Каталог медикаторов</title>
-    <link rel="stylesheet" href="cs/style.css">
-    <script src="j/script.js" defer></script>
-    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
+<meta charset="UTF-8">
+<title><?php echo $page_title; ?></title>
+<meta name="description" content="<?php echo $meta_desc; ?>">
+<meta name="keywords" content="<?php echo $meta_keys; ?>">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="cs/style.css">
+<script src="j/script.js" defer></script>
+<link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
 
 
 </head>
@@ -438,66 +454,7 @@ function findFileSimple($img) {
     }
 }
 </style>
-   <header class="header">
-    <div class="container">
-        <div class="header__inner">
-            <!-- Бургер-кнопка -->
-            <button class="burger-btn" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false" aria-controls="mainNav">
-                <span class="burger-btn__line"></span>
-                <span class="burger-btn__line"></span>
-                <span class="burger-btn__line"></span>
-            </button>
-
-            <!-- Логотип -->
-            <a href="index.php" class="logo">
-                <div class="logo__img">
-                    <img src="logo.jpg" alt="7company" width="40" height="40" loading="lazy">
-                </div>
-                <span class="logo__text">7 company</span>
-            </a>
-
-   
-
-            <!-- Затемнение фона -->
-            <div class="nav-overlay" id="navOverlay"></div>
-
-            <!-- Навигация -->
-            <nav class="nav" id="mainNav" aria-label="Основная навигация">
-                <ul class="nav__list">
-                    <li class="nav__item">
-                        <a href="index.php" class="nav__link nav__link--active">Главная</a>
-                    </li>
-                    <li class="nav__item has-dropdown">
-                        <a href="catalog.php" class="catalog-link" id="catalogLink">
-                            Каталог
-                        </a>
-                        <ul class="dropdown-menu" id="catalogDropdown">
-                            <li><a href="catalog.php?category=all">Все модели</a></li>
-                            <li><a href="catalog.php?category=DIA">DIA</a></li>
-                            <li><a href="catalog.php?category=D07">D07</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav__item">
-                        <a href="contacts.php" class="nav__link">Контакты</a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="compare.php" class="nav__link">Сравнение</a>
-                    </li>
-                    <li class="nav__item nav__item--search">
-                        <div class="sidebar-search">
-                            <div class="search-box">
-                                <input type="text" id="searchInput" placeholder="Поиск по названию...">
-                                <button id="searchBtn" type="button">🔍</button>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-                     <a href="contacts.php#contactFormSplit" class="btn btn-primary header__order-btn">Заказать</a>
-        </div>
-    </div>
-</header>
-
+    <?php include 'includes/header.php'; ?>
     <main class="main">
         <section class="hero">
             <div class="swiper hero-swiper">
@@ -520,19 +477,10 @@ function findFileSimple($img) {
             <div class="container">
                 <h2 class="section-title">О компании</h2>
                 <div class="about__content">
-                    <div class="about__text">
-                        <p><strong>7 company</strong> — поставщик профессионального оборудования для систем дозирования и орошения. Мы работаем с сельскохозяйственными предприятиями, тепличными комплексами и промышленными объектами.</p>
-                        <p>Наша специализация — медикаторы и дозаторы для точного внесения удобрений, средств защиты растений и химических реагентов.</p>
-                        <ul class="about__features">
-                            <li>✅ Гарантия качества продукции</li>
-                            <li>✅ Техническая поддержка</li>
-                            <li>✅ Доставка по всей Беларуси</li>
-                            <li>✅ Индивидуальный подход</li>
-                        </ul>
-                    </div>
-                    <div class="about__image">
-                        <img src="logo.jpg" alt="7 company" loading="lazy">
-                    </div>
+                    <?php echo nl2br(htmlspecialchars($about_text));?>                    
+                        <div class="about__image">
+                                <img src="logo.jpg" alt="7 company" loading="lazy">
+                        </div>
                 </div>
             </div>
         </section>
@@ -541,7 +489,6 @@ function findFileSimple($img) {
     <div class="container">
         <h2 class="section-title">Популярные товары</h2>
         
-        <!-- Grid для десктопа (показывается только на ПК) -->
         <div class="products-grid-desktop">
             <?php if (count($products) > 0): ?>
                 <?php 
@@ -747,45 +694,7 @@ function findFileSimple($img) {
             </div>
         </section>
     </main>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="footer__content">
-                <div class="footer__col">
-                    <a href="index.php" class="footer-logo">7company</a>
-                    <p class="footer__text">Каталог медикаторов</p>
-                </div>
-                <div class="footer__col">
-                    <h3 class="footer__title">Контакты</h3>
-                    <ul class="footer__list">
-                        <li>📞 +375 33 680 07 07
-                        <br>   +375 29 883 00 07</li>
-                        <li>✉️ info@7company.by</li>
-                        <li>📍 г. Минск, ул. Толбухина д.2</li>
-                    </ul>
-                </div>
-                <div class="footer__col">
-                    <h3 class="footer__title">Навигация</h3>
-                    <ul class="footer__list">
-                        <li><a href="index.php">Главная</a></li>
-                        <li><a href="catalog.php">Каталог</a></li> 
-                        <li><a href="contacts.php">Контакты</a></li> 
-                        <li><a href="compare.php">Сравнение</a></li>
-                    </ul>
-                </div>
-                <div class="footer__col">
-                    <h3 class="footer__title">Часы работы</h3>
-                    <ul class="footer__list">
-                        <li>Пн-Пт: 9:00-18:00</li>
-                        <li>Сб-Вс: Выходной</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer__bottom">
-                <p>&copy; 2025 7company. Все права защищены.</p>
-            </div>
-        </div>
-    </footer>
+    <?php include 'includes/footer.php'; ?>
     <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
 <script>
 // Удалить defer с этого скрипта и добавить в конец body

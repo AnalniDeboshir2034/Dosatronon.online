@@ -48,6 +48,7 @@ $result->free();
             <nav class="nav-links">
                 <a href="adminpanel.php" class="active">📋 Все записи</a>
                 <a href="add.php">➕ Добавить запись</a>
+                <a href="content_editor.php">📝 Наполнение сайта</a>
                 <a href="download_log.php?file=bitrix" class="download-link">📥 Bitrix лог</a>
                 <a href="download_log.php?file=error" class="download-link">📥 Error лог</a>
                 <a href="logout.php" style="color: #f85149;">🚪 Выйти</a>
