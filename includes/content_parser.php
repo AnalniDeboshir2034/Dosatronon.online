@@ -118,7 +118,8 @@ function getSectionName($key) {
         'footer_text' => '🦶 Текст в подвале',
         'contact_form_title' => '📝 Заголовок формы',
         'compare_title' => '⚖️ Заголовок сравнения',
-        'head_name' =>'Название на шапке'
+        'head_name' =>'Название на шапке',
+        'favicon' => 'Иконка сайта'
     ];
     
     return $names[$key] ?? $key;
@@ -152,5 +153,4 @@ function saveContent($section, $new_content) {
         error_log("Save error: " . $e->getMessage());
         throw new Exception("Ошибка: " . $e->getMessage());
     }
-}
 ?>

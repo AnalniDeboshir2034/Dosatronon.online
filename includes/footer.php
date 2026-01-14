@@ -6,12 +6,13 @@ $contact_email = getContentSection('contact_email');
 $contact_address = getContentSection('contact_address');
 $working_hours = getContentSection('working_hours');
 $copyright = getContentSection('copyright');
+$head_name=getContentSection('head_name');
 ?>
     <footer class="footer">
         <div class="container">
             <div class="footer__content">
                 <div class="footer__col">
-                    <a href="index.php" class="footer-logo">7company</a>
+                    <a href="index.php" class="footer-logo"><?php echo nl2br(htmlspecialchars($head_name)); ?></a>
                     <p class="footer__text">Каталог медикаторов</p>
                 </div>
                 <div class="footer__col">

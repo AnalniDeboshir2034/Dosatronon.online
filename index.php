@@ -79,8 +79,7 @@ function findFileSimple($img) {
     return null;
 }
 }
-?>
-<?php
+
 // ПЕРЕД HTML кодом добавь:
 function getContent($section) {
     // Подключаем парсер
@@ -91,13 +90,18 @@ function getContent($section) {
 $meta_desc = getContent('meta_description');
 $meta_keys = getContent('meta_keywords');
 $page_title = getContent('header_title');
-$about_text = getContent('about_text')
+$about_text = getContent('about_text');
+$favicon=getContent('favicon');
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" href="<?php echo $favicon; ?>" type="image/x-icon">
+<link rel="shortcut icon" href="<?php echo $meta_desc; ?>" type="image/x-icon">
 <title><?php echo $page_title; ?></title>
 <meta name="description" content="<?php echo $meta_desc; ?>">
 <meta name="keywords" content="<?php echo $meta_keys; ?>">
@@ -477,9 +481,9 @@ $about_text = getContent('about_text')
             <div class="container">
                 <h2 class="section-title">О компании</h2>
                 <div class="about__content">
-                    <?php echo nl2br(htmlspecialchars($about_text));?>                    
+                   <?php echo nl2br($about_text);?>                   
                         <div class="about__image">
-                                <img src="logo.jpg" alt="7 company" loading="lazy">
+                                <img src="uploads/inde.png" alt="7 company" loading="lazy">
                         </div>
                 </div>
             </div>
@@ -624,7 +628,7 @@ $about_text = getContent('about_text')
                                 <div class="review-card">
                                     <div class="review-card__header">
                                         <div class="review-card__avatar">
-                                            
+                                            JX
                                         </div>
                                         <div class="review-card__info">
                                             <h4 class="review-card__name">Исус Христосович</h4>

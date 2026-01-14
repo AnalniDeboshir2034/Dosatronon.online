@@ -97,7 +97,7 @@ $page_title = getContent('header_title');
     <link rel="stylesheet" href="cs/style.css">
     <script src="j/script.js?v=<?php echo filemtime('j/script.js'); ?>" defer></script>   
      <style>
-        /* ОБЩИЕ СТИЛИ СТРАНИЦЫ КОНТАКТОВ */
+  /* ОБЩИЕ СТИЛИ СТРАНИЦЫ КОНТАКТОВ */
         .page-contacts {
             max-width: 1200px;
             margin: 40px auto;
@@ -468,8 +468,13 @@ $page_title = getContent('header_title');
 
 </head>
 <body>
+    <?php include 'includes/header.php'; ?>
     <div class="page-contacts">
-            <?php include 'includes/header.php'; ?>
+        <div class="container">
+
+
+
+</div>
     <main class="main">
        
 
@@ -500,7 +505,7 @@ $page_title = getContent('header_title');
                                     <div class="contact-icon">📍</div>
                                     <div class="contact-details">
                                         <h4>Адрес</h4>
-                                        <p>г. Минск, ул. Толбухина д.2</p>
+                                        <p><?php echo nl2br(htmlspecialchars($contact_address));?></p>
                                     </div>
                                 </div>
                                 
@@ -650,7 +655,7 @@ $page_title = getContent('header_title');
                     <div id="map"></div>
                 </div>
                 <div style="text-align: center; margin-top: 15px; color: hsl(200 20% 70%);">
-                    <p>📍 г. Минск, ул. Толбухина д.2</p>
+                    <p>📍 214012, г. Смоленск, ул. Вяземская 2-я, д.4, офис Р58</p>
                 </div>
             </div>
         </section>
@@ -977,14 +982,14 @@ function validatePhone() {
                 try {
                     ymaps.ready(function() {
                         const map = new ymaps.Map('map', {
-                            center: [53.926112, 27.614706], // Координаты Минска
+                            center: [54.782952, 32.026853], // Координаты Минска
                             zoom: 12,
                             controls: ['zoomControl', 'fullscreenControl']
                         });
                         
                         // Точка с адресом
-                        const marker = new ymaps.Placemark([53.926112, 27.614706], {
-                            balloonContent: '<strong>7 company</strong><br>г. Минск, ул. Толбухина д.2'
+                        const marker = new ymaps.Placemark([54.782952, 32.026853], {
+                            balloonContent: '<strong>Dosatron.online</strong><br>г.Смоленск,2-я Вяземская улица,д.4'
                         }, {
                             preset: 'islands#blueDotIcon'
                         });
@@ -1011,8 +1016,8 @@ function validatePhone() {
                         <div style="width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;text-align:center;">
                             <div style="font-size:48px;margin-bottom:20px;">📍</div>
                             <h3>7 company</h3>
-                            <p>г. Минск, ул. Толбухина д.2</p>
-                            <p style="margin-top:20px;color:#666;">Координаты: 53.926112, 27.614706</p>
+                            <p>г.Смоленск,2-я Вяземская улица,д.4</p>
+                            <p style="margin-top:20px;color:#666;">Координаты: 54.782952, 32.026853</p>
                         </div>
                     `;
                 }

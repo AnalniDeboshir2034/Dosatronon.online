@@ -15,9 +15,7 @@ $logo__text = getContentSection('head_name');
 
             <!-- Логотип -->
             <a href="index.php" class="logo">
-                <div class="logo__img">
-                    <img src="logo.jpg" alt="7company" width="40" height="40" loading="lazy">
-                </div>
+            
                 <span class="logo__text"><?php echo nl2br(htmlspecialchars($logo__text)); ?></span>
             </a>
 

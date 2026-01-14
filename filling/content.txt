@@ -31,3 +31,5 @@ Dosatron.online-Лучший сайт для выбора Dosatron'a
 
 [head_name]
 Dosatron.online
+[favicon]
+/uploads/favico.png
