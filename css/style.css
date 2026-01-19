@@ -145,6 +145,7 @@ body {
     gap: 15px;
 }
 
+/* Обновляем стили для логотипа */
 .logo {
     display: flex;
     align-items: center;
@@ -155,33 +156,63 @@ body {
     background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent;
+    color: hsl(195 100% 50%);
     position: relative;
     z-index: 1;
     flex-shrink: 0;
 }
 
+/* Убираем старую линию */
 .logo::after {
+    display: none !important;
+}
+
+/* Создаём новую линию ТОЛЬКО под текстом */
+.logo__text {
+    position: relative;
+    display: inline-block;
+}
+
+/* Линия под текстом — теперь её ширина = 100% от текста */
+.logo__text::after {
     content: '';
     position: absolute;
     bottom: -5px;
     left: 0;
-    width: 100%;
+    width: 100%; /* 100% от ширины текста, а не от всего лого! */
     height: 2px;
     background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
 }
 
-.logo__img {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--gradient-card);
-    border-radius: 10px;
-    border: 1px solid hsl(200 30% 18%);
+/* На телефоне делаем тоньше и ближе */
+@media (max-width: 992px) {
+    .logo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+    }
+    
+    .logo__img {
+        margin-bottom: 5px;
+    }
+    
+    .logo__text {
+        text-align: center;
+        position: relative;
+    }
+    
+    .logo__text::after {
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px; /* Фиксированная ширина */
+        height: 1px;
+        background: var(--neon-cyan);
+    }
 }
-
 .header__order-btn {
     display: inline-flex;
     white-space: nowrap;

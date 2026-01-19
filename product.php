@@ -104,6 +104,46 @@ if ($stmt) {
     
     $stmt->close();
 }
+
+// ============================================
+// ПОЛУЧАЕМ ПОХОЖИЕ ТОВАРЫ
+// ============================================
+$similar_products = array();
+if ($product) {
+    $similar_sql = "SELECT * FROM medicator WHERE id != ? ORDER BY RAND() LIMIT 6";
+    $similar_stmt = $mysqli->prepare($similar_sql);
+    
+    if ($similar_stmt) {
+        $similar_stmt->bind_param("i", $product_id);
+        $similar_stmt->execute();
+        $similar_stmt->store_result();
+        
+        // Получаем информацию о колонках
+        $meta = $similar_stmt->result_metadata();
+        $fields = array();
+        $fieldReferences = array();
+        
+        while ($field = $meta->fetch_field()) {
+            $fields[$field->name] = null;
+            $fieldReferences[] = &$fields[$field->name];
+        }
+        
+        call_user_func_array(array($similar_stmt, 'bind_result'), $fieldReferences);
+        
+        while ($similar_stmt->fetch()) {
+            $similar_product = array();
+            foreach ($fields as $key => $value) {
+                $similar_product[$key] = $value;
+            }
+            
+            // Ищем изображение
+            $similar_product['img_found'] = findFile($similar_product['img'] ?? '');
+            $similar_products[] = $similar_product;
+        }
+        
+        $similar_stmt->close();
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -442,12 +482,103 @@ if ($stmt) {
                 min-height: 250px;
             }
         }
+        /* Grid для десктопа */
+.products-grid-desktop {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+/* Swiper для мобилки - скрыт на десктопе */
+.products-swiper-mobile {
+    display: none;
+    position: relative;
+    padding: 0 60px 40px;
+    margin-bottom: 20px;
+}
+
+/* Адаптивность */
+@media (max-width: 991px) {
+    .products-grid-desktop {
+        display: none !important;
+    }
+    
+    .products-swiper-mobile {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .products-swiper-mobile {
+        padding: 0 50px 40px;
+    }
+}
+
+@media (max-width: 576px) {
+    .products-swiper-mobile {
+        padding: 0 40px 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .products-swiper-mobile {
+        padding: 0 20px 30px;
+    }
+}
+
+/* Стили для навигации Swiper */
+.products-swiper .swiper-button-next,
+.products-swiper .swiper-button-prev {
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    border-radius: 50%;
+    color: var(--primary-foreground);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    top: 50%;
+    margin-top: -20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+    transition: all 0.2s;
+    z-index: 10;
+}
+
+.products-swiper .swiper-button-next:hover,
+.products-swiper .swiper-button-prev:hover {
+    opacity: 1;
+    background: hsl(195 100% 40%);
+    transform: scale(1.05);
+}
+
+.products-swiper .swiper-button-prev {
+    left: 10px;
+}
+
+.products-swiper .swiper-button-next {
+    right: 10px;
+}
+
+.products-swiper .swiper-button-prev:after,
+.products-swiper .swiper-button-next:after {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.products-swiper .swiper-button-disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none !important;
+}
     </style>
 </head>
 <body>
     <!-- ШАПКА САЙТА -->
-     <div class="container">
+    <div class="container">
         <?php include 'includes/header.php'; ?>
+    </div>
 
     <!-- ОСНОВНОЙ КОНТЕНТ -->
     <main class="main">
@@ -500,7 +631,7 @@ if ($stmt) {
                                 <span style="margin-right: 8px;">⚖️</span>
                                 Добавить к сравнению
                             </button>
-                         <a href="contacts.php#contactFormSplit" class="btn btn-request">
+                            <a href="contacts.php#contactFormSplit" class="btn btn-request">
                                 <span style="margin-right: 8px;">📧</span>
                                 Заказать
                             </a>
@@ -634,103 +765,133 @@ if ($stmt) {
             </section>
             
             <!-- ПОХОЖИЕ ТОВАРЫ -->
+            <?php if (!empty($similar_products)): ?>
             <section class="similar-products">
                 <div class="container">
                     <h2 style="text-align: center; color: var(--foreground); margin-bottom: 50px; font-size: 2rem;">Похожие товары</h2>
                     
-                    <div class="similar-grid">
-                        <?php
-                        // Получаем похожие товары
-                        $similar_sql = "SELECT * FROM medicator WHERE id != ? LIMIT 4";
-                        $similar_stmt = $mysqli->prepare($similar_sql);
-                        
-                        if ($similar_stmt) {
-                            $similar_stmt->bind_param("i", $product_id);
-                            $similar_stmt->execute();
-                            $similar_stmt->store_result();
-                            
-                            // Получаем информацию о колонках
-                            $meta = $similar_stmt->result_metadata();
-                            $fields = array();
-                            $fieldReferences = array();
-                            
-                            while ($field = $meta->fetch_field()) {
-                                $fields[$field->name] = null;
-                                $fieldReferences[] = &$fields[$field->name];
-                            }
-                            
-                            call_user_func_array(array($similar_stmt, 'bind_result'), $fieldReferences);
-                            
-                            while ($similar_stmt->fetch()) {
-                                $similar = array();
-                                foreach ($fields as $key => $value) {
-                                    $similar[$key] = $value;
-                                }
-                                
-                                // Ищем изображение для похожего товара
-                                $similarImg = findFile($similar['img'] ?? '');
-                        ?>
-                        <div class="similar-card">
-                            <div class="similar-image">
-                                <?php if ($similarImg): ?>
-                                    <img src="<?php echo htmlspecialchars($similarImg); ?>" 
-                                         alt="<?php echo htmlspecialchars($similar['name']); ?>">
+                    <!-- Grid для десктопа -->
+                    <div class="products-grid-desktop">
+                        <?php foreach ($similar_products as $similar): ?>
+                        <div class="product-card">
+                            <div class="product-card__image">
+                                <?php if ($similar['img_found']): ?>
+                                    <img src="<?php echo htmlspecialchars($similar['img_found']); ?>" 
+                                         alt="<?php echo htmlspecialchars($similar['name']); ?>"
+                                         loading="lazy">
                                 <?php else: ?>
-                                    <div style="text-align: center; color: var(--muted-foreground); padding: 20px;">
-                                        <span style="font-size: 3rem;">🏭</span>
+                                    <div class="image-placeholder">
+                                        <span class="placeholder-icon">🏭</span>
+                                        <p>Нет изображения</p>
                                     </div>
                                 <?php endif; ?>
                             </div>
-                            <div class="similar-content">
-                                <h3 style="color: var(--foreground); margin-bottom: 10px; font-size: 1.2rem;">
-                                    <a href="product.php?id=<?php echo $similar['id']; ?>" 
-                                       style="color: var(--foreground); text-decoration: none;">
+                            <div class="product-card__content">
+                                <h3 class="product-card__title">
+                                    <a href="product.php?id=<?php echo $similar['id']; ?>" class="product-link">
                                         <?php echo htmlspecialchars($similar['name']); ?>
                                     </a>
                                 </h3>
-                                <p style="color: var(--muted-foreground); font-size: 0.9rem; margin-bottom: 15px;">
-                                    <?php echo htmlspecialchars($similar['d_dosing'] ?? ''); ?>
+                                <p class="product-card__desc">
+                                    <?php if (!empty($similar['d_dosing'])): ?>
+                                        <span class="spec-item">📏 <?php echo htmlspecialchars($similar['d_dosing']); ?></span><br>
+                                    <?php endif; ?>
+                                    <?php if (!empty($similar['performance'])): ?>
+                                        <span class="spec-item">⚡ <?php echo htmlspecialchars($similar['performance']); ?></span>
+                                    <?php endif; ?>
                                 </p>
-                                <div style="display: flex; gap: 10px;">
-                                    <a href="product.php?id=<?php echo $similar['id']; ?>" 
-                                       class="btn btn-primary" 
-                                       style="flex: 1; text-align: center;">
-                                        Подробнее
-                                    </a>
+                                <div class="product-card__price">Подробности по запросу</div>
+                                <div class="product-card__actions">
                                     <button class="btn btn-secondary" 
                                             data-product-id="<?php echo $similar['id']; ?>"
-                                            data-product-name="<?php echo htmlspecialchars($similar['name']); ?>"
-                                            style="flex: 1;">
+                                            data-product-name="<?php echo htmlspecialchars($similar['name']); ?>">
                                         В сравнение
                                     </button>
+                                    <a href="product.php?id=<?php echo $similar['id']; ?>" class="btn btn-primary">Подробнее</a>
                                 </div>
                             </div>
                         </div>
-                        <?php 
-                            }
-                            $similar_stmt->close();
-                        }
-                        ?>
+                        <?php endforeach; ?>
+                    </div>
+                    
+                    <!-- Swiper для мобилки -->
+                    <div class="products-swiper-mobile">
+                        <div class="swiper products-swiper">
+                            <div class="swiper-wrapper">
+                                <?php foreach ($similar_products as $similar): ?>
+                                <div class="swiper-slide">
+                                    <div class="product-card">
+                                        <div class="product-card__image">
+                                            <?php if ($similar['img_found']): ?>
+                                                <img src="<?php echo htmlspecialchars($similar['img_found']); ?>" 
+                                                     alt="<?php echo htmlspecialchars($similar['name']); ?>"
+                                                     loading="lazy">
+                                            <?php else: ?>
+                                                <div class="image-placeholder">
+                                                    <span class="placeholder-icon">🏭</span>
+                                                    <p>Нет изображения</p>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="product-card__content">
+                                            <h3 class="product-card__title">
+                                                <a href="product.php?id=<?php echo $similar['id']; ?>" class="product-link">
+                                                    <?php echo htmlspecialchars($similar['name']); ?>
+                                                </a>
+                                            </h3>
+                                            <p class="product-card__desc">
+                                                <?php if (!empty($similar['d_dosing'])): ?>
+                                                    <span class="spec-item">📏 <?php echo htmlspecialchars($similar['d_dosing']); ?></span><br>
+                                                <?php endif; ?>
+                                                <?php if (!empty($similar['performance'])): ?>
+                                                    <span class="spec-item">⚡ <?php echo htmlspecialchars($similar['performance']); ?></span>
+                                                <?php endif; ?>
+                                            </p>
+                                            <div class="product-card__price">Подробности по запросу</div>
+                                            <div class="product-card__actions">
+                                                <button class="btn btn-secondary" 
+                                                        data-product-id="<?php echo $similar['id']; ?>"
+                                                        data-product-name="<?php echo htmlspecialchars($similar['name']); ?>">
+                                                    В сравнение
+                                                </button>
+                                                <a href="product.php?id=<?php echo $similar['id']; ?>" class="btn btn-primary">Подробнее</a>
+                                                 <a href="catalog.php" class="btn btn-large">Весь каталог →</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                            
+                            <!-- Навигация -->
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center" >
+                        <a href="catalog.php" class="btn btn-large">Весь каталог →</a>
                     </div>
                 </div>
             </section>
+            <?php endif; ?>
         <?php endif; ?>
     </main>
 
-
-       <?php include 'includes/footer.php'; ?>
+    <!-- ПОДВАЛ -->
+    <?php include 'includes/footer.php'; ?>
 
     <script>
         // Добавление в сравнение
         document.querySelectorAll('[data-product-id]').forEach(button => {
             button.addEventListener('click', function() {
                 const productId = this.getAttribute('data-product-id');
-                const productName = this.getAttribute('data-product-name');
+                let productName = this.getAttribute('data-product-name');
                 
                 if (!productName) {
-                    const productCard = this.closest('.similar-card');
+                    const productCard = this.closest('.product-card');
                     if (productCard) {
-                        const titleElement = productCard.querySelector('h3');
+                        const titleElement = productCard.querySelector('.product-card__title');
                         if (titleElement) {
                             productName = titleElement.textContent.trim();
                         }
@@ -801,6 +962,83 @@ if ($stmt) {
                 }
             });
         }
+        
+        // Инициализация Swiper для похожих товаров
+        document.addEventListener('DOMContentLoaded', function() {
+            // Инициализация Swiper только на мобильных устройствах
+            if (window.innerWidth <= 991) {
+                console.log('Мобильное устройство, инициализируем Swiper');
+                
+                // Удаляем предыдущие экземпляры Swiper
+                if (window.productsSwiper) {
+                    window.productsSwiper.destroy();
+                }
+                
+                window.productsSwiper = new Swiper('.products-swiper', {
+                    // Конфигурация Swiper
+                    loop: true,
+                    speed: 400,
+                    slidesPerView: 1,
+                    spaceBetween: 15,
+                    centeredSlides: true,
+                    grabCursor: true,
+                    
+                    // Навигация
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    
+                    // Адаптивность
+                    breakpoints: {
+                        576: {
+                            slidesPerView: 1.2,
+                        },
+                        768: {
+                            slidesPerView: 1.5,
+                        }
+                    },
+                    
+                    // События
+                    on: {
+                        init: function() {
+                            console.log('Swiper инициализирован');
+                            // Принудительно показываем кнопки навигации
+                            if (this.navigation.nextEl) this.navigation.nextEl.style.display = 'flex';
+                            if (this.navigation.prevEl) this.navigation.prevEl.style.display = 'flex';
+                        },
+                    }
+                });
+            } else {
+                console.log('Десктоп, Swiper не нужен');
+                // Скрываем кнопки навигации на десктопе
+                const nextBtn = document.querySelector('.swiper-button-next');
+                const prevBtn = document.querySelector('.swiper-button-prev');
+                if (nextBtn) nextBtn.style.display = 'none';
+                if (prevBtn) prevBtn.style.display = 'none';
+            }
+            
+            // Обработчик изменения размера окна
+            window.addEventListener('resize', function() {
+                clearTimeout(window.resizeTimer);
+                window.resizeTimer = setTimeout(function() {
+                    // Проверяем размер экрана и переинициализируем Swiper при необходимости
+                    const isMobile = window.innerWidth <= 991;
+                    const hasSwiper = !!window.productsSwiper;
+                    
+                    if (isMobile && !hasSwiper) {
+                        // Если перешли на мобилку, но Swiper не инициализирован
+                        window.location.reload(); // Проще перезагрузить страницу
+                    } else if (!isMobile && hasSwiper) {
+                        // Если перешли на десктоп, а Swiper был инициализирован
+                        window.productsSwiper.destroy();
+                        window.productsSwiper = null;
+                        document.querySelector('.products-swiper-mobile').style.display = 'none';
+                        document.querySelector('.products-grid-desktop').style.display = 'grid';
+                    }
+                }, 250);
+            });
+        });
     </script>
 </body>
 </html>

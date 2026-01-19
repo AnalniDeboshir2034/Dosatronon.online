@@ -1,0 +1,563 @@
+/* ===== КЛАССЫ ДЛЯ ПОЛИТИКИ ПЕРСОНАЛЬНЫХ ДАННЫХ ===== */
+
+.policy-content {
+    padding: 80px 0;
+    background: var(--gradient-hero);
+    min-height: calc(100vh - 200px);
+}
+
+.content-wrapper {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: clamp(25px, 5vw, 50px);
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+}
+
+.content-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+}
+
+/* Заголовок секции */
+.policy-content .section-title {
+    text-align: left;
+    margin-bottom: clamp(30px, 6vh, 50px);
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--border);
+}
+
+/* Секции политики */
+.policy-section {
+    margin-bottom: clamp(40px, 8vh, 60px);
+    position: relative;
+}
+
+.policy-section h2 {
+    font-size: clamp(1.6rem, 4vw, 2rem);
+    color: var(--foreground);
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+}
+
+.policy-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 80px;
+    height: 3px;
+    background: var(--primary);
+}
+
+.policy-section h3 {
+    font-size: clamp(1.2rem, 3vw, 1.4rem);
+    color: var(--primary);
+    margin: 20px 0 10px;
+    font-weight: 600;
+}
+
+.policy-section p {
+    color: var(--muted-foreground);
+    margin-bottom: 15px;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    line-height: 1.7;
+}
+
+/* Подсекции */
+.subsection {
+    background: hsl(200 30% 12% / 0.5);
+    padding: clamp(20px, 4vw, 30px);
+    border-left: 4px solid var(--primary);
+    margin: 25px 0;
+    border-radius: 0 8px 8px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.subsection::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, transparent, hsl(195 100% 50% / 0.05), transparent);
+    pointer-events: none;
+}
+
+.subsection h3 {
+    color: var(--primary);
+    margin-top: 0;
+    font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+}
+
+/* Сетка определений */
+.definitions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: clamp(15px, 3vw, 25px);
+    margin-top: 25px;
+}
+
+.definition-item {
+    background: var(--gradient-card);
+    padding: clamp(15px, 3vw, 25px);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+.definition-item:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+    box-shadow: 0 10px 30px hsl(195 100% 50% / 0.1), var(--shadow-card);
+}
+
+.definition-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--primary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.definition-item:hover::before {
+    opacity: 1;
+}
+
+.definition-item h3 {
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    color: var(--foreground);
+    margin-bottom: 10px;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+.definition-item p {
+    font-size: clamp(0.95rem, 2vw, 1rem);
+    color: var(--muted-foreground);
+    margin-bottom: 0;
+    line-height: 1.6;
+}
+
+/* Таблица */
+.table-container {
+    overflow-x: auto;
+    margin: 30px 0;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    position: relative;
+}
+
+.table-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+    background: hsl(220 35% 8%);
+}
+
+.data-table th {
+    background: hsl(200 70% 15%);
+    color: var(--foreground);
+    padding: 18px 20px;
+    text-align: left;
+    font-weight: 600;
+    border-right: 1px solid var(--border);
+    position: relative;
+}
+
+.data-table th:last-child {
+    border-right: none;
+}
+
+.data-table th::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--primary);
+}
+
+.data-table td {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--muted-foreground);
+}
+
+.data-table tr:nth-child(even) {
+    background: hsl(200 30% 12% / 0.3);
+}
+
+.data-table tr:hover {
+    background: hsl(195 100% 50% / 0.05);
+}
+
+.data-table ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.data-table li {
+    margin-bottom: 5px;
+    color: var(--muted-foreground);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.data-table li:last-child {
+    margin-bottom: 0;
+}
+
+/* Списки */
+.policy-section ul {
+    padding-left: 25px;
+    margin: 15px 0;
+}
+
+.policy-section li {
+    margin-bottom: 10px;
+    color: var(--muted-foreground);
+    line-height: 1.6;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    position: relative;
+    padding-left: 10px;
+}
+
+.policy-section li::before {
+    content: '▸';
+    position: absolute;
+    left: -15px;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+/* Секция контактов */
+.contact-section {
+    background: linear-gradient(135deg, hsl(200 30% 12%), hsl(200 40% 8%));
+    padding: clamp(25px, 5vw, 40px);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.contact-info {
+    margin: 25px 0;
+    padding: 25px;
+    background: hsl(220 35% 8%);
+    border-radius: var(--radius);
+    border-left: 4px solid var(--accent);
+    position: relative;
+}
+
+.contact-info::before {
+    content: '📧';
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    background: var(--accent);
+    color: var(--accent-foreground);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.contact-info p {
+    margin-bottom: 15px;
+    font-size: clamp(1.1rem, 2.5vw, 1.2rem);
+    color: var(--muted-foreground);
+}
+
+.contact-info strong {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+.contact-info a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: var(--transition-smooth);
+    position: relative;
+    padding-bottom: 2px;
+}
+
+.contact-info a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.contact-info a:hover {
+    color: var(--accent);
+}
+
+.contact-info a:hover::after {
+    width: 100%;
+}
+
+.update-info {
+    font-style: italic;
+    color: var(--muted-foreground);
+    padding: 20px;
+    background: hsl(200 30% 12%);
+    border-radius: var(--radius);
+    border-left: 4px solid var(--primary);
+    font-size: clamp(0.95rem, 2vw, 1rem);
+    margin-top: 25px;
+    position: relative;
+}
+
+.update-info::before {
+    content: '💡';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+/* Ссылки в тексте */
+.policy-section a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: var(--transition-smooth);
+    position: relative;
+    padding-bottom: 2px;
+}
+
+.policy-section a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.policy-section a:hover {
+    color: var(--accent);
+}
+
+.policy-section a:hover::after {
+    width: 100%;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .policy-content {
+        padding: 40px 0;
+    }
+    
+    .definitions-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .subsection {
+        padding: 20px;
+        margin: 20px 0;
+    }
+    
+    .contact-info {
+        padding: 20px 15px;
+    }
+    
+    .contact-info::before {
+        top: -12px;
+        left: -12px;
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .content-wrapper {
+        padding: 20px;
+    }
+    
+    .policy-section h2 {
+        font-size: 1.5rem;
+    }
+    
+    .policy-section h3 {
+        font-size: 1.2rem;
+    }
+    
+    .contact-section {
+        padding: 20px;
+    }
+    
+    .update-info {
+        padding: 15px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.policy-section {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+.policy-section:nth-child(2) { animation-delay: 0.1s; }
+.policy-section:nth-child(3) { animation-delay: 0.2s; }
+.policy-section:nth-child(4) { animation-delay: 0.3s; }
+.policy-section:nth-child(5) { animation-delay: 0.4s; }
+.contact-section { animation-delay: 0.5s; }
+
+/* Стили для кнопок в политике */
+.policy-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-radius: var(--radius);
+    text-decoration: none;
+    font-weight: 600;
+    border: 2px solid var(--primary);
+    transition: var(--transition-smooth);
+    margin-top: 20px;
+}
+
+.policy-btn:hover {
+    background: transparent;
+    color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px hsl(195 100% 50% / 0.3);
+}
+
+/* Иконки в политике */
+.policy-icon {
+    color: var(--primary);
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+/* Аккордеон для мобильных */
+.policy-accordion {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin: 20px 0;
+    overflow: hidden;
+}
+
+.accordion-header {
+    padding: 20px;
+    background: hsl(200 30% 12%);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    color: var(--foreground);
+    transition: var(--transition-smooth);
+}
+
+.accordion-header:hover {
+    background: hsl(200 30% 15%);
+}
+
+.accordion-header::after {
+    content: '▾';
+    transition: transform 0.3s ease;
+}
+
+.accordion-header.active::after {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    padding: 20px;
+    background: var(--card);
+    display: none;
+}
+
+.accordion-content.active {
+    display: block;
+}
+
+@media (min-width: 769px) {
+    .policy-accordion {
+        display: none;
+    }
+}

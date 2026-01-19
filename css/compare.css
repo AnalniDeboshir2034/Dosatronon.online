@@ -1,0 +1,270 @@
+ .compare-page {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .compare-header {
+            padding: 60px 0 30px;
+            text-align: center;
+        }
+        
+        .compare-header h1 {
+            font-size: 2.5rem;
+            color: var(--foreground);
+            margin-bottom: 15px;
+        }
+        
+        .compare-header p {
+            color: var(--muted-foreground);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        
+        .compare-empty {
+            text-align: center;
+            padding: 80px 20px;
+            background: var(--muted);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin: 40px 0;
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--muted-foreground);
+        }
+        
+        .empty-title {
+            font-size: 1.8rem;
+            color: var(--foreground);
+            margin-bottom: 15px;
+        }
+        
+        .empty-text {
+            color: var(--muted-foreground);
+            margin-bottom: 30px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .compare-table-container {
+            overflow-x: auto;
+            margin: 40px 0;
+            background: var(--card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 0;
+        }
+        
+        .compare-table {
+            width: 100%;
+            min-width: 800px;
+            border-collapse: collapse;
+        }
+        
+        .compare-table th {
+            background: var(--muted);
+            padding: 20px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--foreground);
+            border-bottom: 2px solid var(--border);
+            vertical-align: top;
+            min-width: 200px;
+        }
+        
+        .compare-table td {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            min-width: 250px;
+            background: var(--card);
+        }
+        
+        .compare-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .product-column {
+            background: var(--muted);
+            position: sticky;
+            left: 0;
+            z-index: 10;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .compare-product-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-height: 400px;
+        }
+        
+        .compare-product-image {
+            width: 180px;
+            height: 180px;
+            margin-bottom: 20px;
+            background: var(--background);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 15px;
+        }
+        
+        .compare-product-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .compare-product-title {
+            font-size: 1.2rem;
+            color: var(--foreground);
+            margin-bottom: 15px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        
+        .compare-remove-btn {
+            margin-top: auto;
+            padding: 8px 16px;
+            background: transparent;
+            border: 2px solid #f44336;
+            color: #f44336;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .compare-remove-btn:hover {
+            background: #f44336;
+            color: white;
+        }
+        
+        .spec-row {
+            margin-bottom: 15px;
+        }
+        
+        .spec-label {
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+        
+        .spec-value {
+            color: var(--muted-foreground);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .spec-value.highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .compare-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .compare-action-btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .compare-action-btn.primary {
+            background: var(--primary);
+            color: var(--primary-foreground);
+        }
+        
+        .compare-action-btn.secondary {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--foreground);
+        }
+        
+        .compare-action-btn.danger {
+            background: transparent;
+            border: 2px solid #f44336;
+            color: #f44336;
+        }
+        
+        .compare-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 1100px) {
+            .compare-table-container {
+                margin: 20px -20px;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            
+            .compare-header {
+                padding: 40px 0 20px;
+            }
+            
+            .compare-header h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .compare-product-image {
+                width: 140px;
+                height: 140px;
+            }
+            
+            .compare-product-card {
+                min-height: 350px;
+            }
+            
+            .compare-actions {
+                flex-direction: column;
+            }
+            
+            .compare-action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .compare-page {
+                padding: 0 10px;
+            }
+            
+            .compare-product-image {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .compare-table th,
+            .compare-table td {
+                padding: 15px 10px;
+            }
+        }

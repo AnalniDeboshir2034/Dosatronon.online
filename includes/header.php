@@ -13,12 +13,9 @@ $logo__text = getContentSection('head_name');
                 <span class="burger-btn__line"></span>
             </button>
 
-            <!-- Логотип -->
             <a href="index.php" class="logo">
-            
-                <span class="logo__text"><?php echo nl2br(htmlspecialchars($logo__text)); ?></span>
+                <span class="logo__text"><?php echo nl2br($logo__text); ?></span>
             </a>
-
    
 
             <!-- Затемнение фона -->

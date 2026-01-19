@@ -19,7 +19,7 @@ $head_name=getContentSection('head_name');
                     <h3 class="footer__title">Контакты</h3>
                     <ul class="footer__list">
                         <?php if ($contact_phone): ?>
-                        <li>📞 <?php echo nl2br(htmlspecialchars($contact_phone)); ?></li>
+                        <li>📞 <?php echo nl2br($contact_phone); ?></li>
                         <?php endif; ?>
                         
                         <?php if ($contact_email): ?>
