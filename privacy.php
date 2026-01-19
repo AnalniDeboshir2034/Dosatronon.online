@@ -13,7 +13,7 @@ $meta_keys = "персональные данные, политика конфи
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="cs/style.css">
     <link rel="stylesheet" href="cs/privacy.css">
-    <script src="js/script.js?v=<?php echo filemtime('js/script.js'); ?>" defer></script> 
+    <script src="j/script.js?v=<?php echo filemtime('j/script.js'); ?>" defer></script> 
 </head>
 <body>
 <?php include "includes/header.php"; ?>
