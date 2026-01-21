@@ -12,7 +12,7 @@ $head_name=getContentSection('head_name');
         <div class="container">
             <div class="footer__content">
                 <div class="footer__col">
-                    <a href="index.php" class="footer-logo"><?php echo nl2br(htmlspecialchars($head_name)); ?></a>
+                    <a href="/" class="footer-logo"><?php echo nl2br(htmlspecialchars($head_name)); ?></a>
                     <p class="footer__text">Каталог медикаторов</p>
                 </div>
                 <div class="footer__col">
@@ -27,17 +27,17 @@ $head_name=getContentSection('head_name');
                         <?php endif; ?>
                         
                         <?php if ($contact_address): ?>
-                        <li>📍 <?php echo htmlspecialchars($contact_address); ?></li>
+                        <li>📍 <?php echo nl2br($contact_address); ?></li>
                         <?php endif; ?>
                     </ul>
                 </div>
                 <div class="footer__col">
                     <h3 class="footer__title">Навигация</h3>
                     <ul class="footer__list">
-                        <li><a href="index.php">Главная</a></li>
-                        <li><a href="catalog.php">Каталог</a></li> 
-                        <li><a href="contacts.php">Контакты</a></li> 
-                        <li><a href="compare.php">Сравнение</a></li>
+                        <li><a href="/">Главная</a></li>
+                        <li><a href="/catalog">Каталог</a></li> 
+                        <li><a href="/contacts">Контакты</a></li> 
+                        <li><a href="/compare">Сравнение</a></li>
                     </ul>
                 </div>
                 <div class="footer__col">

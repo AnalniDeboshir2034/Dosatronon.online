@@ -1,4 +1,5 @@
 <?php
+require_once 'includes/forslug.php';
 $BITRIX_WEBHOOK = 'https://k7s.bitrix24.by/rest/25370/dhzvmrk2o9q56985/crm.lead.add.json';
 
 
@@ -83,6 +84,17 @@ if ($mysqli->connect_error) {
 
 $mysqli->set_charset("utf8mb4");
 
+
+$sql = "SELECT id, name, img, d_dosing, performance, slug FROM medicator LIMIT 6";
+$result = $mysqli->query($sql);
+$products = [];
+
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        $row['img_found'] = findFile($row['img'] ?? '');
+        $products[] = $row;
+    }
+}
 function findFile($dbPath) {
     if (empty($dbPath) || $dbPath == '-' || $dbPath == 'NULL') {
         return null;
@@ -194,7 +206,7 @@ $favicon=getContent('favicon');
                             <div class="hero-slide__content">
                                 <h1 class="hero-slide__title">Профессиональные медикаторы</h1>
                                 <p class="hero-slide__text">Точное дозирование для сельского хозяйства</p>
-                                <a href="catalog.php" class="btn btn-primary btn-hero">Смотреть каталог</a>
+                                <a href="/catalog" class="btn btn-primary btn-hero">Смотреть каталог</a>
                             </div>
                         </div>
                         <div class="hero-slide__overlay"></div>
@@ -216,131 +228,67 @@ $favicon=getContent('favicon');
         </section>
 
 <section class="products">
-    <div class="container">
-        <h2 class="section-title">Популярные товары</h2>
-        
-        <div class="products-grid-desktop">
-            <?php if (count($products) > 0): ?>
-                <?php 
-                // Берем только 3 товара для десктопа
-                $desktopProducts = array_slice($products, 0, 3);
-                ?>
-                <?php foreach ($desktopProducts as $product): ?>
-                <div class="product-card">
-                    <div class="product-card__image">
-                        <?php if ($product['img_found']): ?>
-                            <img src="<?php echo htmlspecialchars($product['img_found']); ?>" 
-                                 alt="<?php echo htmlspecialchars($product['name']); ?>"
-                                 loading="lazy">
-                        <?php elseif (!empty($product['img']) && $product['img'] != '-'): ?>
-                            <img src="images/products/<?php echo htmlspecialchars($product['img']); ?>" 
-                                 alt="<?php echo htmlspecialchars($product['name']); ?>"
-                                 loading="lazy">
-                        <?php else: ?>
-                            <div class="image-placeholder">
-                                <span class="placeholder-icon">🏭</span>
-                                <p>Нет изображения</p>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                    <div class="product-card__content">
-                        <h3 class="product-card__title">
-                            <a href="product.php?id=<?php echo $product['id']; ?>" class="product-link">
-                                <?php echo htmlspecialchars($product['name']); ?>
-                            </a>
-                        </h3>
-                        <p class="product-card__desc">
-                            <?php if (!empty($product['d_dosing'])): ?>
-                                <span class="spec-item">📏 <?php echo htmlspecialchars($product['d_dosing']); ?></span><br>
+        <div class="container">
+            <h2 class="section-title">Популярные товары</h2>
+            
+            <div class="products-grid-desktop">
+                <?php if (count($products) > 0): ?>
+                    <?php $desktopProducts = array_slice($products, 0, 3); ?>
+                    <?php foreach ($desktopProducts as $product): ?>
+                    <div class="product-card">
+                        <div class="product-card__image">
+                            <?php 
+                            // ИСПОЛЬЗУЕМ getProductImage() из forslug.php
+                            $imageUrl = getProductImage($product);
+                            if ($imageUrl): ?>
+                                <img src="<?php echo htmlspecialchars($imageUrl); ?>" 
+                                     alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                     loading="lazy">
+                            <?php else: ?>
+                                <div class="image-placeholder">
+                                    <span class="placeholder-icon">🏭</span>
+                                    <p>Нет изображения</p>
+                                </div>
                             <?php endif; ?>
-                            <?php if (!empty($product['performance'])): ?>
-                                <span class="spec-item">⚡ <?php echo htmlspecialchars($product['performance']); ?></span>
-                            <?php endif; ?>
-                        </p>
-                        <div class="product-card__price">Подробности по запросу</div>
-                        <div class="product-card__actions">
-                            <button class="btn btn-secondary" 
-                                    data-product-id="<?php echo $product['id']; ?>"
-                                    data-product-name="<?php echo htmlspecialchars($product['name']); ?>">
-                                В сравнение
-                            </button>
-                            <a href="product.php?id=<?php echo $product['id']; ?>" class="btn btn-primary">Подробнее</a>
                         </div>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div>
-        
-        <!-- Swiper для мобилки (скрыт на десктопе) -->
-        <div class="products-swiper-mobile">
-            <div class="swiper products-swiper">
-                <div class="swiper-wrapper">
-                    <?php if (count($products) > 0): ?>
-                        <?php 
-                        // Берем первые 3 товара для цикла 0-2
-                        $mobileProducts = array_slice($products, 0, 3);
-                        ?>
-                        <?php foreach ($mobileProducts as $product): ?>
-                        <div class="swiper-slide">
-                            <div class="product-card">
-                                <div class="product-card__image">
-                                    <?php if ($product['img_found']): ?>
-                                        <img src="<?php echo htmlspecialchars($product['img_found']); ?>" 
-                                             alt="<?php echo htmlspecialchars($product['name']); ?>"
-                                             loading="lazy">
-                                    <?php elseif (!empty($product['img']) && $product['img'] != '-'): ?>
-                                        <img src="images/products/<?php echo htmlspecialchars($product['img']); ?>" 
-                                             alt="<?php echo htmlspecialchars($product['name']); ?>"
-                                             loading="lazy">
-                                    <?php else: ?>
-                                        <div class="image-placeholder">
-                                            <span class="placeholder-icon">🏭</span>
-                                            <p>Нет изображения</p>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="product-card__content">
-                                    <h3 class="product-card__title">
-                                        <a href="product.php?id=<?php echo $product['id']; ?>" class="product-link">
-                                            <?php echo htmlspecialchars($product['name']); ?>
-                                        </a>
-                                    </h3>
-                                    <p class="product-card__desc">
-                                        <?php if (!empty($product['d_dosing'])): ?>
-                                            <span class="spec-item">📏 <?php echo htmlspecialchars($product['d_dosing']); ?></span><br>
-                                        <?php endif; ?>
-                                        <?php if (!empty($product['performance'])): ?>
-                                            <span class="spec-item">⚡ <?php echo htmlspecialchars($product['performance']); ?></span>
-                                        <?php endif; ?>
-                                    </p>
-                                    <div class="product-card__price">Подробности по запросу</div>
-                                    <div class="product-card__actions">
-                                        <button class="btn btn-secondary" 
-                                                data-product-id="<?php echo $product['id']; ?>"
-                                                data-product-name="<?php echo htmlspecialchars($product['name']); ?>">
-                                            В сравнение
-                                        </button>
-                                        <a href="product.php?id=<?php echo $product['id']; ?>" class="btn btn-primary">Подробнее</a>
-                                    </div>
-                                </div>
+                        <div class="product-card__content">
+                            <h3 class="product-card__title">
+                                <!-- ИСПОЛЬЗУЕМ getProductUrl() из forslug.php -->
+                                <a href="<?php echo getProductUrl($product); ?>" class="product-link">
+                                    <?php echo htmlspecialchars($product['name']); ?>
+                                </a>
+                            </h3>
+                            <p class="product-card__desc">
+                                <?php if (!empty($product['d_dosing'])): ?>
+                                    <span class="spec-item">📏 <?php echo htmlspecialchars($product['d_dosing']); ?></span><br>
+                                <?php endif; ?>
+                                <?php if (!empty($product['performance'])): ?>
+                                    <span class="spec-item">⚡ <?php echo htmlspecialchars($product['performance']); ?></span>
+                                <?php endif; ?>
+                            </p>
+                            <div class="product-card__price">Подробности по запросу</div>
+                            <div class="product-card__actions">
+                                <button class="btn btn-secondary" 
+                                        data-product-id="<?php echo $product['id']; ?>"
+                                        data-product-name="<?php echo htmlspecialchars($product['name']); ?>">
+                                    В сравнение
+                                </button>
+                                <!-- ИСПОЛЬЗУЕМ getProductUrl() из forslug.php -->
+                                <a href="<?php echo getProductUrl($product); ?>" class="btn btn-primary">Подробнее</a>
                             </div>
                         </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </div>
-                
-                <!-- Кнопки навигации -->
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
+                    </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+            
+            <!-- Кнопка в каталог -->
+            <div class="text-center" style="margin-top: 30px; text-align: center;">
+                <a href="/catalog" class="btn btn-large">Весь каталог →</a>
             </div>
         </div>
-        
-        <div class="text-center" style="margin-top: 30px;">
-            <a href="catalog.php" class="btn btn-large">Весь каталог →</a>
-        </div>
-    </div>
-</section>
+    </section>
+    
            <section class="form-section" id="form">
     <div class="form-container">
         <div class="form-card-single">
@@ -415,7 +363,7 @@ $favicon=getContent('favicon');
                     <div class="checkbox-wrapper-single">
                         <input type="checkbox" id="agreeSingle" name="agree" class="form-checkbox-single" required>
                         <label for="agreeSingle" class="checkbox-label-single">
-                            Я даю согласие на <a href="privacy.php">обработку персональных данных</a>
+                            Я даю согласие на <a href="/privacy">обработку персональных данных</a>
                         </label>
                     </div>
                 </div>

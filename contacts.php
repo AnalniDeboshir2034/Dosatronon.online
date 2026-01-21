@@ -139,7 +139,7 @@ $favicon=getContent('favicon');
                                     <div class="contact-icon">📍</div>
                                     <div class="contact-details">
                                         <h4>Адрес</h4>
-                                        <p><?php echo nl2br(htmlspecialchars($contact_address));?></p>
+                                        <p><?php echo nl2br($contact_address);?></p>
                                     </div>
                                 </div>
                                 
@@ -261,7 +261,7 @@ $favicon=getContent('favicon');
                                         <input type="checkbox" id="agreeSplit" name="agree" class="form-checkbox-split" required>
                                         <label for="agreeSplit" class="checkbox-label-split">
                                             <span class="checkbox-text-split">
-                                                Я даю согласие на <a href= "privacy.php" class = "nav__link"> обработку персональных данных</a>
+                                                Я даю согласие на <a href= "/privacy" class = "nav__link"> обработку персональных данных</a>
                                             </span>
                                         </label>
                                     </div>

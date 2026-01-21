@@ -1,7 +1,5 @@
 <?php
-// Включаем отладку
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+require_once "includes/forslug.php";
 
 
 $host = 'localhost';
@@ -83,7 +81,7 @@ if (isset($_GET['ids'])) {
 
 if (!empty($compare_ids)) {
     $placeholders = implode(',', array_fill(0, count($compare_ids), '?'));
-    $sql = "SELECT * FROM medicator WHERE id IN ($placeholders)";
+    $sql = "SELECT *, slug FROM medicator WHERE id IN ($placeholders)"; // ← ДОБАВИЛИ slug
     
     $stmt = $mysqli->prepare($sql);
     if ($stmt) {
@@ -91,10 +89,7 @@ if (!empty($compare_ids)) {
         $stmt->bind_param($types, ...$compare_ids);
         $stmt->execute();
         
-        // Вместо get_result() используем bind_result()
         $stmt->store_result();
-        
-        // Получаем информацию о колонках
         $meta = $stmt->result_metadata();
         $fields = array();
         $fieldReferences = array();
@@ -154,7 +149,7 @@ $favicon=getContent('favicon');
             <div class="compare-header">
                 <h1>Сравнение товаров</h1>
                 <p>Сравните характеристики выбранных медикаторов</p>
-                <a href="srav.php"class="btn btn-primary header__order-btn">Общая Сравнительная Таблица</a>
+                <a href="/srav"class="btn btn-primary header__order-btn">Общая Сравнительная Таблица</a>
             </div>
             
             <?php if (empty($compare_items)): ?>
@@ -163,7 +158,7 @@ $favicon=getContent('favicon');
                     <h2 class="empty-title">Список сравнения пуст</h2>
                     <p class="empty-text">Добавьте товары для сравнения из каталога.</p>
                     <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                        <a href="catalog.php" class="compare-action-btn primary">
+                        <a href="/catalog" class="compare-action-btn primary">
                             Перейти в каталог
                         </a>
                     </div>
@@ -239,12 +234,10 @@ $favicon=getContent('favicon');
                                 <?php foreach ($compare_items as $product): ?>
                                 <td>
                                     <div style="display: flex; flex-direction: column; gap: 10px;">
-                                        <a href="product.php?id=<?php echo $product['id']; ?>" 
-                                           class="compare-action-btn secondary">
-                                            Подробнее
+                                        <a href="<?php echo getProductUrl($product); ?>" class="compare-action-btn secondary">
+                                                Подробнее
                                         </a>
-                                        <a href="contacts.php?product=<?php echo urlencode($product['name']); ?>" 
-                                           class="compare-action-btn primary">
+                                        <a href="/contacts" class="compare-action-btn primary">
                                             Заказать
                                         </a>
                                     </div>
@@ -255,13 +248,13 @@ $favicon=getContent('favicon');
                     </table>
                     
                     <div class="compare-actions">
-                        <a href="compare.php?action=clear" class="compare-action-btn danger" onclick="return confirm('Очистить весь список сравнения?')">
+                        <a href="/compare?action=clear" class="compare-action-btn danger" onclick="return confirm('Очистить весь список сравнения?')">
                             Очистить сравнение
                         </a>
-                        <a href="catalog.php" class="compare-action-btn secondary">
+                        <a href="/catalog" class="compare-action-btn secondary">
                             Добавить еще товары
                         </a>
-                        <a href="contacts.php" class="compare-action-btn primary">
+                        <a href="/contacts" class="compare-action-btn primary">
                             Заказать выбранное
                         </a>
                     </div>

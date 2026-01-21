@@ -54,7 +54,7 @@ $favicon=getContent('favicon');
             <div class="consultation-box">
                 <h3>Нужна консультация?</h3>
                 <p>Наши специалисты помогут подобрать оптимальную модель для ваших задач</p>
-                <a href="#consult-form" class="btn btn-primary">Получить консультацию</a>
+                <a href="/contacts#contactFormSplit" class="btn btn-primary">Получить консультацию</a>
             </div>
         </aside>
         
@@ -424,7 +424,7 @@ $favicon=getContent('favicon');
                 <p style="color: hsl(200 20% 70%); font-size: 1.2rem; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
                     Свяжитесь с нашими специалистами через форму обратной связи для подбора оптимальной модели дозатора
                 </p>
-                <a href="contacts.php#contactFormSplit" class="btn btn-primary" style="padding: 15px 40px; font-size: 1.1rem;">
+                <a href="/contacts#contactFormSplit" class="catalog-btn" style="padding: 15px 40px; font-size: 1.1rem;">
                     Написать специалисту
                 </a>
             </div>

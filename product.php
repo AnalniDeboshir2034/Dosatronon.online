@@ -2,7 +2,7 @@
 // Включаем отладку
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
+require_once 'includes/forslug.php'; 
 // ============================================
 // ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ
 // ============================================
@@ -67,7 +67,7 @@ $product_id = isset($_GET['id']) ? intval($_GET['id']) : 1;
 $product = null;
 
 // Запрос к базе данных
-$sql = "SELECT * FROM medicator WHERE id = ?";
+$sql = "SELECT *,slug FROM medicator WHERE id = ?";
 $stmt = $mysqli->prepare($sql);
 if ($stmt) {
     $stmt->bind_param("i", $product_id);
@@ -151,6 +151,8 @@ function getContent($section) {
 
 $meta_desc = getContent('meta_description');
 $meta_keys = getContent('meta_keywords');
+$favicon = getContent('favicon');
+$page_title = getContent('header_title');
 $favicon=getContent('favicon');
 ?>
 
@@ -159,12 +161,14 @@ $favicon=getContent('favicon');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="icon" href="<?php echo $favicon; ?>" type="image/x-icon">
+    <link rel="icon" href="<?php echo $favicon; ?>" type="image/x-icon">
     <link rel="shortcut icon" href="<?php echo $meta_desc; ?>" type="image/x-icon">
-    <title><?php echo $product ? htmlspecialchars($product['name']) . ' | DOSATRON' : 'Товар не найден | DOSATRON'; ?></title>
-    <link rel="stylesheet" href="cs/style.css">
-    <link rel="stylesheet" href="cs/product.css">
-    <script src="j/script.js?v=<?php echo filemtime('j/script.js'); ?>" defer></script> 
+    <title><?php echo $product ? htmlspecialchars($product['name']) . ' | ' . $page_title : 'Товар не найден | ' . $page_title; ?></title>
+    
+    <!-- ИСПРАВЛЕННЫЕ ПУТИ -->
+    <link rel="stylesheet" href="/cs/style.css">
+    <link rel="stylesheet" href="/cs/product.css">
+    <script src="/j/script.js?v=<?php echo filemtime('j/script.js'); ?>" defer></script> 
     <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
     <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js" defer></script>
 </head>
@@ -184,7 +188,7 @@ $favicon=getContent('favicon');
                         Запрашиваемый товар не существует или был удален.
                     </p>
                     <div>
-                        <a href="catalog.php" class="btn btn-primary">
+                        <a href="/catalog" class="btn btn-primary">
                             Вернуться в каталог
                         </a>
                     </div>
@@ -193,9 +197,9 @@ $favicon=getContent('favicon');
         <?php else: ?>
             <nav style="background: var(--card); padding: 15px 0; border-bottom: 1px solid var(--border);">
                 <div class="container">
-                    <a href="index.php" style="color: var(--muted-foreground); text-decoration: none;">Главная</a>
+                    <a href="/" style="color: var(--muted-foreground); text-decoration: none;">Главная</a>
                     <span style="color: var(--muted-foreground); margin: 0 10px;"></span>
-                    <a href="catalog.php" style="color: var(--muted-foreground); text-decoration: none;">Каталог</a>
+                    <a href="/catalog" style="color: var(--muted-foreground); text-decoration: none;">Каталог</a>
                     <span style="color: var(--muted-foreground); margin: 0 10px;"></span>
                     <span style="color: var(--foreground); font-weight: 500;"><?php echo htmlspecialchars($product['name']); ?></span>
                 </div>
@@ -209,7 +213,7 @@ $favicon=getContent('favicon');
                         <!-- Изображение товара -->
                         <div class="product-image-container">
                             <?php if ($product['img_found']): ?>
-                                <img src="<?php echo htmlspecialchars($product['img_found']); ?>" 
+                                <img src="/<?php echo htmlspecialchars($product['img_found']); ?>" 
                                      alt="<?php echo htmlspecialchars($product['name']); ?>">
                             <?php else: ?>
                                 <div class="image-placeholder">
@@ -225,12 +229,12 @@ $favicon=getContent('favicon');
                                 <span style="margin-right: 8px;">⚖️</span>
                                 Добавить к сравнению
                             </button>
-                            <a href="contacts.php#contactFormSplit" class="btn btn-request">
+                            <a href="/contacts#contactFormSplit" class="btn btn-request">
                                 <span style="margin-right: 8px;">📧</span>
                                 Заказать
                             </a>
                             <?php if ($product['pdf_found']): ?>
-                                <a href="<?php echo htmlspecialchars($product['pdf_found']); ?>" 
+                                <a href="/<?php echo htmlspecialchars($product['pdf_found']); ?>" 
                                    class="btn btn-download" 
                                    target="_blank"
                                    download>
@@ -343,7 +347,7 @@ $favicon=getContent('favicon');
                             
                             <div class="diagram-image-container">
                                 <?php if ($product['diag_found']): ?>
-                                    <img src="<?php echo htmlspecialchars($product['diag_found']); ?>" 
+                                    <img src="/<?php echo htmlspecialchars($product['diag_found']); ?>" 
                                          alt="Техническая схема <?php echo htmlspecialchars($product['name']); ?>">
                                 <?php else: ?>
                                     <div class="image-placeholder">
@@ -374,7 +378,7 @@ $favicon=getContent('favicon');
                         <div class="product-card">
                             <div class="product-card__image">
                                 <?php if ($similar['img_found']): ?>
-                                    <img src="<?php echo htmlspecialchars($similar['img_found']); ?>" 
+                                    <img src="/<?php echo htmlspecialchars($similar['img_found']); ?>" 
                                          alt="<?php echo htmlspecialchars($similar['name']); ?>"
                                          loading="lazy">
                                 <?php else: ?>
@@ -386,7 +390,7 @@ $favicon=getContent('favicon');
                             </div>
                             <div class="product-card__content">
                                 <h3 class="product-card__title">
-                                    <a href="product.php?id=<?php echo $similar['id']; ?>" class="product-link">
+                                   <a href="<?php echo getProductUrl($similar); ?>" class="product-link">
                                         <?php echo htmlspecialchars($similar['name']); ?>
                                     </a>
                                 </h3>
@@ -405,7 +409,7 @@ $favicon=getContent('favicon');
                                             data-product-name="<?php echo htmlspecialchars($similar['name']); ?>">
                                         В сравнение
                                     </button>
-                                    <a href="product.php?id=<?php echo $similar['id']; ?>" class="btn btn-primary">Подробнее</a>
+                                    <a href="<?php echo getProductUrl($similar); ?>" class="btn btn-primary">Подробнее</a>
                                 </div>
                             </div>
                         </div>
@@ -421,7 +425,7 @@ $favicon=getContent('favicon');
                                     <div class="product-card">
                                         <div class="product-card__image">
                                             <?php if ($similar['img_found']): ?>
-                                                <img src="<?php echo htmlspecialchars($similar['img_found']); ?>" 
+                                                <img src="/<?php echo htmlspecialchars($similar['img_found']); ?>" 
                                                      alt="<?php echo htmlspecialchars($similar['name']); ?>"
                                                      loading="lazy">
                                             <?php else: ?>
@@ -433,9 +437,9 @@ $favicon=getContent('favicon');
                                         </div>
                                         <div class="product-card__content">
                                             <h3 class="product-card__title">
-                                                <a href="product.php?id=<?php echo $similar['id']; ?>" class="product-link">
-                                                    <?php echo htmlspecialchars($similar['name']); ?>
-                                                </a>
+                                               <a href="<?php echo getProductUrl($similar); ?>" class="product-link">
+                                        <?php echo htmlspecialchars($similar['name']); ?>
+                                    </a>
                                             </h3>
                                             <p class="product-card__desc">
                                                 <?php if (!empty($similar['d_dosing'])): ?>
@@ -452,8 +456,7 @@ $favicon=getContent('favicon');
                                                         data-product-name="<?php echo htmlspecialchars($similar['name']); ?>">
                                                     В сравнение
                                                 </button>
-                                                <a href="product.php?id=<?php echo $similar['id']; ?>" class="btn btn-primary">Подробнее</a>
-                                                 <a href="catalog.php" class="btn btn-large">Весь каталог →</a>
+                                                <a href="/product/<?php echo $similar['id']; ?>" class="btn btn-primary">Подробнее</a>
                                             </div>
                                         </div>
                                     </div>
@@ -468,7 +471,7 @@ $favicon=getContent('favicon');
                     </div>
                     
                     <div class="text-center" >
-                        <a href="catalog.php" class="btn btn-large">Весь каталог →</a>
+                        <a href="/catalog" class="btn btn-large">Весь каталог →</a>
                     </div>
                 </div>
             </section>

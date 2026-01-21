@@ -1,0 +1,45 @@
+RewriteEngine On
+
+# HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# product/4?id=4 → /product/4
+RewriteCond %{THE_REQUEST} \s/product/([0-9]+)\?id=\1 [NC]
+RewriteRule ^ /product/%1? [R=301,L]
+
+# product.php?id=4 → /product/4
+RewriteCond %{THE_REQUEST} \s/product\.php\?id=([0-9]+) [NC]
+RewriteRule ^ /product/%1? [R=301,L]
+
+# /product/4 → product.php?id=4
+RewriteRule ^product/([0-9]+)/?$ product.php?id=$1 [L,QSA]
+
+# catalog?filter=D25 → /catalog/D25
+RewriteCond %{THE_REQUEST} \s/catalog\?filter=([A-Za-z0-9\-]+) [NC]
+RewriteRule ^ /catalog/%1? [R=301,L]
+
+# /catalog/D25 → catalog.php?filter=D25
+RewriteRule ^catalog/([A-Za-z0-9\-]+)/?$ catalog.php?filter=$1 [L,QSA]
+
+# Обработка поиска (catalog?search=query)
+RewriteCond %{QUERY_STRING} ^search=(.*)$
+RewriteRule ^catalog/?$ catalog.php?search=%1 [L,QSA]
+
+# Главная страница каталога (без фильтра)
+RewriteRule ^catalog/?$ catalog.php [L,QSA]
+
+# Убираем .php
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([^/]+)/?$ $1.php [L]
+
+# Поиск с ЧПУ: /catalog/search/DIA → catalog.php?search=DIA
+RewriteRule ^catalog/search/([^/]+)/?$ catalog.php?search=$1 [L,QSA]
+
+# Редирект со старого формата на новый (по желанию)
+RewriteCond %{THE_REQUEST} \s/catalog\?search=([^\s&]+) [NC]
+RewriteRule ^ /catalog/search/%1? [R=301,L]
+# Для нового формата: /product/1-dosatron-dia4al-vf → product.php?id=1
+RewriteRule ^product/([0-9]+)-([a-z0-9\-]+)/?$ product.php?id=$1 [L,QSA]
+# Для чистого slug: /product/dosatron-dia4al-vf → product.php?slug=dosatron-dia4al-vf
+RewriteRule ^product/([a-z0-9\-]+)/?$ product.php?slug=$1 [L,QSA]

@@ -1,0 +1,15 @@
+User-agent: *
+Disallow: /api/
+Disallow: /includes/
+Disallow: /.git/
+Disallow: /.vscode/
+Disallow:/filling/
+
+Allow: /css/
+Allow: /js/
+Allow: /img/
+Allow: /products/
+Allow: /pdfs/
+Allow: /diagrams/
+
+Sitemap: https://dosatron.online/sitemap.xml
