@@ -186,11 +186,11 @@ $favicon=getContent('favicon');
 <meta name="description" content="<?php echo $meta_desc; ?>">
 <meta name="keywords" content="<?php echo $meta_keys; ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="cs/style.css">
-<link rel="stylesheet" href="cs/index.css">
-<script src="j/script.js?v=<?php echo filemtime('j/script.js'); ?>" defer></script> 
-<script src="j/index.js" ></script>
-<script src = "j/contacts.js"></script>
+<link rel="stylesheet" href="/cs/style.css">
+<link rel="stylesheet" href="/cs/index.css">
+<script src="/j/script.js?v=<?php echo filemtime('/j/script.js'); ?>" defer></script> 
+<script src="/j/index.js" ></script>
+<script src = "/j/contacts.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
 
 

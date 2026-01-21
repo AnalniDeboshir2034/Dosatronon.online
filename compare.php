@@ -48,10 +48,20 @@ function findFile($dbPath) {
 $compare_items = [];
 $compare_ids = [];
 
+
 if (isset($_GET['action']) && $_GET['action'] == 'clear') {
-    echo '<script>localStorage.removeItem("compareItems"); window.location.href = "compare.php";</script>';
+    // Устанавливаем пустой массив в localStorage через JavaScript
+    echo '<script>
+        if (confirm("Очистить весь список сравнения?")) {
+            localStorage.removeItem("compareItems");
+            window.location.href = "compare.php";
+        } else {
+            window.history.back();
+        }
+    </script>';
     exit();
 }
+ 
 
 if (isset($_GET['remove_id'])) {
     $remove_id = intval($_GET['remove_id']);
@@ -181,7 +191,7 @@ $favicon=getContent('favicon');
                                             <?php endif; ?>
                                         </div>
                                         <h3 class="compare-product-title"><?php echo htmlspecialchars($product['name']); ?></h3>
-                                        <a href="compare.php?remove_id=<?php echo $product['id']; ?>&ids=<?php echo isset($_GET['ids']) ? $_GET['ids'] : ''; ?>" class="compare-remove-btn" onclick="return confirm('Удалить товар из сравнения?')">
+                                        <a href="compare.php?remove_id=<?php echo $product['id']; ?>&ids=<?php echo urlencode(implode(',', $compare_ids)); ?>"class="compare-remove-btn" data-product-id="<?php echo $product['id']; ?>">
                                             Удалить
                                         </a>
                                     </div>
@@ -248,7 +258,7 @@ $favicon=getContent('favicon');
                     </table>
                     
                     <div class="compare-actions">
-                        <a href="/compare?action=clear" class="compare-action-btn danger" onclick="return confirm('Очистить весь список сравнения?')">
+                        <a href="compare.php?action=clear" class="compare-action-btn danger clear-compare-btn">
                             Очистить сравнение
                         </a>
                         <a href="/catalog" class="compare-action-btn secondary">
