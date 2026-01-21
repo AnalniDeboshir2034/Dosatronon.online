@@ -1,12 +1,23 @@
 <?php
 $page_title = "Политика обработки персональных данных | Dosatron";
-$meta_desc = "Политика обработки персональных данных Dosatron.online в соответствии с Законодательством РФ";
-$meta_keys = "персональные данные, политика конфиденциальности, обработка данных";
+include 'includes/content_parser.php';
+function getContent($section) {
+    require_once 'includes/content_parser.php';
+    return getContentSection($section, '');
+}
+
+$meta_desc = getContent('meta_description');
+$meta_keys = getContent('meta_keywords');
+$favicon=getContent('favicon');
 ?>
+
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="<?php echo $favicon; ?>" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo $meta_desc; ?>" type="image/x-icon">
     <title><?php echo $page_title; ?></title>
     <meta name="description" content="<?php echo $meta_desc; ?>">
     <meta name="keywords" content="<?php echo $meta_keys; ?>">

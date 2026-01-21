@@ -3,6 +3,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+
 $host = 'localhost';
 $user = 'a7comby_dosatron_user';
 $pass = 'dosatron_user';
@@ -117,6 +118,16 @@ if (!empty($compare_ids)) {
         $stmt->close();
     }
 }
+include 'includes/content_parser.php';
+function getContent($section) {
+    require_once 'includes/content_parser.php';
+    return getContentSection($section, '');
+}
+
+$meta_desc = getContent('meta_description');
+$meta_keys = getContent('meta_keywords');
+$page_title = getContent('header_title');
+$favicon=getContent('favicon');
 ?>
 
 <!DOCTYPE html>
@@ -124,7 +135,9 @@ if (!empty($compare_ids)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сравнение товаров | 7 company</title>
+    <link rel="icon" href="<?php echo $favicon; ?>" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo $meta_desc; ?>" type="image/x-icon">
+    <title><?php echo $page_title; ?></title>
     <link rel="stylesheet" href="cs/style.css">
         <link rel="stylesheet" href="cs/compare.css">
     <script src="j/script.js?v=<?php echo filemtime('j/script.js'); ?>" defer></script> 

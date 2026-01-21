@@ -1,5 +1,16 @@
 <?php
+include 'includes/content_parser.php';
+function getContent($section) {
+    require_once 'includes/content_parser.php';
+    return getContentSection($section, '');
+}
+
+$meta_desc = getContent('meta_description');
+$meta_keys = getContent('meta_keywords');
+$page_title = getContent('header_title');
+$favicon=getContent('favicon');
 ?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -8,7 +19,9 @@
     <link rel="stylesheet" href="cs/style.css">
     <link rel="stylesheet" href="cs/srav.css">
     <script src="j/srav.js" defer></script>
-    <title>Сравнительная таблица дозаторов Dosatron</title>       
+    <link rel="icon" href="<?php echo $favicon; ?>" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo $meta_desc; ?>" type="image/x-icon">
+    <title><?php echo $page_title; ?></title>  
 </head>
 <body>
     

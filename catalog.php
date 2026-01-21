@@ -3,7 +3,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-
+include 'includes/content_parser.php';
 
 // Проверяем соединение с базой данных
 $host = 'localhost';
@@ -126,14 +126,26 @@ $available_filters = [
 ];
 
 $final_filters = array_merge(['all' => 'Все товары'], $available_filters);
+function getContent($section) {
+    require_once 'includes/content_parser.php';
+    return getContentSection($section, '');
+}
+
+$meta_desc = getContent('meta_description');
+$meta_keys = getContent('meta_keywords');
+$page_title = getContent('header_title');
+$favicon=getContent('favicon');
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Каталог медикаторов | 7 company</title>
+    <link rel="icon" href="<?php echo $favicon; ?>" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo $meta_desc; ?>" type="image/x-icon">
+    <title><?php echo $page_title; ?></title>
     <link rel="stylesheet" href="cs/style.css">
     <link rel="stylesheet" href="cs/catalog.css">
     <script src="j/script.js?v=<?php echo filemtime('j/script.js'); ?>" defer></script> 

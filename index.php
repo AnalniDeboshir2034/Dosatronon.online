@@ -1,4 +1,75 @@
 <?php
+$BITRIX_WEBHOOK = 'https://k7s.bitrix24.by/rest/25370/dhzvmrk2o9q56985/crm.lead.add.json';
+
+
+$form_success = false;
+$form_error = '';
+$form_data = [];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
+    $name = htmlspecialchars(trim($_POST['name'] ?? ''));
+    $email = htmlspecialchars(trim($_POST['email'] ?? ''));
+    $phone = htmlspecialchars(trim($_POST['phone'] ?? ''));
+    $message = htmlspecialchars(trim($_POST['message'] ?? ''));
+    
+    $form_data = compact('name', 'email', 'phone', 'message');
+    
+    if (empty($name) || empty($email) || empty($phone)) {
+        $form_error = 'Пожалуйста, заполните все обязательные поля';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $form_error = 'Пожалуйста, введите корректный email адрес';
+    } else {
+        $leadData = [
+            'fields' => [
+                'TITLE' => 'Заявка с сайта Dosatron',
+                'NAME' => $name,
+                'PHONE' => [['VALUE' => $phone, 'VALUE_TYPE' => 'WORK']],
+                'EMAIL' => [['VALUE' => $email, 'VALUE_TYPE' => 'WORK']],
+                'SOURCE_ID' => 'WEB',
+                'SOURCE_DESCRIPTION' => 'Контактная форма сайта',
+                'ASSIGNED_BY_ID' => 1,
+                'STATUS_ID' => 'NEW',
+                'COMMENTS' => "Имя: $name\nEmail: $email\nТелефон: $phone\nСообщение: $message\n\nДата: " . date('d.m.Y H:i:s'),
+                'UF_CRM_SITE' => 'dosa',
+                'UTM_SOURCE' => 'direct',
+                'UTM_MEDIUM' => 'contact_form'
+            ]
+        ];
+        
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $BITRIX_WEBHOOK,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => http_build_query($leadData),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/x-www-form-urlencoded'
+            ]
+        ]);
+        
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        
+        $result = json_decode($response, true);
+        
+        file_put_contents('bitrix_log.txt', 
+            date('Y-m-d H:i:s') . " | HTTP: $httpCode\n" .
+            "Данные: " . print_r($leadData, true) . "\n" .
+            "Ответ: " . print_r($result, true) . "\n\n",
+            FILE_APPEND
+        );
+        
+        if (isset($result['result'])) {
+            $form_success = true;
+            $form_data = [];
+        } else {
+            $form_error = 'Ошибка отправки. Пожалуйста, позвоните нам.';
+        }
+    }
+}
 $host = 'localhost';
 $user = 'a7comby_dosatron_user';
 $pass = 'dosatron_user';
@@ -55,7 +126,6 @@ if ($result) {
     }
 }
 
-// Функция поиска файла (упрощенная)
 function findFileSimple($img) {
     if (empty($img) || $img == '-' || $img == 'NULL') {
         return null;
@@ -80,9 +150,7 @@ function findFileSimple($img) {
 }
 }
 
-// ПЕРЕД HTML кодом добавь:
 function getContent($section) {
-    // Подключаем парсер
     require_once 'includes/content_parser.php';
     return getContentSection($section, '');
 }
@@ -110,6 +178,7 @@ $favicon=getContent('favicon');
 <link rel="stylesheet" href="cs/index.css">
 <script src="j/script.js?v=<?php echo filemtime('j/script.js'); ?>" defer></script> 
 <script src="j/index.js" ></script>
+<script src = "j/contacts.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
 
 
@@ -272,7 +341,97 @@ $favicon=getContent('favicon');
         </div>
     </div>
 </section>
-
+           <section class="form-section" id="form">
+    <div class="form-container">
+        <div class="form-card-single">
+            <div class="form-header-single">
+                <h2>Оставьте заявку</h2>
+                <p class="form-subtitle-single">
+                    Опишите ваш вопрос или оставьте контакты для связи. 
+                    Мы перезвоним вам в течение 30 минут!
+                </p>
+            </div>
+            
+            <?php if ($form_success): ?>
+                <div class="form-notification-single form-success-single">
+                    ✅ Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.
+                </div>
+            <?php elseif ($form_error): ?>
+                <div class="form-notification-single form-error-single">
+                    ⚠️ <?php echo htmlspecialchars($form_error); ?>
+                </div>
+            <?php endif; ?>
+            
+            <form class="contact-form-single" method="POST" action="#form">
+                <div class="form-grid-single">
+                    <!-- Имя -->
+                    <div class="form-group-single">
+                        <label for="nameSingle" class="form-label-single required">
+                            Имя
+                        </label>
+                        <input type="text" id="nameSingle" name="name" class="form-input-single" 
+                               placeholder="Иван Иванов" 
+                               value="<?php echo htmlspecialchars($form_data['name'] ?? ''); ?>"
+                               required>
+                        <div class="form-hint-single">Пример: Иван Иванов</div>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="form-group-single">
+                        <label for="emailSingle" class="form-label-single">
+                            Электронная почта
+                        </label>
+                        <input type="email" id="emailSingle" name="email" class="form-input-single" 
+                               placeholder="example@mail.ru" 
+                               value="<?php echo htmlspecialchars($form_data['email'] ?? ''); ?>">
+                        <div class="form-hint-single">Пример: example@mail.ru</div>
+                    </div>
+                    
+                    <!-- Телефон на всю ширину -->
+                    <div class="form-group-single full-width">
+                        <label for="phoneSingle" class="form-label-single required">
+                            Телефон
+                        </label>
+                        <input type="tel" id="phoneSingle" name="phone" class="form-input-single" 
+                               placeholder="+375 (29) 123-45-67" 
+                               value="<?php echo htmlspecialchars($form_data['phone'] ?? ''); ?>"
+                               required>
+                        <div class="form-hint-single">Пример: +375 (29) 123-45-67</div>
+                    </div>
+                    
+                    <!-- Сообщение -->
+                    <div class="form-group-single full-width">
+                        <label for="messageSingle" class="form-label-single">
+                            Комментарий
+                        </label>
+                        <textarea id="messageSingle" name="message" class="form-textarea-single" 
+                                  placeholder="Опишите ваш вопрос или задачу подробнее..." 
+                                  rows="5"><?php echo htmlspecialchars($form_data['message'] ?? ''); ?></textarea>
+                    </div>
+                </div>
+                
+                <!-- Чекбокс согласия -->
+                <div class="form-agreement-single">
+                    <div class="checkbox-wrapper-single">
+                        <input type="checkbox" id="agreeSingle" name="agree" class="form-checkbox-single" required>
+                        <label for="agreeSingle" class="checkbox-label-single">
+                            Я даю согласие на <a href="privacy.php">обработку персональных данных</a>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Кнопка отправки -->
+                <div class="form-submit-single">
+                    <button type="submit" class="btn-submit-single">
+                        Отправить заявку →
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+                
+                
 
 
         <section class="reviews">

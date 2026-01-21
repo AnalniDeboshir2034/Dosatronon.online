@@ -144,6 +144,14 @@ if ($product) {
         $similar_stmt->close();
     }
 }
+function getContent($section) {
+    require_once 'includes/content_parser.php';
+    return getContentSection($section, '');
+}
+
+$meta_desc = getContent('meta_description');
+$meta_keys = getContent('meta_keywords');
+$favicon=getContent('favicon');
 ?>
 
 <!DOCTYPE html>
@@ -151,428 +159,14 @@ if ($product) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $product ? htmlspecialchars($product['name']) . ' | 7 company' : 'Товар не найден | 7 company'; ?></title>
+     <link rel="icon" href="<?php echo $favicon; ?>" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo $meta_desc; ?>" type="image/x-icon">
+    <title><?php echo $product ? htmlspecialchars($product['name']) . ' | DOSATRON' : 'Товар не найден | DOSATRON'; ?></title>
     <link rel="stylesheet" href="cs/style.css">
-    <script src="j/script.js" defer></script>
+    <link rel="stylesheet" href="cs/product.css">
+    <script src="j/script.js?v=<?php echo filemtime('j/script.js'); ?>" defer></script> 
     <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
     <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js" defer></script>
-
-    <style>
-        /* Стили для страницы товара */
-        .product-page {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .product-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            margin-top: 40px;
-        }
-        
-        .product-gallery {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 30px;
-            border: 1px solid var(--border);
-        }
-        
-        .product-image-container {
-            width: 100%;
-            height: 400px;
-            background: var(--muted);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-        
-        .product-image-container img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        
-        .image-placeholder {
-            text-align: center;
-            color: var(--muted-foreground);
-            padding: 40px;
-        }
-        
-        .placeholder-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-        
-        .product-title {
-            font-size: 2.5rem;
-            color: var(--foreground);
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        
-        .product-subtitle {
-            color: var(--muted-foreground);
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-        
-        /* ТЕХНИЧЕСКИЕ ХАРАКТЕРИСТИКИ */
-        .tech-specs {
-            margin-top: 30px;
-        }
-        
-        .tech-specs h2 {
-            font-size: 1.8rem;
-            color: var(--foreground);
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--primary);
-        }
-        
-        .specs-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 25px;
-        }
-        
-        .spec-card {
-            background: var(--muted);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 25px;
-        }
-        
-        .spec-card.full-width {
-            grid-column: 1 / -1;
-        }
-        
-        .spec-label {
-            color: var(--muted-foreground);
-            font-size: 0.95rem;
-            margin-bottom: 10px;
-            display: block;
-            font-weight: 500;
-        }
-        
-        .spec-value {
-            color: var(--foreground);
-            font-size: 1.2rem;
-            font-weight: 600;
-            line-height: 1.4;
-        }
-        
-        /* Диаграмма */
-        .diagram-container {
-            margin-top: 40px;
-            background: var(--card);
-            border-radius: 16px;
-            padding: 30px;
-            border: 1px solid var(--border);
-        }
-        
-        .diagram-image-container {
-            width: 100%;
-            max-height: 500px;
-            min-height: 300px;
-            background: var(--muted);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-        
-        .diagram-image-container img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        
-        /* Кнопки */
-        .actions-bar {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-        }
-        
-        .btn-compare {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-        
-        .btn-compare:hover {
-            background: var(--primary);
-            color: var(--primary-foreground);
-        }
-        
-        .btn-request {
-            background: #4CAF50;
-            color: white;
-        }
-        
-        .btn-request:hover {
-            background: #45a049;
-        }
-        
-        .btn-download {
-            background: #2196F3;
-            color: white;
-        }
-        
-        .btn-download:hover {
-            background: #1976D2;
-        }
-        
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-        
-        .btn-primary {
-            background: var(--primary);
-            color: var(--primary-foreground);
-        }
-        
-        /* ОПИСАНИЕ ТОВАРА */
-        .product-description {
-            margin-top: 30px;
-            padding: 25px;
-            background: var(--muted);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
-        
-        .product-description h3 {
-            color: var(--foreground);
-            margin-bottom: 15px;
-            font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 10px;
-        }
-        
-        .description-content {
-            color: var(--foreground);
-            line-height: 1.7;
-            font-size: 1.05rem;
-        }
-        
-        .description-content p {
-            margin-bottom: 15px;
-        }
-        
-        .description-content ul, .description-content ol {
-            margin-left: 20px;
-            margin-bottom: 15px;
-        }
-        
-        .description-content li {
-            margin-bottom: 8px;
-        }
-        
-        .description-content strong {
-            color: var(--primary);
-            font-weight: 600;
-        }
-        
-        /* Похожие товары */
-        .similar-products {
-            padding: 80px 0;
-            background: var(--background);
-            border-top: 1px solid var(--border);
-        }
-        
-        .similar-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-        
-        .similar-card {
-            background: var(--card);
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-        }
-        
-        .similar-image {
-            height: 200px;
-            background: var(--muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .similar-image img {
-            max-width: 80%;
-            max-height: 80%;
-            object-fit: contain;
-        }
-        
-        .similar-content {
-            padding: 20px;
-        }
-        
-        /* Адаптивность */
-        @media (max-width: 1100px) {
-            .product-layout {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            
-            .specs-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .actions-bar {
-                flex-direction: column;
-            }
-            
-            .actions-bar .btn {
-                width: 100%;
-            }
-            
-            .product-image-container {
-                height: 350px;
-            }
-            
-            .product-title {
-                font-size: 2rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .product-image-container {
-                height: 300px;
-            }
-            
-            .diagram-image-container {
-                min-height: 250px;
-            }
-        }
-        /* Grid для десктопа */
-.products-grid-desktop {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    margin-bottom: 30px;
-}
-
-/* Swiper для мобилки - скрыт на десктопе */
-.products-swiper-mobile {
-    display: none;
-    position: relative;
-    padding: 0 60px 40px;
-    margin-bottom: 20px;
-}
-
-/* Адаптивность */
-@media (max-width: 991px) {
-    .products-grid-desktop {
-        display: none !important;
-    }
-    
-    .products-swiper-mobile {
-        display: block;
-    }
-}
-
-@media (max-width: 768px) {
-    .products-swiper-mobile {
-        padding: 0 50px 40px;
-    }
-}
-
-@media (max-width: 576px) {
-    .products-swiper-mobile {
-        padding: 0 40px 40px;
-    }
-}
-
-@media (max-width: 480px) {
-    .products-swiper-mobile {
-        padding: 0 20px 30px;
-    }
-}
-
-/* Стили для навигации Swiper */
-.products-swiper .swiper-button-next,
-.products-swiper .swiper-button-prev {
-    width: 40px;
-    height: 40px;
-    background: var(--primary);
-    border-radius: 50%;
-    color: var(--primary-foreground);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    top: 50%;
-    margin-top: -20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.8;
-    transition: all 0.2s;
-    z-index: 10;
-}
-
-.products-swiper .swiper-button-next:hover,
-.products-swiper .swiper-button-prev:hover {
-    opacity: 1;
-    background: hsl(195 100% 40%);
-    transform: scale(1.05);
-}
-
-.products-swiper .swiper-button-prev {
-    left: 10px;
-}
-
-.products-swiper .swiper-button-next {
-    right: 10px;
-}
-
-.products-swiper .swiper-button-prev:after,
-.products-swiper .swiper-button-next:after {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.products-swiper .swiper-button-disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-    transform: none !important;
-}
-    </style>
 </head>
 <body>
     <!-- ШАПКА САЙТА -->
@@ -600,9 +194,9 @@ if ($product) {
             <nav style="background: var(--card); padding: 15px 0; border-bottom: 1px solid var(--border);">
                 <div class="container">
                     <a href="index.php" style="color: var(--muted-foreground); text-decoration: none;">Главная</a>
-                    <span style="color: var(--muted-foreground); margin: 0 10px;">></span>
+                    <span style="color: var(--muted-foreground); margin: 0 10px;"></span>
                     <a href="catalog.php" style="color: var(--muted-foreground); text-decoration: none;">Каталог</a>
-                    <span style="color: var(--muted-foreground); margin: 0 10px;">></span>
+                    <span style="color: var(--muted-foreground); margin: 0 10px;"></span>
                     <span style="color: var(--foreground); font-weight: 500;"><?php echo htmlspecialchars($product['name']); ?></span>
                 </div>
             </nav>
@@ -663,6 +257,10 @@ if ($product) {
                                 $opis = nl2br($opis);
                                 $opis = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $opis);
                                 $opis = preg_replace('/\*(.*?)\*/', '<em>$1</em>', $opis);
+                                $opis = preg_replace('/\$(.*?)\$/', '<h2>$1</h2>', $opis);
+                                $opis = preg_replace('/\%(.*?)\%/', '<h4>$1</h4>', $opis);
+                                $opis = preg_replace('/\.\.(.*?)\.\./', '<b>$1</b>', $opis);
+                                
                                 echo $opis;
                                 ?>
                             </div>

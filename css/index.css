@@ -338,3 +338,327 @@
         font-size: 0.85rem;
     }
 }
+
+/* Основной контейнер формы */
+.form-section {
+    padding: 60px 0;
+    background: linear-gradient(135deg, hsl(220 35% 8%) 0%, hsl(220 35% 6%) 100%);
+}
+
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Карточка формы - аналогично product-card */
+.form-card-single {
+    background: var(--card);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    padding: 40px;
+}
+
+.form-card-single:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+    box-shadow: 0 15px 50px rgba(0, 188, 235, 0.15);
+}
+
+/* Заголовок формы */
+.form-header-single {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+}
+
+.form-header-single h2 {
+    color: var(--primary);
+    font-size: 2rem;
+    margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
+}
+
+.form-header-single h2:after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 3px;
+}
+
+.form-subtitle-single {
+    color: var(--muted-foreground);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 20px auto 0;
+}
+
+/* Сетка полей формы - 2 колонки на десктопе */
+.form-grid-single {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    margin-bottom: 25px;
+}
+
+@media (max-width: 768px) {
+    .form-grid-single {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+/* Группы полей */
+.form-group-single {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Телефон на всю ширину */
+.form-group-single.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Лейблы - стили как у названий товаров */
+.form-label-single {
+    font-size: 0.95rem;
+    color: var(--muted-foreground);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 2px;
+}
+
+.form-label-single.required:after {
+    content: '*';
+    color: #ff4757;
+    font-size: 1.2rem;
+    line-height: 1;
+    margin-left: 2px;
+}
+
+/* Поля ввода - стили как в карточках */
+.form-input-single,
+.form-textarea-single {
+    background: var(--background);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    color: var(--foreground);
+    font-size: 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    line-height: 1.4;
+}
+
+.form-input-single:focus,
+.form-textarea-single:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 188, 235, 0.1);
+}
+
+.form-input-single:hover,
+.form-textarea-single:hover {
+    border-color: hsl(200 30% 25%);
+}
+
+.form-textarea-single {
+    resize: vertical;
+    min-height: 140px;
+    line-height: 1.5;
+}
+
+/* Подсказки под полями */
+.form-hint-single {
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+    margin-top: 2px;
+    line-height: 1.4;
+    opacity: 0.8;
+}
+
+/* Чекбокс согласия */
+.form-agreement-single {
+    margin: 30px 0;
+    padding: 25px;
+    background: hsl(200 30% 10% / 0.3);
+    border-radius: 10px;
+    border-left: 4px solid var(--primary);
+}
+
+.checkbox-wrapper-single {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.form-checkbox-single {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--primary);
+    cursor: pointer;
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.checkbox-label-single {
+    cursor: pointer;
+    color: var(--muted-foreground);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    flex: 1;
+    margin: 0;
+}
+
+.checkbox-label-single a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.checkbox-label-single a:hover {
+    text-decoration: underline;
+}
+
+/* Кнопка отправки - как в карточках товаров */
+.form-submit-single {
+    margin-top: 30px;
+}
+
+.btn-submit-single {
+    width: 100%;
+    padding: 18px;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-submit-single:hover {
+    background: hsl(195 100% 40%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 188, 235, 0.3);
+}
+
+.btn-submit-single:active {
+    transform: translateY(0);
+}
+
+.btn-submit-single .submit-icon {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.btn-submit-single:hover .submit-icon {
+    transform: translateX(5px);
+}
+
+/* Уведомления */
+.form-notification-single {
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 500;
+    animation: slideDown 0.3s ease;
+    border: 1px solid transparent;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-success-single {
+    background: rgba(46, 213, 115, 0.1);
+    color: #2ed573;
+    border-color: rgba(46, 213, 115, 0.3);
+}
+
+.form-error-single {
+    background: rgba(255, 71, 87, 0.1);
+    color: #ff4757;
+    border-color: rgba(255, 71, 87, 0.3);
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+    .form-section {
+        padding: 40px 0;
+    }
+    
+    .form-card-single {
+        padding: 30px 25px;
+    }
+    
+    .form-header-single h2 {
+        font-size: 1.6rem;
+    }
+    
+    .form-subtitle-single {
+        font-size: 1rem;
+    }
+    
+    .form-input-single,
+    .form-textarea-single {
+        padding: 16px;
+        font-size: 16px;
+    }
+    
+    .form-agreement-single {
+        padding: 20px;
+    }
+    
+    .btn-submit-single {
+        padding: 18px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-card-single {
+        padding: 25px 20px;
+    }
+    
+    .form-header-single h2 {
+        font-size: 1.5rem;
+    }
+    
+    .form-subtitle-single {
+        font-size: 0.95rem;
+    }
+}

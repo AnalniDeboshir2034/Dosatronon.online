@@ -183,9 +183,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     <div class="file-input-wrapper" onclick="this.querySelector('input').click()">
                         <div class="file-icon">📄</div>
-                        <div class="file-label">pdf *</div>
+                        <div class="file-label">pdf </div>
                         <div class="file-hint">PDF документ</div>
-                        <input type="file" class="file-input" name="pdf" accept=".pdf" required>
+                        <input type="file" class="file-input" name="pdf" accept=".pdf">
                     </div>
                 </div>
                 <p style="color: var(--text-muted); font-size: 12px; margin-top: 10px;">* Все файлы обязательны для загрузки</p>
