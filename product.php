@@ -2,7 +2,10 @@
 // Включаем отладку
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-require_once 'includes/forslug.php'; 
+
+require_once 'includes/forslug.php';
+include 'includes/content_parser.php';
+
 // ============================================
 // ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ
 // ============================================
@@ -61,89 +64,190 @@ function findFile($dbPath) {
 }
 
 // ============================================
-// ПОЛУЧАЕМ ID ТОВАРА ИЗ URL
+// ОБРАБОТКА ВХОДЯЩИХ ПАРАМЕТРОВ
 // ============================================
-$product_id = isset($_GET['id']) ? intval($_GET['id']) : 1;
-$product = null;
 
-// Запрос к базе данных
-$sql = "SELECT *,slug FROM medicator WHERE id = ?";
-$stmt = $mysqli->prepare($sql);
-if ($stmt) {
-    $stmt->bind_param("i", $product_id);
-    $stmt->execute();
+$product_id = null;
+$product = null;
+$slug = null;
+
+// ВАЖНО: Получаем slug из URL (по новому формату ЧПУ)
+if (isset($_GET['slug']) && !empty($_GET['slug'])) {
+    $slug = trim($_GET['slug']);
+    echo "<!-- DEBUG: Получен slug из URL: " . htmlspecialchars($slug) . " -->\n";
     
-    // Вместо get_result() используем bind_result()
-    $stmt->store_result();
-    
-    if ($stmt->num_rows > 0) {
-        // Получаем информацию о колонках
-        $meta = $stmt->result_metadata();
-        $fields = array();
-        $fieldReferences = array();
+    // Ищем товар по slug
+    $sql = "SELECT *, slug FROM medicator WHERE slug = ?";
+    $stmt = $mysqli->prepare($sql);
+    if ($stmt) {
+        $stmt->bind_param("s", $slug);
+        $stmt->execute();
+        $stmt->store_result();
         
-        while ($field = $meta->fetch_field()) {
-            $fields[$field->name] = null;
-            $fieldReferences[] = &$fields[$field->name];
-        }
-        
-        call_user_func_array(array($stmt, 'bind_result'), $fieldReferences);
-        
-        if ($stmt->fetch()) {
-            $product = array();
-            foreach ($fields as $key => $value) {
-                $product[$key] = $value;
+        if ($stmt->num_rows > 0) {
+            // Получаем информацию о колонках
+            $meta = $stmt->result_metadata();
+            $fields = array();
+            $fieldReferences = array();
+            
+            while ($field = $meta->fetch_field()) {
+                $fields[$field->name] = null;
+                $fieldReferences[] = &$fields[$field->name];
             }
             
-            // Ищем файлы
-            $product['img_found'] = findFile($product['img'] ?? '');
-            $product['diag_found'] = findFile($product['diag'] ?? '');
-            $product['pdf_found'] = findFile($product['pdf'] ?? '');
+            call_user_func_array(array($stmt, 'bind_result'), $fieldReferences);
+            
+            if ($stmt->fetch()) {
+                $product = array();
+                foreach ($fields as $key => $value) {
+                    $product[$key] = $value;
+                }
+                
+                // Ищем файлы
+                $product['img_found'] = findFile($product['img'] ?? '');
+                $product['diag_found'] = findFile($product['diag'] ?? '');
+                $product['pdf_found'] = findFile($product['pdf'] ?? '');
+                
+                echo "<!-- DEBUG: Найден товар по slug: ID=" . $product['id'] . ", Название=" . htmlspecialchars($product['name']) . " -->\n";
+            }
+        } else {
+            echo "<!-- DEBUG: Товар с slug '" . htmlspecialchars($slug) . "' не найден -->\n";
         }
+        
+        $stmt->close();
     }
+}
+
+// Если не нашли по slug, проверяем старый параметр id
+if (!$product && isset($_GET['id']) && !empty($_GET['id'])) {
+    $product_id = intval($_GET['id']);
+    echo "<!-- DEBUG: Получен id из URL: " . $product_id . " -->\n";
     
-    $stmt->close();
+    // Ищем товар по id
+    $sql = "SELECT *, slug FROM medicator WHERE id = ?";
+    $stmt = $mysqli->prepare($sql);
+    if ($stmt) {
+        $stmt->bind_param("i", $product_id);
+        $stmt->execute();
+        $stmt->store_result();
+        
+        if ($stmt->num_rows > 0) {
+            // Получаем информацию о колонках
+            $meta = $stmt->result_metadata();
+            $fields = array();
+            $fieldReferences = array();
+            
+            while ($field = $meta->fetch_field()) {
+                $fields[$field->name] = null;
+                $fieldReferences[] = &$fields[$field->name];
+            }
+            
+            call_user_func_array(array($stmt, 'bind_result'), $fieldReferences);
+            
+            if ($stmt->fetch()) {
+                $product = array();
+                foreach ($fields as $key => $value) {
+                    $product[$key] = $value;
+                }
+                
+                // Ищем файлы
+                $product['img_found'] = findFile($product['img'] ?? '');
+                $product['diag_found'] = findFile($product['diag'] ?? '');
+                $product['pdf_found'] = findFile($product['pdf'] ?? '');
+                
+                echo "<!-- DEBUG: Найден товар по id: ID=" . $product['id'] . ", Slug=" . ($product['slug'] ?? 'нет') . " -->\n";
+                
+                // ВАЖНО: Делаем редирект 301 на правильный URL со slug
+                if (!empty($product['slug'])) {
+                    header("Location: /product/" . $product['slug'], true, 301);
+                    exit;
+                }
+            }
+        }
+        
+        $stmt->close();
+    }
+}
+
+// Если slug в URL это число (кто-то ввел /product/4), перенаправляем на правильный slug
+if (!$product && $slug && is_numeric($slug)) {
+    $product_id = intval($slug);
+    echo "<!-- DEBUG: Slug является числом, ищем товар с id=" . $product_id . " -->\n";
+    
+    $sql = "SELECT slug FROM medicator WHERE id = ?";
+    $stmt = $mysqli->prepare($sql);
+    if ($stmt) {
+        $stmt->bind_param("i", $product_id);
+        $stmt->execute();
+        $stmt->store_result();
+        
+        if ($stmt->num_rows > 0) {
+            $stmt->bind_result($found_slug);
+            $stmt->fetch();
+            
+            if (!empty($found_slug)) {
+                // Делаем редирект 301 на правильный slug
+                header("Location: /product/" . $found_slug, true, 301);
+                exit;
+            }
+        }
+        
+        $stmt->close();
+    }
+}
+
+// ============================================
+// ЕСЛИ ТОВАР НЕ НАЙДЕН - 404
+// ============================================
+if (!$product) {
+    header("HTTP/1.0 404 Not Found");
+    include '404.php';
+    exit;
 }
 
 // ============================================
 // ПОЛУЧАЕМ ПОХОЖИЕ ТОВАРЫ
 // ============================================
 $similar_products = array();
-if ($product) {
-    $similar_sql = "SELECT * FROM medicator WHERE id != ? ORDER BY RAND() LIMIT 6";
-    $similar_stmt = $mysqli->prepare($similar_sql);
+$current_product_id = $product['id'];
+
+$similar_sql = "SELECT *, slug FROM medicator WHERE id != ? ORDER BY RAND() LIMIT 6";
+$similar_stmt = $mysqli->prepare($similar_sql);
+
+if ($similar_stmt) {
+    $similar_stmt->bind_param("i", $current_product_id);
+    $similar_stmt->execute();
+    $similar_stmt->store_result();
     
-    if ($similar_stmt) {
-        $similar_stmt->bind_param("i", $product_id);
-        $similar_stmt->execute();
-        $similar_stmt->store_result();
-        
-        // Получаем информацию о колонках
-        $meta = $similar_stmt->result_metadata();
-        $fields = array();
-        $fieldReferences = array();
-        
-        while ($field = $meta->fetch_field()) {
-            $fields[$field->name] = null;
-            $fieldReferences[] = &$fields[$field->name];
-        }
-        
-        call_user_func_array(array($similar_stmt, 'bind_result'), $fieldReferences);
-        
-        while ($similar_stmt->fetch()) {
-            $similar_product = array();
-            foreach ($fields as $key => $value) {
-                $similar_product[$key] = $value;
-            }
-            
-            // Ищем изображение
-            $similar_product['img_found'] = findFile($similar_product['img'] ?? '');
-            $similar_products[] = $similar_product;
-        }
-        
-        $similar_stmt->close();
+    // Получаем информацию о колонках
+    $meta = $similar_stmt->result_metadata();
+    $fields = array();
+    $fieldReferences = array();
+    
+    while ($field = $meta->fetch_field()) {
+        $fields[$field->name] = null;
+        $fieldReferences[] = &$fields[$field->name];
     }
+    
+    call_user_func_array(array($similar_stmt, 'bind_result'), $fieldReferences);
+    
+    while ($similar_stmt->fetch()) {
+        $similar_product = array();
+        foreach ($fields as $key => $value) {
+            $similar_product[$key] = $value;
+        }
+        
+        // Ищем изображение
+        $similar_product['img_found'] = findFile($similar_product['img'] ?? '');
+        $similar_products[] = $similar_product;
+    }
+    
+    $similar_stmt->close();
 }
+
+// ============================================
+// ПОЛУЧАЕМ КОНТЕНТ ДЛЯ SEO
+// ============================================
 function getContent($section) {
     require_once 'includes/content_parser.php';
     return getContentSection($section, '');
@@ -153,17 +257,23 @@ $meta_desc = getContent('meta_description');
 $meta_keys = getContent('meta_keywords');
 $favicon = getContent('favicon');
 $page_title = getContent('header_title');
-$favicon=getContent('favicon');
-?>
+$favicon = getContent('favicon');
 
+// Формируем title для страницы
+$html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_title : 'Товар не найден | ' . $page_title;
+
+// ============================================
+// ВЫВОД HTML
+// ============================================
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="<?php echo $favicon; ?>" type="image/x-icon">
-    <link rel="shortcut icon" href="<?php echo $meta_desc; ?>" type="image/x-icon">
-    <title><?php echo $product ? htmlspecialchars($product['name']) . ' | ' . $page_title : 'Товар не найден | ' . $page_title; ?></title>
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" type="image/x-icon">
+    <title><?php echo $html_title; ?></title>
     
     <!-- ИСПРАВЛЕННЫЕ ПУТИ -->
     <link rel="stylesheet" href="/cs/style.css">
@@ -198,9 +308,9 @@ $favicon=getContent('favicon');
             <nav style="background: var(--card); padding: 15px 0; border-bottom: 1px solid var(--border);">
                 <div class="container">
                     <a href="/" style="color: var(--muted-foreground); text-decoration: none;">Главная</a>
-                    <span style="color: var(--muted-foreground); margin: 0 10px;"></span>
+                    <span style="color: var(--muted-foreground); margin: 0 10px;">›</span>
                     <a href="/catalog" style="color: var(--muted-foreground); text-decoration: none;">Каталог</a>
-                    <span style="color: var(--muted-foreground); margin: 0 10px;"></span>
+                    <span style="color: var(--muted-foreground); margin: 0 10px;">›</span>
                     <span style="color: var(--foreground); font-weight: 500;"><?php echo htmlspecialchars($product['name']); ?></span>
                 </div>
             </nav>
@@ -438,8 +548,8 @@ $favicon=getContent('favicon');
                                         <div class="product-card__content">
                                             <h3 class="product-card__title">
                                                <a href="<?php echo getProductUrl($similar); ?>" class="product-link">
-                                        <?php echo htmlspecialchars($similar['name']); ?>
-                                    </a>
+                                                    <?php echo htmlspecialchars($similar['name']); ?>
+                                                </a>
                                             </h3>
                                             <p class="product-card__desc">
                                                 <?php if (!empty($similar['d_dosing'])): ?>
@@ -456,7 +566,7 @@ $favicon=getContent('favicon');
                                                         data-product-name="<?php echo htmlspecialchars($similar['name']); ?>">
                                                     В сравнение
                                                 </button>
-                                                <a href="/product/<?php echo $similar['id']; ?>" class="btn btn-primary">Подробнее</a>
+                                                <a href="<?php echo getProductUrl($similar); ?>" class="btn btn-primary">Подробнее</a>
                                             </div>
                                         </div>
                                     </div>

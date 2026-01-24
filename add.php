@@ -29,34 +29,6 @@ function saveFile($file) {
     return null;
 }
 
-// Функция для генерации slug (можно вынести в отдельный файл)
-function generateSlugForAdmin($name) {
-    if (empty($name)) {
-        return 'product';
-    }
-    
-    // Переводим в нижний регистр
-    $name = mb_strtolower(trim($name), 'UTF-8');
-    
-    // Транслитерация русских букв
-    $ru = ['а','б','в','г','д','е','ё','ж','з','и','й','к','л','м','н','о','п','р','с','т','у','ф','х','ц','ч','ш','щ','ъ','ы','ь','э','ю','я',' '];
-    $en = ['a','b','v','g','d','e','e','zh','z','i','y','k','l','m','n','o','p','r','s','t','u','f','h','ts','ch','sh','sch','','y','','e','yu','ya','-'];
-    
-    $slug = str_replace($ru, $en, $name);
-    
-    // Убираем все кроме букв, цифр и дефиса
-    $slug = preg_replace('/[^a-z0-9\-]/', '-', $slug);
-    $slug = preg_replace('/-+/', '-', $slug);
-    $slug = trim($slug, '-');
-    
-    // Если после всего slug пустой
-    if (empty($slug)) {
-        $slug = 'product';
-    }
-    
-    return $slug;
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Получаем данные из формы
@@ -71,22 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $dop = $mysqli->real_escape_string($_POST['dop']);
         $opis = $mysqli->real_escape_string($_POST['opis']);
         $filtr = $mysqli->real_escape_string($_POST['filtr']);
-        
-        // ГЕНЕРИРУЕМ SLUG
-        $slug = generateSlugForAdmin($name);
-        
-        // Проверяем уникальность slug
-        $check_sql = "SELECT id FROM medicator WHERE slug = ?";
-        $stmt_check = $mysqli->prepare($check_sql);
-        $stmt_check->bind_param("s", $slug);
-        $stmt_check->execute();
-        $stmt_check->store_result();
-        
-        // Если slug уже существует, добавляем случайное число
-        if ($stmt_check->num_rows > 0) {
-            $slug = $slug . '-' . rand(1000, 9999);
-        }
-        $stmt_check->close();
         
         // Обработка файлов
         $img = null;
@@ -105,21 +61,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdf = saveFile($_FILES['pdf']);
         }
         
-        // Подготовленный запрос с slug
-        $stmt = $mysqli->prepare("INSERT INTO medicator (name, d_dosing, performance, pressure, temperature, connections, m_seal, m_case, dop, img, diag, pdf, opis, filtr, slug) 
-                                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        // Подготовленный запрос
+        $stmt = $mysqli->prepare("INSERT INTO medicator (name, d_dosing, performance, pressure, temperature, connections, m_seal, m_case, dop, img, diag, pdf, opis, filtr) 
+                                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         
         if (!$stmt) {
             throw new Exception($mysqli->error);
         }
         
-        $stmt->bind_param("sssssssssssssss", 
+        $stmt->bind_param("ssssssssssssss", 
             $name, $d_dosing, $performance, $pressure, $temperature,
-            $connections, $m_seal, $m_case, $dop, $img, $diag, $pdf, $opis, $filtr, $slug
+            $connections, $m_seal, $m_case, $dop, $img, $diag, $pdf, $opis, $filtr
         );
         
         if ($stmt->execute()) {
-            $_SESSION['success'] = "Запись успешно добавлена! Slug: $slug";
+            $_SESSION['success'] = "Запись успешно добавлена!";
             header('Location: adminpanel.php');
             exit();
         } else {
@@ -154,12 +110,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
         
-        <?php if (isset($_SESSION['success'])): ?>
-            <div class="alert alert-success">
-                ✅ <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
-            </div>
-        <?php endif; ?>
-        
         <form method="POST" enctype="multipart/form-data" class="form-card">
             <div class="form-group">
                 <label for="name">Название *</label>
@@ -176,7 +126,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" id="performance" name="performance" placeholder="10 мл/ч - 2.5 л/ч" required>
             </div>
             
-            <!-- ... остальные поля формы ... -->
+            <div class="form-group">
+                <label for="pressure">pressure *</label>
+                <input type="text" id="pressure" name="pressure" placeholder="0,3-6 бар" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="temperature">temperature *</label>
+                <input type="text" id="temperature" name="temperature" placeholder="5-40°C" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="connections">connections *</label>
+                <input type="text" id="connections" name="connections" placeholder="G¾\" наружная" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="m_seal">m_seal *</label>
+                <input type="text" id="m_seal" name="m_seal" placeholder="VITON – для кислот, масел, ветеринарных препаратов" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="m_case">m_case *</label>
+                <input type="text" id="m_case" name="m_case" placeholder="Полиацеталь" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="dop">dop *</label>
+                <input type="text" id="dop" name="dop" placeholder="-" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="opis">opis *</label>
+                <textarea id="opis" name="opis" rows="4" placeholder="Описание..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="filtr">filtr *</label>
+                <input type="text" id="filtr" name="filtr" placeholder="DIA" required>
+            </div>
+            
+            <div class="file-section">
+                <h3 style="margin-bottom: 20px; color: var(--text);">Файлы *</h3>
+                <div class="file-grid">
+                    <div class="file-input-wrapper" onclick="this.querySelector('input').click()">
+                        <div class="file-label">img *</div>
+                        <div class="file-hint">Изображение</div>
+                        <input type="file" class="file-input" name="img" accept="image/*" required>
+                    </div>
+                    
+                    <div class="file-input-wrapper" onclick="this.querySelector('input').click()">
+                        <div class="file-label">diag </div>
+                        <div class="file-hint">Диаграмма</div>
+                        <input type="file" class="file-input" name="diag" accept="image/*" >
+                    </div>
+                    
+                    <div class="file-input-wrapper" onclick="this.querySelector('input').click()">
+                        <div class="file-icon">📄</div>
+                        <div class="file-label">pdf </div>
+                        <div class="file-hint">PDF документ</div>
+                        <input type="file" class="file-input" name="pdf" accept=".pdf" >
+                    </div>
+                </div>
+                <p style="color: var(--text-muted); font-size: 12px; margin-top: 10px;">* Все файлы обязательны для загрузки</p>
+            </div>
             
             <div class="form-actions">
                 <button type="reset" class="btn">Очистить</button>

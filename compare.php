@@ -50,7 +50,6 @@ $compare_ids = [];
 
 
 if (isset($_GET['action']) && $_GET['action'] == 'clear') {
-    // Устанавливаем пустой массив в localStorage через JavaScript
     echo '<script>
         if (confirm("Очистить весь список сравнения?")) {
             localStorage.removeItem("compareItems");

@@ -9,15 +9,15 @@ if (!isset($_SESSION['admin_logged_in'])) {
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// Получаем данные записи (старый способ без get_result())
+// ИСПРАВЛЕННЫЙ ЗАПРОС - добавлено поле slug
 $stmt = $mysqli->prepare("SELECT * FROM medicator WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 
-// Привязываем результаты к переменным
+// Привязываем результаты к переменным - добавлена переменная для slug
 $stmt->bind_result(
     $item_id, $name, $d_dosing, $performance, $pressure, $temperature,
-    $connections, $m_seal, $m_case, $dop, $img, $diag, $pdf, $opis, $filtr
+    $connections, $m_seal, $m_case, $dop, $img, $diag, $pdf, $opis, $filtr, $slug
 );
 
 // Получаем данные
@@ -29,7 +29,7 @@ if (!$stmt->fetch()) {
 
 $stmt->close();
 
-// Создаем массив для удобства
+// Создаем массив для удобства - добавлено поле slug
 $item = [
     'id' => $item_id,
     'name' => $name,
@@ -45,7 +45,8 @@ $item = [
     'diag' => $diag,
     'pdf' => $pdf,
     'opis' => $opis,
-    'filtr' => $filtr
+    'filtr' => $filtr,
+    'slug' => $slug
 ];
 
 // Функция для сохранения файлов
@@ -79,6 +80,43 @@ function saveFile($file, $oldFile = null) {
     return null;
 }
 
+// Функция для генерации slug
+function generateSlug($name, $mysqli, $excludeId = null) {
+    $slug = strtolower($name);
+    $slug = preg_replace('/[^a-z0-9а-яё\-]+/u', '-', $slug);
+    $slug = preg_replace('/-+/', '-', $slug);
+    $slug = trim($slug, '-');
+    
+    // Делаем уникальным
+    $original_slug = $slug;
+    $counter = 1;
+    
+    do {
+        $check_sql = "SELECT id FROM medicator WHERE slug = ?";
+        if ($excludeId) {
+            $check_sql .= " AND id != ?";
+        }
+        
+        $check_stmt = $mysqli->prepare($check_sql);
+        if ($excludeId) {
+            $check_stmt->bind_param("si", $slug, $excludeId);
+        } else {
+            $check_stmt->bind_param("s", $slug);
+        }
+        $check_stmt->execute();
+        $check_stmt->store_result();
+        
+        if ($check_stmt->num_rows === 0) {
+            $check_stmt->close();
+            return $slug;
+        }
+        
+        $check_stmt->close();
+        $slug = $original_slug . '-' . $counter;
+        $counter++;
+    } while (true);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $name = $mysqli->real_escape_string($_POST['name']);
@@ -93,16 +131,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $opis = $mysqli->real_escape_string($_POST['opis']);
         $filtr = $mysqli->real_escape_string($_POST['filtr']);
         
+        // Генерируем slug автоматически из названия
+        $slug = generateSlug($name, $mysqli, $id);
+        
         // Обработка файлов
         $img = saveFile($_FILES['img'], $item['img']);
         $diag = saveFile($_FILES['diag'], $item['diag']);
         $pdf = saveFile($_FILES['pdf'], $item['pdf']);
         
-        // Обновляем запись
+        // ИСПРАВЛЕННЫЙ ЗАПРОС UPDATE - добавлено поле slug
         $stmt = $mysqli->prepare("UPDATE medicator SET 
             name = ?, d_dosing = ?, performance = ?, pressure = ?, temperature = ?,
             connections = ?, m_seal = ?, m_case = ?, dop = ?, opis = ?, filtr = ?,
-            img = ?, diag = ?, pdf = ?
+            img = ?, diag = ?, pdf = ?, slug = ?
             WHERE id = ?");
         
         if (!$stmt) {
@@ -114,10 +155,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $diag = $diag ?: $item['diag'];
         $pdf = $pdf ?: $item['pdf'];
         
-        $stmt->bind_param("ssssssssssssssi", 
+        // ИСПРАВЛЕННЫЙ bind_param - добавлен slug
+        $stmt->bind_param("sssssssssssssssi", 
             $name, $d_dosing, $performance, $pressure, $temperature,
             $connections, $m_seal, $m_case, $dop, $opis, $filtr,
-            $img, $diag, $pdf, $id
+            $img, $diag, $pdf, $slug, $id
         );
         
         if ($stmt->execute()) {
@@ -155,6 +197,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .current-file a:hover {
             text-decoration: underline;
         }
+        .slug-info {
+            background: var(--bg-secondary);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -171,9 +220,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
         
         <form method="POST" enctype="multipart/form-data" class="form-card">
+            <div class="slug-info">
+                <strong>ЧПУ (slug):</strong> <?php echo $item['slug'] ? htmlspecialchars($item['slug']) : 'Будет сгенерирован автоматически'; ?>
+                <br>
+                <small>Генерируется автоматически из названия. URL товара: /product/<?php echo $item['slug'] ? htmlspecialchars($item['slug']) : 'slug'; ?></small>
+            </div>
+            
             <div class="form-group">
                 <label for="name">Название *</label>
                 <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($item['name']); ?>" required>
+                <small>Из этого названия будет сгенерирован ЧПУ (URL)</small>
             </div>
             
             <div class="form-group">
@@ -233,8 +289,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="file-label">img</div>
                         <div class="file-hint">Изображение</div>
                         <div class="current-file">
-                            <?php if ($item['img']): ?>
+                            <?php if ($item['img'] && $item['img'] != '-'): ?>
                                 Текущий: <a href="uploads/<?php echo $item['img']; ?>" target="_blank"><?php echo $item['img']; ?></a>
+                            <?php else: ?>
+                                Нет файла
                             <?php endif; ?>
                         </div>
                         <input type="file" class="file-input" name="img" accept="image/*">
@@ -244,8 +302,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="file-label">diag</div>
                         <div class="file-hint">Диаграмма</div>
                         <div class="current-file">
-                            <?php if ($item['diag']): ?>
+                            <?php if ($item['diag'] && $item['diag'] != '-'): ?>
                                 Текущий: <a href="uploads/<?php echo $item['diag']; ?>" target="_blank"><?php echo $item['diag']; ?></a>
+                            <?php else: ?>
+                                Нет файла
                             <?php endif; ?>
                         </div>
                         <input type="file" class="file-input" name="diag" accept="image/*">
@@ -256,8 +316,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="file-label">pdf</div>
                         <div class="file-hint">PDF документ</div>
                         <div class="current-file">
-                            <?php if ($item['pdf']): ?>
+                            <?php if ($item['pdf'] && $item['pdf'] != '-'): ?>
                                 Текущий: <a href="uploads/<?php echo $item['pdf']; ?>" target="_blank"><?php echo $item['pdf']; ?></a>
+                            <?php else: ?>
+                                Нет файла
                             <?php endif; ?>
                         </div>
                         <input type="file" class="file-input" name="pdf" accept=".pdf">
