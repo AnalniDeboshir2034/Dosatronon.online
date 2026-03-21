@@ -1,17 +1,14 @@
 <?php
-// Включаем отображение всех ошибок
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 require_once 'includes/forslug.php';
 include 'includes/content_parser.php';
 
-// Проверяем соединение с базой данных
 $host = 'localhost';
 $user = 'a7comby_dosatron_user';
 $pass = 'dosatron_user';
 $db_name = 'a7comby_dosatron';
 
-// Подключение к базе данных
 $mysqli = @new mysqli($host, $user, $pass, $db_name);
 
 if ($mysqli->connect_error) {
@@ -20,7 +17,6 @@ if ($mysqli->connect_error) {
 
 $mysqli->set_charset("utf8mb4");
 
-// Функция поиска файла
 function findFile($dbPath) {
     if (empty($dbPath) || $dbPath == '-' || $dbPath == 'NULL') {
         return null;
@@ -53,21 +49,34 @@ function findFile($dbPath) {
     return null;
 }
 
-// Получаем параметры фильтра и поиска
 $selected_filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
 $search_query = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-// Подготовка SQL запроса с учетом поиска
 $products = [];
 $search_mode = !empty($search_query);
 
+$filter_data = [];
+$filter_result = $mysqli->query("SELECT id, name, slug, description, sort_order FROM filtr WHERE active = 1 ORDER BY sort_order ASC, id ASC");
+if ($filter_result) {
+    while ($row = $filter_result->fetch_assoc()) {
+        $filter_data[] = $row;
+    }
+    $filter_result->free();
+}
+
+$filter_description = '';
+if ($selected_filter != 'all') {
+    foreach ($filter_data as $filter) {
+        if ($filter['slug'] == $selected_filter) {
+            $filter_description = $filter['description'] ?? '';
+            break;
+        }
+    }
+}
+
 if ($search_mode) {
-    // Есть поисковый запрос
     if ($selected_filter != 'all' && !empty($selected_filter)) {
-        // Поиск + фильтр
-        $sql = "SELECT *,slug FROM medicator WHERE filtr LIKE ? AN LIKE ? AND 
-                (name LIKE ? OR d_dosing LIKE ? OR performance LIKE ? OR filtr LIKE ?) 
-                ORDER BY name ASC  ";
+        $sql = "SELECT *, slug FROM medicator WHERE filtr LIKE ? AND (name LIKE ? OR d_dosing LIKE ? OR performance LIKE ? OR filtr LIKE ?) ORDER BY name ASC";
         $stmt = $mysqli->prepare($sql);
         if ($stmt) {
             $filter_param = "%" . $selected_filter . "%";
@@ -76,7 +85,6 @@ if ($search_mode) {
             $stmt->execute();
             $stmt->store_result();
             
-            // Получаем колонки
             $meta = $stmt->result_metadata();
             $fields = [];
             $fieldReferences = [];
@@ -98,14 +106,9 @@ if ($search_mode) {
             }
             
             $stmt->close();
-        } else {
-            echo "<!-- Ошибка подготовки запроса: " . $mysqli->error . " -->";
         }
     } else {
-        // Только поиск (без фильтра)
-        $sql = "SELECT * FROM medicator WHERE 
-                (name LIKE ? OR d_dosing LIKE ? OR performance LIKE ? OR filtr LIKE ?) 
-                ORDER BY name ASC";
+        $sql = "SELECT *, slug FROM medicator WHERE name LIKE ? OR d_dosing LIKE ? OR performance LIKE ? OR filtr LIKE ? ORDER BY name ASC";
         $stmt = $mysqli->prepare($sql);
         if ($stmt) {
             $search_param = "%" . $search_query . "%";
@@ -113,7 +116,6 @@ if ($search_mode) {
             $stmt->execute();
             $stmt->store_result();
             
-            // Получаем колонки
             $meta = $stmt->result_metadata();
             $fields = [];
             $fieldReferences = [];
@@ -135,15 +137,11 @@ if ($search_mode) {
             }
             
             $stmt->close();
-        } else {
-            echo "<!-- Ошибка подготовки запроса: " . $mysqli->error . " -->";
         }
     }
 } else {
-    // НЕТ поискового запроса - используем старую логику фильтрации
     if ($selected_filter != 'all' && !empty($selected_filter)) {
-        // Только фильтр (без поиска)
-        $sql = "SELECT * FROM medicator WHERE filtr LIKE ? ORDER BY name ASC";
+        $sql = "SELECT *, slug FROM medicator WHERE filtr LIKE ? ORDER BY name ASC";
         $stmt = $mysqli->prepare($sql);
         if ($stmt) {
             $filter_param = "%" . $selected_filter . "%";
@@ -151,7 +149,6 @@ if ($search_mode) {
             $stmt->execute();
             $stmt->store_result();
             
-            // Получаем колонки
             $meta = $stmt->result_metadata();
             $fields = [];
             $fieldReferences = [];
@@ -173,12 +170,9 @@ if ($search_mode) {
             }
             
             $stmt->close();
-        } else {
-            echo "<!-- Ошибка подготовки запроса: " . $mysqli->error . " -->";
         }
     } else {
-        // Нет ни поиска, ни фильтра - все товары
-        $sql = "SELECT * FROM medicator ORDER BY name ASC";
+        $sql = "SELECT *, slug FROM medicator ORDER BY name ASC";
         $result = $mysqli->query($sql);
         
         if ($result) {
@@ -187,30 +181,9 @@ if ($search_mode) {
                 $products[] = $row;
             }
             $result->free();
-        } else {
-            echo "<!-- Ошибка запроса: " . $mysqli->error . " -->";
         }
     }
 }
-
-echo "<!-- Получено товаров: " . count($products) . " -->";
-echo "<!-- Поисковый запрос: " . htmlspecialchars($search_query) . " -->";
-echo "<!-- Фильтр: " . htmlspecialchars($selected_filter) . " -->";
-
-$available_filters = [
-    'DIA' => 'DIA Серия',
-    'D07' => 'D07 Серия', 
-    'D25' => 'D25 Серия',
-    'D3' => 'D3 Серия',
-    'D45' => 'D45 Серия',
-    'D8' => 'D8 Серия',
-    'D9' => 'D9 Серия',
-    'D20' => 'D20 Серия',
-    'D30' => 'D30 Серия',
-    'Drugoe'=>'Доп. оборудование'
-];
-
-$final_filters = array_merge(['all' => 'Все товары'], $available_filters);
 
 function getContent($section) {
     require_once 'includes/content_parser.php';
@@ -235,6 +208,39 @@ $favicon = getContent('favicon');
     <link rel="stylesheet" href="/cs/catalog.css">
     <script src="/j/script.js?v=<?php echo filemtime('j/script.js'); ?>" defer></script> 
     <script src="/j/catalog.js"></script>
+    <style>
+        .filter-description {
+            padding: 30px 0;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+        }
+        .filter-description-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            color: var(--foreground);
+            line-height: 1.6;
+        }
+        .filter-description-content h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        .filter-description-content h3 {
+            font-size: 1.2rem;
+            margin: 15px 0 10px;
+        }
+        .filter-description-content p {
+            margin-bottom: 10px;
+        }
+        .filter-description-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        .filter-description-content li {
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
@@ -247,54 +253,72 @@ $favicon = getContent('favicon');
             </div>
         </section>
 
+        <?php if (!empty($filter_description) && $selected_filter != 'all'): ?>
+        <section class="filter-description">
+            <div class="container">
+                <div class="filter-description-content">
+                    <?php echo $filter_description; ?>
+                </div>
+            </div>
+        </section>
+        <?php endif; ?>
+
         <div class="catalog-container">
             <aside class="catalog-sidebar">
                 <h2 class="sidebar-title">Фильтры по типу</h2>
                 
                 <div class="filter-list">
-                    <?php foreach ($final_filters as $filter_value => $filter_label): 
-                        // Формируем URL для фильтра (красивый URL)
-                        if ($filter_value == 'all') {
-                            $filter_url = "/catalog";
-                        } else {
-                            $filter_url = "/catalog/" . $filter_value;
+                    <?php 
+                    $all_url = "/catalog";
+                    if (!empty($search_query)) {
+                        $all_url .= "?search=" . urlencode($search_query);
+                    }
+                    $all_count_sql = "SELECT COUNT(*) as count FROM medicator";
+                    if ($search_mode) {
+                        $all_count_sql .= " WHERE name LIKE ? OR d_dosing LIKE ? OR performance LIKE ? OR filtr LIKE ?";
+                    }
+                    $all_count = 0;
+                    $stmt = $mysqli->prepare($all_count_sql);
+                    if ($stmt) {
+                        if ($search_mode) {
+                            $search_param = "%" . $search_query . "%";
+                            $stmt->bind_param("ssss", $search_param, $search_param, $search_param, $search_param);
                         }
-                        
-                        // Добавляем поисковый запрос если есть
+                        $stmt->execute();
+                        $stmt->bind_result($all_count);
+                        $stmt->fetch();
+                        $stmt->close();
+                    }
+                    ?>
+                    <a href="<?php echo $all_url; ?>" 
+                       class="filter-item <?php echo $selected_filter == 'all' ? 'active' : ''; ?>">
+                        Все товары
+                        <span class="filter-count"><?php echo $all_count; ?></span>
+                    </a>
+                    
+                    <?php foreach ($filter_data as $filter): 
+                        $filter_url = "/catalog/" . $filter['slug'];
                         if (!empty($search_query)) {
                             $filter_url .= "?search=" . urlencode($search_query);
                         }
                         
-                        // Проверяем активен ли фильтр
-                        $is_active = ($selected_filter == $filter_value);
+                        $is_active = ($selected_filter == $filter['slug']);
                         
-                        // Считаем количество товаров
-                        $count_sql = "SELECT COUNT(*) as count FROM medicator";
-                        $params = [];
-                        $types = "";
+                        $count_sql = "SELECT COUNT(*) as count FROM medicator WHERE filtr LIKE ?";
+                        $params = ["%" . $filter['slug'] . "%"];
+                        $types = "s";
                         
-                        if ($filter_value != 'all') {
-                            $count_sql .= " WHERE filtr LIKE ?";
-                            $params[] = "%" . $filter_value . "%";
-                            $types .= "s";
-                            
-                            if ($search_mode) {
-                                $count_sql .= " AND (name LIKE ? OR d_dosing LIKE ? OR performance LIKE ? OR filtr LIKE ?)";
-                                $params = array_merge($params, array_fill(0, 4, "%" . $search_query . "%"));
-                                $types .= str_repeat("s", 4);
-                            }
-                        } else if ($search_mode) {
-                            $count_sql .= " WHERE (name LIKE ? OR d_dosing LIKE ? OR performance LIKE ? OR filtr LIKE ?)";
-                            $params = array_fill(0, 4, "%" . $search_query . "%");
-                            $types = str_repeat("s", 4);
+                        if ($search_mode) {
+                            $count_sql .= " AND (name LIKE ? OR d_dosing LIKE ? OR performance LIKE ? OR filtr LIKE ?)";
+                            $search_param = "%" . $search_query . "%";
+                            $params = array_merge($params, [$search_param, $search_param, $search_param, $search_param]);
+                            $types .= "ssss";
                         }
                         
                         $count = 0;
                         $stmt = $mysqli->prepare($count_sql);
                         if ($stmt) {
-                            if (!empty($params)) {
-                                $stmt->bind_param($types, ...$params);
-                            }
+                            $stmt->bind_param($types, ...$params);
                             $stmt->execute();
                             $stmt->bind_result($count);
                             $stmt->fetch();
@@ -303,7 +327,7 @@ $favicon = getContent('favicon');
                     ?>
                         <a href="<?php echo $filter_url; ?>" 
                            class="filter-item <?php echo $is_active ? 'active' : ''; ?>">
-                            <?php echo htmlspecialchars($filter_label); ?>
+                            <?php echo htmlspecialchars($filter['name']); ?>
                             <span class="filter-count"><?php echo $count; ?></span>
                         </a>
                     <?php endforeach; ?>
@@ -327,7 +351,16 @@ $favicon = getContent('favicon');
                     
                     <?php if ($selected_filter != 'all'): ?>
                         <div class="current-filter">
-                            Активный фильтр: <?php echo htmlspecialchars($final_filters[$selected_filter] ?? $selected_filter); ?>
+                            Активный фильтр: <?php 
+                            $filter_name = '';
+                            foreach ($filter_data as $filter) {
+                                if ($filter['slug'] == $selected_filter) {
+                                    $filter_name = $filter['name'];
+                                    break;
+                                }
+                            }
+                            echo htmlspecialchars($filter_name ?: $selected_filter); 
+                            ?>
                         </div>
                         <a href="/catalog<?php echo $search_mode ? '?search=' . urlencode($search_query) : ''; ?>" class="clear-filter">
                             Сбросить фильтр
@@ -336,88 +369,83 @@ $favicon = getContent('favicon');
                 </div>
                 
                 <div class="catalog-grid" id="productsGrid">
-    <?php if (count($products) > 0): ?>
-        <?php foreach ($products as $product): ?>
-        <div class="product-card" 
-             data-product-name="<?php echo htmlspecialchars($product['name']); ?>" 
-             data-product-dosing="<?php echo htmlspecialchars($product['d_dosing']); ?>"
-             data-product-performance="<?php echo htmlspecialchars($product['performance']); ?>"
-             data-product-filter="<?php echo htmlspecialchars($product['filtr'] ?? ''); ?>">
-            <div class="product-card__image">
-                <?php if ($product['img_found']): ?>
-                    <!-- ВАЖНО: добавлен / в начале пути -->
-                    <img src="/<?php echo htmlspecialchars($product['img_found']); ?>" 
-                         alt="<?php echo htmlspecialchars($product['name']); ?>"
-                         loading="lazy">
-                <?php elseif (!empty($product['img']) && $product['img'] != '-'): ?>
-                    <!-- ВАЖНО: добавлен / в начале пути -->
-                    <img src="/images/products/<?php echo htmlspecialchars($product['img']); ?>" 
-                         alt="<?php echo htmlspecialchars($product['name']); ?>"
-                         loading="lazy">
-                <?php else: ?>
-                    <div class="image-placeholder">
-                        <span class="placeholder-icon">🏭</span>
-                        <p>Нет изображения</p>
-                    </div>
-                <?php endif; ?>
-            </div>
-            <div class="product-card__content">
-                <?php if (!empty($product['filtr']) && $product['filtr'] != '-'): ?>
-                    <div class="product-card__filter">
-                        <?php 
-                        $filters = explode(',', $product['filtr']);
-                        echo htmlspecialchars(trim($filters[0]));
-                        ?>
-                    </div>
-                <?php endif; ?>
-                
-                <h3 class="product-card__title">
-                    <!-- ВАЖНО: ссылка с / -->
-                    <a href="<?php echo getProductUrl($product); ?>" style="color: inherit; text-decoration: none;">
-                        <?php echo htmlspecialchars($product['name']); ?>
-                    </a>
-                </h3>
-                <p class="product-card__desc">
-                    <?php if (!empty($product['d_dosing'])): ?>
-                        <strong>Дозировка:</strong> <?php echo htmlspecialchars($product['d_dosing']); ?><br>
+                    <?php if (count($products) > 0): ?>
+                        <?php foreach ($products as $product): ?>
+                        <div class="product-card" 
+                             data-product-name="<?php echo htmlspecialchars($product['name']); ?>" 
+                             data-product-dosing="<?php echo htmlspecialchars($product['d_dosing']); ?>"
+                             data-product-performance="<?php echo htmlspecialchars($product['performance']); ?>"
+                             data-product-filter="<?php echo htmlspecialchars($product['filtr'] ?? ''); ?>">
+                            <div class="product-card__image">
+                                <?php if ($product['img_found']): ?>
+                                    <img src="/<?php echo htmlspecialchars($product['img_found']); ?>" 
+                                         alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                         loading="lazy">
+                                <?php elseif (!empty($product['img']) && $product['img'] != '-'): ?>
+                                    <img src="/images/products/<?php echo htmlspecialchars($product['img']); ?>" 
+                                         alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                         loading="lazy">
+                                <?php else: ?>
+                                    <div class="image-placeholder">
+                                        <span class="placeholder-icon">🏭</span>
+                                        <p>Нет изображения</p>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="product-card__content">
+                                <?php if (!empty($product['filtr']) && $product['filtr'] != '-'): ?>
+                                    <div class="product-card__filter">
+                                        <?php 
+                                        $filters = explode(',', $product['filtr']);
+                                        echo htmlspecialchars(trim($filters[0]));
+                                        ?>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <h3 class="product-card__title">
+                                    <a href="<?php echo getProductUrl($product); ?>" style="color: inherit; text-decoration: none;">
+                                        <?php echo htmlspecialchars($product['name']); ?>
+                                    </a>
+                                </h3>
+                                <p class="product-card__desc">
+                                    <?php if (!empty($product['d_dosing'])): ?>
+                                        <strong>Дозировка:</strong> <?php echo htmlspecialchars($product['d_dosing']); ?><br>
+                                    <?php endif; ?>
+                                    <?php if (!empty($product['performance'])): ?>
+                                        <strong>Производительность:</strong> <?php echo htmlspecialchars($product['performance']); ?><br>
+                                    <?php endif; ?>
+                                    <?php if (!empty($product['filtr']) && $product['filtr'] != '-'): ?>
+                                        <strong>Серия:</strong> <?php echo htmlspecialchars($product['filtr']); ?>
+                                    <?php endif; ?>
+                                </p>
+                                <div class="product-card__actions">
+                                    <button class="btn btn-secondary" 
+                                            data-product-id="<?php echo $product['id']; ?>"
+                                            data-product-name="<?php echo htmlspecialchars($product['name']); ?>">
+                                        В сравнение
+                                    </button>
+                                    <a href="<?php echo getProductUrl($product); ?>" class="btn btn-primary">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="no-products">
+                            <p>
+                                <?php if ($search_mode): ?>
+                                    По запросу "<?php echo htmlspecialchars($search_query); ?>" ничего не найдено.
+                                <?php elseif ($selected_filter != 'all'): ?>
+                                    Товары не найдены. Попробуйте другой фильтр.
+                                <?php else: ?>
+                                    Товары не найдены. Добавьте товары в базу данных.
+                                <?php endif; ?>
+                            </p>
+                            <a href="/catalog" class="btn btn-primary" style="margin-top: 20px;">
+                                Показать все товары
+                            </a>
+                        </div>
                     <?php endif; ?>
-                    <?php if (!empty($product['performance'])): ?>
-                        <strong>Производительность:</strong> <?php echo htmlspecialchars($product['performance']); ?><br>
-                    <?php endif; ?>
-                    <?php if (!empty($product['filtr']) && $product['filtr'] != '-'): ?>
-                        <strong>Серия:</strong> <?php echo htmlspecialchars($product['filtr']); ?>
-                    <?php endif; ?>
-                </p>
-                <div class="product-card__actions">
-                    <button class="btn btn-secondary" 
-                            data-product-id="<?php echo $product['id']; ?>"
-                            data-product-name="<?php echo htmlspecialchars($product['name']); ?>">
-                        В сравнение
-                    </button>
-                    <!-- ВАЖНО: ссылка с / -->
-                     <a href="<?php echo getProductUrl($product); ?>" class="btn btn-primary">Подробнее</a>
                 </div>
-            </div>
-        </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <div class="no-products">
-            <p>
-                <?php if ($search_mode): ?>
-                    По запросу "<?php echo htmlspecialchars($search_query); ?>" ничего не найдено.
-                <?php elseif ($selected_filter != 'all'): ?>
-                    Товары не найдены. Попробуйте другой фильтр.
-                <?php else: ?>
-                    Товары не найдены. Добавьте товары в базу данных.
-                <?php endif; ?>
-            </p>
-            <!-- ВАЖНО: ссылка с / -->
-            <a href="/catalog" class="btn btn-primary" style="margin-top: 20px;">
-                Показать все товары
-            </a>
-        </div>
-    <?php endif; ?>
-</div>
             </div>
         </div>
     </main>
@@ -425,7 +453,6 @@ $favicon = getContent('favicon');
     <?php include 'includes/footer.php'; ?>
     
     <script>
-        
         function updateCompareButtons() {
             const compareItems = JSON.parse(localStorage.getItem('compareItems')) || [];
             

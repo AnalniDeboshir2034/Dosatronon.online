@@ -7,7 +7,6 @@ session_start();
 
 require_once 'includes/config.php';
 
-// Проверяем подключение
 if (!$mysqli || $mysqli->connect_error) {
     die("❌ Нет соединения с БД");
 }
@@ -17,7 +16,6 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-// Получаем все записи
 $result = $mysqli->query("SELECT * FROM medicator ORDER BY id DESC");
 if (!$result) {
     die("❌ Ошибка SQL: " . $mysqli->error);
@@ -49,6 +47,8 @@ $result->free();
                 <a href="adminpanel.php" class="active">📋 Все записи</a>
                 <a href="add.php">➕ Добавить запись</a>
                 <a href="content_editor.php">📝 Наполнение сайта</a>
+                <a href="view_stats.php" >👁️Статистика просмотров</a>
+                <a href="filtr.php">🏷️Фильтры</a>
                 <a href="download_log.php?file=bitrix" class="download-link">📥 Bitrix лог</a>
                 <a href="download_log.php?file=error" class="download-link">📥 Error лог</a>
                 <a href="generator.php" class = "download-link">➕ Обновление URL</a>

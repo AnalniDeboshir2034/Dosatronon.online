@@ -1,55 +1,35 @@
 <?php
-// Включаем отладку
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once 'includes/forslug.php';
 include 'includes/content_parser.php';
 
-// ============================================
-// ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ
-// ============================================
 $host = 'localhost';
 $user = 'a7comby_dosatron_user';
 $pass = 'dosatron_user';
 $db_name = 'a7comby_dosatron';
 
-// Подключаемся к MySQL
 $mysqli = new mysqli($host, $user, $pass, $db_name);
 
-// Проверяем подключение
 if ($mysqli->connect_error) {
     die("Ошибка подключения к базе данных: " . $mysqli->connect_error);
 }
 
-// Устанавливаем кодировку
 $mysqli->set_charset("utf8mb4");
 
-// ============================================
-// ФУНКЦИЯ ДЛЯ ПОИСКА ФАЙЛОВ
-// ============================================
 function findFile($dbPath) {
     if (empty($dbPath) || $dbPath == '-' || $dbPath == 'NULL') {
         return null;
     }
     
-    // Берем только имя файла
     $fileName = basename($dbPath);
     
-    // Папки для поиска
     $searchFolders = [
-        '',                      // Корень проекта
-        'images/',              // Папка images
-        'img/',                 // Папка img
-        'products/',            // Папка products
-        'uploads/',             // Папка uploads
-        'diagrams/',            // Папка diagrams
-        'pdfs/',                // Папка pdfs
-        'images/products/',     // Вложенная images/products
-        'img/products/',        // Вложенная img/products
+        '', 'images/', 'img/', 'products/', 'uploads/', 
+        'diagrams/', 'pdfs/', 'images/products/', 'img/products/'
     ];
     
-    // Проверяем все варианты
     foreach ($searchFolders as $folder) {
         $fullPath = $folder . $fileName;
         $fullPath = str_replace('\\', '/', $fullPath);
@@ -63,20 +43,13 @@ function findFile($dbPath) {
     return null;
 }
 
-// ============================================
-// ОБРАБОТКА ВХОДЯЩИХ ПАРАМЕТРОВ
-// ============================================
-
 $product_id = null;
 $product = null;
 $slug = null;
 
-// ВАЖНО: Получаем slug из URL (по новому формату ЧПУ)
 if (isset($_GET['slug']) && !empty($_GET['slug'])) {
     $slug = trim($_GET['slug']);
-    echo "<!-- DEBUG: Получен slug из URL: " . htmlspecialchars($slug) . " -->\n";
     
-    // Ищем товар по slug
     $sql = "SELECT *, slug FROM medicator WHERE slug = ?";
     $stmt = $mysqli->prepare($sql);
     if ($stmt) {
@@ -85,7 +58,6 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
         $stmt->store_result();
         
         if ($stmt->num_rows > 0) {
-            // Получаем информацию о колонках
             $meta = $stmt->result_metadata();
             $fields = array();
             $fieldReferences = array();
@@ -103,27 +75,40 @@ if (isset($_GET['slug']) && !empty($_GET['slug'])) {
                     $product[$key] = $value;
                 }
                 
-                // Ищем файлы
                 $product['img_found'] = findFile($product['img'] ?? '');
                 $product['diag_found'] = findFile($product['diag'] ?? '');
                 $product['pdf_found'] = findFile($product['pdf'] ?? '');
                 
-                echo "<!-- DEBUG: Найден товар по slug: ID=" . $product['id'] . ", Название=" . htmlspecialchars($product['name']) . " -->\n";
+                $today = date('Y-m-d');
+                $check_views = $mysqli->prepare("SELECT id, view_count FROM product_views WHERE product_id = ? AND view_date = ?");
+                $check_views->bind_param("is", $product['id'], $today);
+                $check_views->execute();
+                $check_views->store_result();
+                
+                if ($check_views->num_rows > 0) {
+                    $check_views->bind_result($view_id, $view_count);
+                    $check_views->fetch();
+                    $update_views = $mysqli->prepare("UPDATE product_views SET view_count = view_count + 1 WHERE id = ?");
+                    $update_views->bind_param("i", $view_id);
+                    $update_views->execute();
+                    $update_views->close();
+                } else {
+                    $insert_views = $mysqli->prepare("INSERT INTO product_views (product_id, product_name, view_date, view_count) VALUES (?, ?, ?, 1)");
+                    $insert_views->bind_param("iss", $product['id'], $product['name'], $today);
+                    $insert_views->execute();
+                    $insert_views->close();
+                }
+                $check_views->close();
             }
-        } else {
-            echo "<!-- DEBUG: Товар с slug '" . htmlspecialchars($slug) . "' не найден -->\n";
         }
         
         $stmt->close();
     }
 }
 
-// Если не нашли по slug, проверяем старый параметр id
 if (!$product && isset($_GET['id']) && !empty($_GET['id'])) {
     $product_id = intval($_GET['id']);
-    echo "<!-- DEBUG: Получен id из URL: " . $product_id . " -->\n";
     
-    // Ищем товар по id
     $sql = "SELECT *, slug FROM medicator WHERE id = ?";
     $stmt = $mysqli->prepare($sql);
     if ($stmt) {
@@ -132,7 +117,6 @@ if (!$product && isset($_GET['id']) && !empty($_GET['id'])) {
         $stmt->store_result();
         
         if ($stmt->num_rows > 0) {
-            // Получаем информацию о колонках
             $meta = $stmt->result_metadata();
             $fields = array();
             $fieldReferences = array();
@@ -150,14 +134,31 @@ if (!$product && isset($_GET['id']) && !empty($_GET['id'])) {
                     $product[$key] = $value;
                 }
                 
-                // Ищем файлы
                 $product['img_found'] = findFile($product['img'] ?? '');
                 $product['diag_found'] = findFile($product['diag'] ?? '');
                 $product['pdf_found'] = findFile($product['pdf'] ?? '');
                 
-                echo "<!-- DEBUG: Найден товар по id: ID=" . $product['id'] . ", Slug=" . ($product['slug'] ?? 'нет') . " -->\n";
+                $today = date('Y-m-d');
+                $check_views = $mysqli->prepare("SELECT id, view_count FROM product_views WHERE product_id = ? AND view_date = ?");
+                $check_views->bind_param("is", $product['id'], $today);
+                $check_views->execute();
+                $check_views->store_result();
                 
-                // ВАЖНО: Делаем редирект 301 на правильный URL со slug
+                if ($check_views->num_rows > 0) {
+                    $check_views->bind_result($view_id, $view_count);
+                    $check_views->fetch();
+                    $update_views = $mysqli->prepare("UPDATE product_views SET view_count = view_count + 1 WHERE id = ?");
+                    $update_views->bind_param("i", $view_id);
+                    $update_views->execute();
+                    $update_views->close();
+                } else {
+                    $insert_views = $mysqli->prepare("INSERT INTO product_views (product_id, product_name, view_date, view_count) VALUES (?, ?, ?, 1)");
+                    $insert_views->bind_param("iss", $product['id'], $product['name'], $today);
+                    $insert_views->execute();
+                    $insert_views->close();
+                }
+                $check_views->close();
+                
                 if (!empty($product['slug'])) {
                     header("Location: /product/" . $product['slug'], true, 301);
                     exit;
@@ -169,10 +170,8 @@ if (!$product && isset($_GET['id']) && !empty($_GET['id'])) {
     }
 }
 
-// Если slug в URL это число (кто-то ввел /product/4), перенаправляем на правильный slug
 if (!$product && $slug && is_numeric($slug)) {
     $product_id = intval($slug);
-    echo "<!-- DEBUG: Slug является числом, ищем товар с id=" . $product_id . " -->\n";
     
     $sql = "SELECT slug FROM medicator WHERE id = ?";
     $stmt = $mysqli->prepare($sql);
@@ -186,7 +185,6 @@ if (!$product && $slug && is_numeric($slug)) {
             $stmt->fetch();
             
             if (!empty($found_slug)) {
-                // Делаем редирект 301 на правильный slug
                 header("Location: /product/" . $found_slug, true, 301);
                 exit;
             }
@@ -196,18 +194,12 @@ if (!$product && $slug && is_numeric($slug)) {
     }
 }
 
-// ============================================
-// ЕСЛИ ТОВАР НЕ НАЙДЕН - 404
-// ============================================
 if (!$product) {
     header("HTTP/1.0 404 Not Found");
     include '404.php';
     exit;
 }
 
-// ============================================
-// ПОЛУЧАЕМ ПОХОЖИЕ ТОВАРЫ
-// ============================================
 $similar_products = array();
 $current_product_id = $product['id'];
 
@@ -219,7 +211,6 @@ if ($similar_stmt) {
     $similar_stmt->execute();
     $similar_stmt->store_result();
     
-    // Получаем информацию о колонках
     $meta = $similar_stmt->result_metadata();
     $fields = array();
     $fieldReferences = array();
@@ -237,7 +228,6 @@ if ($similar_stmt) {
             $similar_product[$key] = $value;
         }
         
-        // Ищем изображение
         $similar_product['img_found'] = findFile($similar_product['img'] ?? '');
         $similar_products[] = $similar_product;
     }
@@ -245,9 +235,6 @@ if ($similar_stmt) {
     $similar_stmt->close();
 }
 
-// ============================================
-// ПОЛУЧАЕМ КОНТЕНТ ДЛЯ SEO
-// ============================================
 function getContent($section) {
     require_once 'includes/content_parser.php';
     return getContentSection($section, '');
@@ -259,12 +246,7 @@ $favicon = getContent('favicon');
 $page_title = getContent('header_title');
 $favicon = getContent('favicon');
 
-// Формируем title для страницы
 $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_title : 'Товар не найден | ' . $page_title;
-
-// ============================================
-// ВЫВОД HTML
-// ============================================
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -275,7 +257,6 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
     <link rel="shortcut icon" href="<?php echo $favicon; ?>" type="image/x-icon">
     <title><?php echo $html_title; ?></title>
     
-    <!-- ИСПРАВЛЕННЫЕ ПУТИ -->
     <link rel="stylesheet" href="/cs/style.css">
     <link rel="stylesheet" href="/cs/product.css">
     <script src="/j/script.js?v=<?php echo filemtime('j/script.js'); ?>" defer></script> 
@@ -283,12 +264,10 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
     <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js" defer></script>
 </head>
 <body>
-    <!-- ШАПКА САЙТА -->
     <div class="container">
         <?php include 'includes/header.php'; ?>
     </div>
 
-    <!-- ОСНОВНОЙ КОНТЕНТ -->
     <main class="main">
         <?php if (!$product): ?>
             <section class="not-found" style="padding: 100px 0; text-align: center;">
@@ -315,12 +294,9 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                 </div>
             </nav>
 
-            <!-- СТРАНИЦА ТОВАРА -->
             <section class="product-page">
                 <div class="product-layout">
-                    <!-- ЛЕВАЯ КОЛОНКА - ИЗОБРАЖЕНИЕ ТОВАРА -->
                     <div class="product-gallery">
-                        <!-- Изображение товара -->
                         <div class="product-image-container">
                             <?php if ($product['img_found']): ?>
                                 <img src="/<?php echo htmlspecialchars($product['img_found']); ?>" 
@@ -333,7 +309,6 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                             <?php endif; ?>
                         </div>
                         
-                        <!-- Кнопки действий -->
                         <div class="actions-bar">
                             <button class="btn btn-compare" data-product-id="<?php echo $product['id']; ?>">
                                 <span style="margin-right: 8px;">⚖️</span>
@@ -359,7 +334,6 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                             <?php endif; ?>
                         </div>
                         
-                        <!-- ОПИСАНИЕ ТОВАРА ИЗ ПОЛЯ OPIS -->
                         <?php if (!empty($product['opis']) && $product['opis'] != '-'): ?>
                         <div class="product-description">
                             <h3>
@@ -382,13 +356,11 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                         <?php endif; ?>
                     </div>
                     <div>
-                        <!-- Заголовок и краткая информация -->
                         <h1 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h1>
                         <p class="product-subtitle">
                             Профессиональный дозатор для систем полива и внесения удобрений
                         </p>
                         
-                        <!-- ТЕХНИЧЕСКИЕ ХАРАКТЕРИСТИКИ -->
                         <div class="tech-specs">
                             <h2>Технические характеристики</h2>
                             <div class="specs-grid">
@@ -450,7 +422,6 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                             </div>
                         </div>
                         
-                        <!-- ДИАГРАММА -->
                         <?php if (!empty($product['diag']) && $product['diag'] != '-'): ?>
                         <div class="diagram-container">
                             <h2 style="color: var(--foreground); margin-bottom: 25px; font-size: 1.8rem;">Техническая схема</h2>
@@ -476,13 +447,11 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                 </div>
             </section>
             
-            <!-- ПОХОЖИЕ ТОВАРЫ -->
             <?php if (!empty($similar_products)): ?>
             <section class="similar-products">
                 <div class="container">
                     <h2 style="text-align: center; color: var(--foreground); margin-bottom: 50px; font-size: 2rem;">Похожие товары</h2>
                     
-                    <!-- Grid для десктопа -->
                     <div class="products-grid-desktop">
                         <?php foreach ($similar_products as $similar): ?>
                         <div class="product-card">
@@ -526,7 +495,6 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                         <?php endforeach; ?>
                     </div>
                     
-                    <!-- Swiper для мобилки -->
                     <div class="products-swiper-mobile">
                         <div class="swiper products-swiper">
                             <div class="swiper-wrapper">
@@ -574,7 +542,6 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                                 <?php endforeach; ?>
                             </div>
                             
-                            <!-- Навигация -->
                             <div class="swiper-button-next"></div>
                             <div class="swiper-button-prev"></div>
                         </div>
@@ -589,11 +556,9 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
         <?php endif; ?>
     </main>
 
-    <!-- ПОДВАЛ -->
     <?php include 'includes/footer.php'; ?>
 
     <script>
-        // Добавление в сравнение
         document.querySelectorAll('[data-product-id]').forEach(button => {
             button.addEventListener('click', function() {
                 const productId = this.getAttribute('data-product-id');
@@ -621,7 +586,6 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                         });
                         localStorage.setItem('compareItems', JSON.stringify(compareItems));
                         
-                        // Визуальная обратная связь
                         const originalText = this.textContent;
                         this.textContent = '✓ Добавлено';
                         this.style.backgroundColor = '#4CAF50';
@@ -639,7 +603,6 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
             });
         });
         
-        // Для кнопки сравнения на странице товара
         const compareBtn = document.querySelector('.btn-compare');
         if (compareBtn) {
             compareBtn.addEventListener('click', function() {
@@ -657,7 +620,6 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                     });
                     localStorage.setItem('compareItems', JSON.stringify(compareItems));
                     
-                    // Визуальная обратная связь
                     const originalText = this.textContent;
                     this.textContent = '✓ Добавлено';
                     this.style.backgroundColor = '#4CAF50';
@@ -674,19 +636,13 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
             });
         }
         
-        // Инициализация Swiper для похожих товаров
         document.addEventListener('DOMContentLoaded', function() {
-            // Инициализация Swiper только на мобильных устройствах
             if (window.innerWidth <= 991) {
-                console.log('Мобильное устройство, инициализируем Swiper');
-                
-                // Удаляем предыдущие экземпляры Swiper
                 if (window.productsSwiper) {
                     window.productsSwiper.destroy();
                 }
                 
                 window.productsSwiper = new Swiper('.products-swiper', {
-                    // Конфигурация Swiper
                     loop: true,
                     speed: 400,
                     slidesPerView: 1,
@@ -694,13 +650,11 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                     centeredSlides: true,
                     grabCursor: true,
                     
-                    // Навигация
                     navigation: {
                         nextEl: '.swiper-button-next',
                         prevEl: '.swiper-button-prev',
                     },
                     
-                    // Адаптивность
                     breakpoints: {
                         576: {
                             slidesPerView: 1.2,
@@ -710,38 +664,29 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                         }
                     },
                     
-                    // События
                     on: {
                         init: function() {
-                            console.log('Swiper инициализирован');
-                            // Принудительно показываем кнопки навигации
                             if (this.navigation.nextEl) this.navigation.nextEl.style.display = 'flex';
                             if (this.navigation.prevEl) this.navigation.prevEl.style.display = 'flex';
                         },
                     }
                 });
             } else {
-                console.log('Десктоп, Swiper не нужен');
-                // Скрываем кнопки навигации на десктопе
                 const nextBtn = document.querySelector('.swiper-button-next');
                 const prevBtn = document.querySelector('.swiper-button-prev');
                 if (nextBtn) nextBtn.style.display = 'none';
                 if (prevBtn) prevBtn.style.display = 'none';
             }
             
-            // Обработчик изменения размера окна
             window.addEventListener('resize', function() {
                 clearTimeout(window.resizeTimer);
                 window.resizeTimer = setTimeout(function() {
-                    // Проверяем размер экрана и переинициализируем Swiper при необходимости
                     const isMobile = window.innerWidth <= 991;
                     const hasSwiper = !!window.productsSwiper;
                     
                     if (isMobile && !hasSwiper) {
-                        // Если перешли на мобилку, но Swiper не инициализирован
-                        window.location.reload(); // Проще перезагрузить страницу
+                        window.location.reload();
                     } else if (!isMobile && hasSwiper) {
-                        // Если перешли на десктоп, а Swiper был инициализирован
                         window.productsSwiper.destroy();
                         window.productsSwiper = null;
                         document.querySelector('.products-swiper-mobile').style.display = 'none';
@@ -755,6 +700,5 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
 </html>
 
 <?php
-// Закрываем соединение с БД
 $mysqli->close();
 ?>
