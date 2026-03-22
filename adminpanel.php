@@ -47,6 +47,7 @@ $result->free();
                 <a href="adminpanel.php" class="active">📋 Все записи</a>
                 <a href="add.php">➕ Добавить запись</a>
                 <a href="content_editor.php">📝 Наполнение сайта</a>
+                <a href="admin_reviews.php">⭐ Управление отзывами</a>
                 <a href="view_stats.php" >👁️Статистика просмотров</a>
                 <a href="filtr.php">🏷️Фильтры</a>
                 <a href="download_log.php?file=bitrix" class="download-link">📥 Bitrix лог</a>

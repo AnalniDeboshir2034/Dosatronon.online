@@ -1,7 +1,8 @@
 <?php
 require_once 'includes/forslug.php';
-$BITRIX_WEBHOOK = 'https://k7s.bitrix24.by/rest/25370/dhzvmrk2o9q56985/crm.lead.add.json';
+require_once 'includes/reviews_manager.php'; 
 
+$BITRIX_WEBHOOK = 'https://k7s.bitrix24.by/rest/25370/s5ocapktjw31qkaw/crm.lead.add.json';
 
 $form_success = false;
 $form_error = '';
@@ -71,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
         }
     }
 }
+
 $host = 'localhost';
 $user = 'a7comby_dosatron_user';
 $pass = 'dosatron_user';
@@ -84,7 +86,6 @@ if ($mysqli->connect_error) {
 
 $mysqli->set_charset("utf8mb4");
 
-
 $sql = "SELECT id, name, img, d_dosing, performance, slug FROM medicator LIMIT 6";
 $result = $mysqli->query($sql);
 $products = [];
@@ -95,6 +96,7 @@ if ($result) {
         $products[] = $row;
     }
 }
+
 function findFile($dbPath) {
     if (empty($dbPath) || $dbPath == '-' || $dbPath == 'NULL') {
         return null;
@@ -127,54 +129,21 @@ function findFile($dbPath) {
     return null;
 }
 
-$sql = "SELECT * FROM medicator LIMIT 6";
-$result = $mysqli->query($sql);
-$products = [];
-
-if ($result) {
-    while ($row = $result->fetch_assoc()) {
-        $row['img_found'] = findFile($row['img'] ?? '');
-        $products[] = $row;
-    }
-}
-
-function findFileSimple($img) {
-    if (empty($img) || $img == '-' || $img == 'NULL') {
-        return null;
-    }
-    
-    $fileName = basename($img);
-    $paths = [
-        'images/' . $fileName,
-        'img/' . $fileName,
-        'products/' . $fileName,
-        'uploads/' . $fileName,
-        $fileName
-    ];
-    
-    foreach ($paths as $path) {
-        if (file_exists($path)) {
-            return $path;
-        }
-    
-    
-    return null;
-}
-}
-
 function getContent($section) {
     require_once 'includes/content_parser.php';
     return getContentSection($section, '');
 }
 
+// Получаем отзывы для сайта
+$reviewsManager = new ReviewsManager();
+$reviews = $reviewsManager->getActiveReviews();
+
 $meta_desc = getContent('meta_description');
 $meta_keys = getContent('meta_keywords');
 $page_title = getContent('header_title');
 $about_text = getContent('about_text');
-$favicon=getContent('favicon');
+$favicon = getContent('favicon');
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -190,10 +159,8 @@ $favicon=getContent('favicon');
 <link rel="stylesheet" href="/cs/index.css">
 <script src="/j/script.js?v=<?php echo filemtime('/j/script.js'); ?>" defer></script> 
 <script src="/j/index.js" ></script>
-<script src = "/j/contacts.js"></script>
+<script src="/j/contacts.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
-
-
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
@@ -219,7 +186,7 @@ $favicon=getContent('favicon');
             <div class="container">
                 <h2 class="section-title">О компании</h2>
                 <div class="about__content">
-                   <?php echo nl2br($about_text);?>                   
+                   <?php echo nl2br($about_text); ?>                   
                         <div class="about__image">
                                 <img src="uploads/inde.png" alt="7 company" loading="lazy">
                         </div>
@@ -227,236 +194,200 @@ $favicon=getContent('favicon');
             </div>
         </section>
 
-<section class="products">
-        <div class="container">
-            <h2 class="section-title">Популярные товары</h2>
-            
-            <div class="products-grid-desktop">
-                <?php if (count($products) > 0): ?>
-                    <?php $desktopProducts = array_slice($products, 0, 3); ?>
-                    <?php foreach ($desktopProducts as $product): ?>
-                    <div class="product-card">
-                        <div class="product-card__image">
-                            <?php 
-                            // ИСПОЛЬЗУЕМ getProductImage() из forslug.php
-                            $imageUrl = getProductImage($product);
-                            if ($imageUrl): ?>
-                                <img src="<?php echo htmlspecialchars($imageUrl); ?>" 
-                                     alt="<?php echo htmlspecialchars($product['name']); ?>"
-                                     loading="lazy">
-                            <?php else: ?>
-                                <div class="image-placeholder">
-                                    <span class="placeholder-icon">🏭</span>
-                                    <p>Нет изображения</p>
+        <section class="products">
+            <div class="container">
+                <h2 class="section-title">Популярные товары</h2>
+                
+                <div class="products-grid-desktop">
+                    <?php if (count($products) > 0): ?>
+                        <?php $desktopProducts = array_slice($products, 0, 3); ?>
+                        <?php foreach ($desktopProducts as $product): ?>
+                        <div class="product-card">
+                            <div class="product-card__image">
+                                <?php 
+                                $imageUrl = getProductImage($product);
+                                if ($imageUrl): ?>
+                                    <img src="<?php echo htmlspecialchars($imageUrl); ?>" 
+                                         alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                         loading="lazy">
+                                <?php else: ?>
+                                    <div class="image-placeholder">
+                                        <span class="placeholder-icon">🏭</span>
+                                        <p>Нет изображения</p>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="product-card__content">
+                                <h3 class="product-card__title">
+                                    <a href="<?php echo getProductUrl($product); ?>" class="product-link">
+                                        <?php echo htmlspecialchars($product['name']); ?>
+                                    </a>
+                                </h3>
+                                <p class="product-card__desc">
+                                    <?php if (!empty($product['d_dosing'])): ?>
+                                        <span class="spec-item">📏 <?php echo htmlspecialchars($product['d_dosing']); ?></span><br>
+                                    <?php endif; ?>
+                                    <?php if (!empty($product['performance'])): ?>
+                                        <span class="spec-item">⚡ <?php echo htmlspecialchars($product['performance']); ?></span>
+                                    <?php endif; ?>
+                                </p>
+                                <div class="product-card__price">Подробности по запросу</div>
+                                <div class="product-card__actions">
+                                    <button class="btn btn-secondary" 
+                                            data-product-id="<?php echo $product['id']; ?>"
+                                            data-product-name="<?php echo htmlspecialchars($product['name']); ?>">
+                                        В сравнение
+                                    </button>
+                                    <a href="<?php echo getProductUrl($product); ?>" class="btn btn-primary">Подробнее</a>
                                 </div>
-                            <?php endif; ?>
-                        </div>
-                        <div class="product-card__content">
-                            <h3 class="product-card__title">
-                                <!-- ИСПОЛЬЗУЕМ getProductUrl() из forslug.php -->
-                                <a href="<?php echo getProductUrl($product); ?>" class="product-link">
-                                    <?php echo htmlspecialchars($product['name']); ?>
-                                </a>
-                            </h3>
-                            <p class="product-card__desc">
-                                <?php if (!empty($product['d_dosing'])): ?>
-                                    <span class="spec-item">📏 <?php echo htmlspecialchars($product['d_dosing']); ?></span><br>
-                                <?php endif; ?>
-                                <?php if (!empty($product['performance'])): ?>
-                                    <span class="spec-item">⚡ <?php echo htmlspecialchars($product['performance']); ?></span>
-                                <?php endif; ?>
-                            </p>
-                            <div class="product-card__price">Подробности по запросу</div>
-                            <div class="product-card__actions">
-                                <button class="btn btn-secondary" 
-                                        data-product-id="<?php echo $product['id']; ?>"
-                                        data-product-name="<?php echo htmlspecialchars($product['name']); ?>">
-                                    В сравнение
-                                </button>
-                                <!-- ИСПОЛЬЗУЕМ getProductUrl() из forslug.php -->
-                                <a href="<?php echo getProductUrl($product); ?>" class="btn btn-primary">Подробнее</a>
                             </div>
                         </div>
-                    </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-            
-            <!-- Кнопка в каталог -->
-            <div class="text-center" style="margin-top: 30px; text-align: center;">
-                <a href="/catalog" class="btn btn-large">Весь каталог →</a>
-            </div>
-        </div>
-    </section>
-    
-           <section class="form-section" id="form">
-    <div class="form-container">
-        <div class="form-card-single">
-            <div class="form-header-single">
-                <h2>Оставьте заявку</h2>
-                <p class="form-subtitle-single">
-                    Опишите ваш вопрос или оставьте контакты для связи. 
-                    Мы перезвоним вам в течение 30 минут!
-                </p>
-            </div>
-            
-            <?php if ($form_success): ?>
-                <div class="form-notification-single form-success-single">
-                    ✅ Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
-            <?php elseif ($form_error): ?>
-                <div class="form-notification-single form-error-single">
-                    ⚠️ <?php echo htmlspecialchars($form_error); ?>
+                
+                <div class="text-center" style="margin-top: 30px; text-align: center;">
+                    <a href="/catalog" class="btn btn-large">Весь каталог →</a>
                 </div>
-            <?php endif; ?>
-            
-            <form class="contact-form-single" method="POST" action="#form">
-                <div class="form-grid-single">
-                    <!-- Имя -->
-                    <div class="form-group-single">
-                        <label for="nameSingle" class="form-label-single required">
-                            Имя
-                        </label>
-                        <input type="text" id="nameSingle" name="name" class="form-input-single" 
-                               placeholder="Иван Иванов" 
-                               value="<?php echo htmlspecialchars($form_data['name'] ?? ''); ?>"
-                               required>
-                        <div class="form-hint-single">Пример: Иван Иванов</div>
+            </div>
+        </section>
+        
+        <section class="form-section" id="form">
+            <div class="form-container">
+                <div class="form-card-single">
+                    <div class="form-header-single">
+                        <h2>Оставьте заявку</h2>
+                        <p class="form-subtitle-single">
+                            Опишите ваш вопрос или оставьте контакты для связи. 
+                            Мы перезвоним вам в течение 30 минут!
+                        </p>
                     </div>
                     
-                    <!-- Email -->
-                    <div class="form-group-single">
-                        <label for="emailSingle" class="form-label-single">
-                            Электронная почта
-                        </label>
-                        <input type="email" id="emailSingle" name="email" class="form-input-single" 
-                               placeholder="example@mail.ru" 
-                               value="<?php echo htmlspecialchars($form_data['email'] ?? ''); ?>">
-                        <div class="form-hint-single">Пример: example@mail.ru</div>
-                    </div>
+                    <?php if ($form_success): ?>
+                        <div class="form-notification-single form-success-single">
+                            ✅ Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.
+                        </div>
+                    <?php elseif ($form_error): ?>
+                        <div class="form-notification-single form-error-single">
+                            ⚠️ <?php echo htmlspecialchars($form_error); ?>
+                        </div>
+                    <?php endif; ?>
                     
-                    <!-- Телефон на всю ширину -->
-                    <div class="form-group-single full-width">
-                        <label for="phoneSingle" class="form-label-single required">
-                            Телефон
-                        </label>
-                        <input type="tel" id="phoneSingle" name="phone" class="form-input-single" 
-                               placeholder="+375 (29) 123-45-67" 
-                               value="<?php echo htmlspecialchars($form_data['phone'] ?? ''); ?>"
-                               required>
-                        <div class="form-hint-single">Пример: +375 (29) 123-45-67</div>
-                    </div>
-                    
-                    <!-- Сообщение -->
-                    <div class="form-group-single full-width">
-                        <label for="messageSingle" class="form-label-single">
-                            Комментарий
-                        </label>
-                        <textarea id="messageSingle" name="message" class="form-textarea-single" 
-                                  placeholder="Опишите ваш вопрос или задачу подробнее..." 
-                                  rows="5"><?php echo htmlspecialchars($form_data['message'] ?? ''); ?></textarea>
-                    </div>
+                    <form class="contact-form-single" method="POST" action="#form">
+                        <div class="form-grid-single">
+                            <div class="form-group-single">
+                                <label for="nameSingle" class="form-label-single required">
+                                    Имя
+                                </label>
+                                <input type="text" id="nameSingle" name="name" class="form-input-single" 
+                                       placeholder="Иван Иванов" 
+                                       value="<?php echo htmlspecialchars($form_data['name'] ?? ''); ?>"
+                                       required>
+                                <div class="form-hint-single">Пример: Иван Иванов</div>
+                            </div>
+                            
+                            <div class="form-group-single">
+                                <label for="emailSingle" class="form-label-single">
+                                    Электронная почта
+                                </label>
+                                <input type="email" id="emailSingle" name="email" class="form-input-single" 
+                                       placeholder="example@mail.ru" 
+                                       value="<?php echo htmlspecialchars($form_data['email'] ?? ''); ?>">
+                                <div class="form-hint-single">Пример: example@mail.ru</div>
+                            </div>
+                            
+                            <div class="form-group-single full-width">
+                                <label for="phoneSingle" class="form-label-single required">
+                                    Телефон
+                                </label>
+                                <input type="tel" id="phoneSingle" name="phone" class="form-input-single" 
+                                       placeholder="+375 (29) 123-45-67" 
+                                       value="<?php echo htmlspecialchars($form_data['phone'] ?? ''); ?>"
+                                       required>
+                                <div class="form-hint-single">Пример: +375 (29) 123-45-67</div>
+                            </div>
+                            
+                            <div class="form-group-single full-width">
+                                <label for="messageSingle" class="form-label-single">
+                                    Комментарий
+                                </label>
+                                <textarea id="messageSingle" name="message" class="form-textarea-single" 
+                                          placeholder="Опишите ваш вопрос или задачу подробнее..." 
+                                          rows="5"><?php echo htmlspecialchars($form_data['message'] ?? ''); ?></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-agreement-single">
+                            <div class="checkbox-wrapper-single">
+                                <input type="checkbox" id="agreeSingle" name="agree" class="form-checkbox-single" required>
+                                <label for="agreeSingle" class="checkbox-label-single">
+                                    Я даю согласие на <a href="/privacy">обработку персональных данных</a>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-submit-single">
+                            <button type="submit" class="btn-submit-single">
+                                Отправить заявку →
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                
-                <!-- Чекбокс согласия -->
-                <div class="form-agreement-single">
-                    <div class="checkbox-wrapper-single">
-                        <input type="checkbox" id="agreeSingle" name="agree" class="form-checkbox-single" required>
-                        <label for="agreeSingle" class="checkbox-label-single">
-                            Я даю согласие на <a href="/privacy">обработку персональных данных</a>
-                        </label>
-                    </div>
-                </div>
-                
-                <!-- Кнопка отправки -->
-                <div class="form-submit-single">
-                    <button type="submit" class="btn-submit-single">
-                        Отправить заявку →
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</section>
-                
-                
-
-
+            </div>
+        </section>
+        
         <section class="reviews">
             <div class="container">
                 <h2 class="section-title">Отзывы наших клиентов</h2>
                 <div class="reviews__slider">
                     <div class="swiper reviews-swiper">
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide review-slide">
-                                <div class="review-card">
-                                    <div class="review-card__header">
-                                        <div class="review-card__avatar">
-                                            JX
+                            <?php if (empty($reviews)): ?>
+                                <div class="swiper-slide review-slide">
+                                    <div class="review-card">
+                                        <div class="review-card__body">
+                                            <p style="text-align: center; padding: 40px;">Пока нет отзывов. Будьте первым!</p>
                                         </div>
-                                        <div class="review-card__info">
-                                            <h4 class="review-card__name">Исус Христосович</h4>
-                                            <div class="review-card__rating">
-                                                ⭐⭐⭐⭐⭐
-                                                <span class="review-card__date">25.12.2023</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="review-card__body">
-                                        <p>Хлеб и вино лучше всего растут с профессиональным оборудованием. Дозаторы работают безотказно!</p>
-                                    </div>
-                                    <div class="review-card__footer">
-                                        <span class="review-card__farm">Дружественная община</span>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <div class="swiper-slide review-slide">
-                                <div class="review-card">
-                                    <div class="review-card__header">
-                                        <div class="review-card__avatar">
-                                            MI
-                                        </div>
-                                        <div class="review-card__info">
-                                            <h4 class="review-card__name">Мойша Исакович</h4>
-                                            <div class="review-card__rating">
-                                                ⭐⭐⭐⭐⭐
-                                                <span class="review-card__date">14.05.2024</span>
+                            <?php else: ?>
+                                <?php foreach ($reviews as $review): ?>
+                                <div class="swiper-slide review-slide">
+                                    <div class="review-card">
+                                        <div class="review-card__header">
+                                            <div class="review-card__avatar">
+                                                <?php echo htmlspecialchars($review['avatar']); ?>
+                                            </div>
+                                            <div class="review-card__info">
+                                                <h4 class="review-card__name">
+                                                    <?php echo htmlspecialchars($review['name']); ?>
+                                                </h4>
+                                                <div class="review-card__rating">
+                                                    <?php echo str_repeat('⭐', $review['rating']); ?>
+                                                    <span class="review-card__date">
+                                                        <?php echo date('d.m.Y', strtotime($review['date'])); ?>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="review-card__body">
-                                        <p>Таки добра, очинь дешево для такого качества! Оборудование работает уже второй сезон без нареканий.</p>
-                                    </div>
-                                    <div class="review-card__footer">
-                                        <span class="review-card__farm">ООО "Сингапурская ферма"</span>
+                                        <div class="review-card__body">
+                                            <p><?php echo nl2br(htmlspecialchars($review['text'])); ?></p>
+                                        </div>
+                                        <?php if (!empty($review['company'])): ?>
+                                        <div class="review-card__footer">
+                                            <span class="review-card__farm">
+                                                <?php echo htmlspecialchars($review['company']); ?>
+                                            </span>
+                                        </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <div class="swiper-slide review-slide">
-                                <div class="review-card">
-                                    <div class="review-card__header">
-                                        <div class="review-card__avatar">
-                                            ПИ
-                                        </div>
-                                        <div class="review-card__info">
-                                            <h4 class="review-card__name">Петр Петрович</h4>
-                                            <div class="review-card__rating">
-                                                ⭐⭐⭐⭐⭐
-                                                <span class="review-card__date">03.11.2024</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="review-card__body">
-                                        <p>Текст</p>
-                                    </div>
-                                    <div class="review-card__footer">
-                                        <span class="review-card__farm">Что то интересное</span>
-                                    </div>
-                                </div>
-                            </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
                     </div>
                 </div>
             </div>
@@ -464,6 +395,38 @@ $favicon=getContent('favicon');
     </main>
     <?php include 'includes/footer.php'; ?>
     <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+    <script>
+        const reviewsSwiper = new Swiper('.reviews-swiper', {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                768: {
+                    slidesPerView: 2,
+                },
+                1024: {
+                    slidesPerView: 3,
+                }
+            }
+        });
+        
+        const heroSwiper = new Swiper('.hero-swiper', {
+            slidesPerView: 1,
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            }
+        });
+    </script>
 </body>
 </html>
 

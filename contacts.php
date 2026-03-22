@@ -1,5 +1,5 @@
 <?php
-$BITRIX_WEBHOOK = 'https://k7s.bitrix24.by/rest/25370/dhzvmrk2o9q56985/crm.lead.add.json';
+$BITRIX_WEBHOOK = 'https://k7s.bitrix24.by/rest/25370/s5ocapktjw31qkaw/crm.lead.add.json';
 
 
 $form_success = false;
