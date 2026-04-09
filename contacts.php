@@ -1,5 +1,5 @@
 <?php
-$BITRIX_WEBHOOK = 'https://k7s.bitrix24.by/rest/25370/s5ocapktjw31qkaw/crm.lead.add.json';
+$BITRIX_WEBHOOK = 'https://k7s.bitrix24.by/rest/25370/ch5mngnsb3vitz2l/crm.lead.add.json';
 
 
 $form_success = false;
@@ -91,6 +91,14 @@ $favicon=getContent('favicon');
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P2N10VB842"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P2N10VB842');
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <link rel="icon" href="<?php echo $favicon; ?>" type="image/x-icon">
@@ -102,6 +110,7 @@ $favicon=getContent('favicon');
     <link rel="stylesheet" href="cs/contacts.css">
     <script src="j/script.js?v=<?php echo filemtime('j/script.js'); ?>" defer></script> 
     <script src="j/contacts.js" ></script>  
+
 
 
 </head>

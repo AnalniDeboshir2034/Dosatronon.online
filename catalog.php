@@ -453,12 +453,44 @@ $favicon = getContent('favicon');
     <?php include 'includes/footer.php'; ?>
     
     <script>
+        const COMPARE_STORAGE_KEY = 'compareItems';
+
+        function getCompareItems() {
+            try {
+                const raw = JSON.parse(localStorage.getItem(COMPARE_STORAGE_KEY)) || [];
+                const unique = new Map();
+
+                raw.forEach(item => {
+                    const id = Number.parseInt(item?.id, 10);
+                    if (!Number.isNaN(id) && id > 0 && !unique.has(id)) {
+                        unique.set(id, {
+                            id,
+                            name: item?.name || `Товар ${id}`,
+                            date: item?.date || null
+                        });
+                    }
+                });
+
+                return Array.from(unique.values());
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function setCompareItems(items) {
+            if (!items.length) {
+                localStorage.removeItem(COMPARE_STORAGE_KEY);
+                return;
+            }
+            localStorage.setItem(COMPARE_STORAGE_KEY, JSON.stringify(items));
+        }
+
         function updateCompareButtons() {
-            const compareItems = JSON.parse(localStorage.getItem('compareItems')) || [];
+            const compareItems = getCompareItems();
             
             document.querySelectorAll('.btn-secondary[data-product-id]').forEach(button => {
-                const productId = button.getAttribute('data-product-id');
-                const exists = compareItems.some(item => item.id == productId);
+                const productId = Number.parseInt(button.getAttribute('data-product-id'), 10);
+                const exists = compareItems.some(item => item.id === productId);
                 
                 if (exists) {
                     button.textContent = '✓ В сравнении';
@@ -474,19 +506,21 @@ $favicon = getContent('favicon');
 
         document.querySelectorAll('.btn-secondary[data-product-id]').forEach(button => {
             button.addEventListener('click', function() {
-                const productId = this.getAttribute('data-product-id');
+                const productId = Number.parseInt(this.getAttribute('data-product-id'), 10);
                 const productName = this.getAttribute('data-product-name');
+
+                if (Number.isNaN(productId) || productId <= 0) return;
+
+                let compareItems = getCompareItems();
                 
-                let compareItems = JSON.parse(localStorage.getItem('compareItems')) || [];
-                
-                const exists = compareItems.some(item => item.id == productId);
+                const exists = compareItems.some(item => item.id === productId);
                 if (!exists) {
                     compareItems.push({
                         id: productId,
                         name: productName,
                         date: new Date().toISOString()
                     });
-                    localStorage.setItem('compareItems', JSON.stringify(compareItems));
+                    setCompareItems(compareItems);
                     
                     this.textContent = '✓ В сравнении';
                     this.classList.add('btn-success');
@@ -495,8 +529,8 @@ $favicon = getContent('favicon');
                     const ids = compareItems.map(item => item.id).join(',');
                     showNotification(`Товар добавлен! <a href="compare.php?ids=${ids}" style="color: white; text-decoration: underline;">Перейти к сравнению</a>`);
                 } else {
-                    compareItems = compareItems.filter(item => item.id != productId);
-                    localStorage.setItem('compareItems', JSON.stringify(compareItems));
+                    compareItems = compareItems.filter(item => item.id !== productId);
+                    setCompareItems(compareItems);
                     
                     this.textContent = 'В сравнение';
                     this.classList.remove('btn-success');
@@ -550,7 +584,7 @@ $favicon = getContent('favicon');
             document.head.appendChild(style);
             
             window.addEventListener('storage', function(e) {
-                if (e.key === 'compareItems') {
+                if (e.key === COMPARE_STORAGE_KEY) {
                     updateCompareButtons();
                 }
             });

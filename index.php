@@ -2,7 +2,7 @@
 require_once 'includes/forslug.php';
 require_once 'includes/reviews_manager.php'; 
 
-$BITRIX_WEBHOOK = 'https://k7s.bitrix24.by/rest/25370/s5ocapktjw31qkaw/crm.lead.add.json';
+$BITRIX_WEBHOOK = 'https://k7s.bitrix24.by/rest/25370/ch5mngnsb3vitz2l/crm.lead.add.json';
 
 $form_success = false;
 $form_error = '';
@@ -134,7 +134,6 @@ function getContent($section) {
     return getContentSection($section, '');
 }
 
-// Получаем отзывы для сайта
 $reviewsManager = new ReviewsManager();
 $reviews = $reviewsManager->getActiveReviews();
 
@@ -148,39 +147,73 @@ $favicon = getContent('favicon');
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P2N10VB842"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P2N10VB842');
+</script>
 <meta charset="UTF-8">
 <link rel="icon" href="<?php echo $favicon; ?>" type="image/x-icon">
 <link rel="shortcut icon" href="<?php echo $meta_desc; ?>" type="image/x-icon">
 <title><?php echo $page_title; ?></title>
+<meta name="yandex-verification" content="c6fb951d49ab9bac" />
 <meta name="description" content="<?php echo $meta_desc; ?>">
 <meta name="keywords" content="<?php echo $meta_keys; ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="/cs/style.css">
 <link rel="stylesheet" href="/cs/index.css">
-<script src="/j/script.js?v=<?php echo filemtime('/j/script.js'); ?>" defer></script> 
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108454352', 'ym');
+
+    ym(108454352, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/108454352" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<script src="/j/script.js?v=<?php echo filemtime($_SERVER['DOCUMENT_ROOT'] . '/j/script.js'); ?>" defer></script>
 <script src="/j/index.js" ></script>
 <script src="/j/contacts.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
 </head>
+
 <body>
+    
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108408300', 'ym');
+    
+        ym(108408300, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/108408300" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
     <?php include 'includes/header.php'; ?>
     <main class="main">
-        <section class="hero">
-            <div class="swiper hero-swiper">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide hero-slide">
-                        <div class="container">
-                            <div class="hero-slide__content">
-                                <h1 class="hero-slide__title">Профессиональные медикаторы</h1>
-                                <p class="hero-slide__text">Точное дозирование для сельского хозяйства</p>
-                                <a href="/catalog" class="btn btn-primary btn-hero">Смотреть каталог</a>
-                            </div>
-                        </div>
-                        <div class="hero-slide__overlay"></div>
-                    </div>
-                </div>
+       <section class="hero">
+    <div class="hero-slide">
+        <div class="container">
+            <div class="hero-slide__content">
+                <h1 class="hero-slide__title">Профессиональные медикаторы</h1>
+                <p class="hero-slide__text">Точное дозирование для сельского хозяйства</p>
+                <a href="/catalog" class="btn btn-primary btn-hero">Смотреть каталог</a>
             </div>
-        </section>
+        </div>
+        <div class="hero-slide__overlay"></div>
+    </div>
+</section>
 
         <section class="about">
             <div class="container">
@@ -245,11 +278,68 @@ $favicon = getContent('favicon');
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
-                
+                                        
+                <div class="products-swiper-mobile">
+            <div class="swiper products-swiper">
+                <div class="swiper-wrapper">
+                    <?php if (count($products) > 0): ?>
+                        <?php 
+                        $mobileProducts = array_slice($products, 0, 3);
+                        ?>
+                        <?php foreach ($mobileProducts as $product): ?>
+                        <div class="swiper-slide">
+                            <div class="product-card">
+                                <div class="product-card__image">
+                                    <?php if ($product['img_found']): ?>
+                                        <img src="<?php echo htmlspecialchars($product['img_found']); ?>" 
+                                             alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                             loading="lazy">
+                                    <?php elseif (!empty($product['img']) && $product['img'] != '-'): ?>
+                                        <img src="images/products/<?php echo htmlspecialchars($product['img']); ?>" 
+                                             alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                             loading="lazy">
+                                    <?php else: ?>
+                                        <div class="image-placeholder">
+                                            <span class="placeholder-icon">🏭</span>
+                                            <p>Нет изображения</p>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="product-card__content">
+                                    <h3 class="product-card__title">
+                                        <a href="product.php?id=<?php echo $product['id']; ?>" class="product-link">
+                                            <?php echo htmlspecialchars($product['name']); ?>
+                                        </a>
+                                    </h3>
+                                    <p class="product-card__desc">
+                                        <?php if (!empty($product['d_dosing'])): ?>
+                                            <span class="spec-item">📏 <?php echo htmlspecialchars($product['d_dosing']); ?></span><br>
+                                        <?php endif; ?>
+                                        <?php if (!empty($product['performance'])): ?>
+                                            <span class="spec-item">⚡ <?php echo htmlspecialchars($product['performance']); ?></span>
+                                        <?php endif; ?>
+                                    </p>
+                                    <div class="product-card__price">Подробности по запросу</div>
+                                    <div class="product-card__actions">
+                                        <button class="btn btn-secondary" 
+                                                data-product-id="<?php echo $product['id']; ?>"
+                                                data-product-name="<?php echo htmlspecialchars($product['name']); ?>">
+                                            В сравнение
+                                        </button>
+                                        <a href="product.php?id=<?php echo $product['id']; ?>" class="btn btn-primary">Подробнее</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+        
                 <div class="text-center" style="margin-top: 30px; text-align: center;">
                     <a href="/catalog" class="btn btn-large">Весь каталог →</a>
                 </div>
             </div>
+                                        
         </section>
         
         <section class="form-section" id="form">

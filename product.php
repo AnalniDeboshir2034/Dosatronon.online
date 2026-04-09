@@ -559,10 +559,44 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
     <?php include 'includes/footer.php'; ?>
 
     <script>
+        const COMPARE_STORAGE_KEY = 'compareItems';
+
+        function getCompareItems() {
+            try {
+                const raw = JSON.parse(localStorage.getItem(COMPARE_STORAGE_KEY)) || [];
+                const unique = new Map();
+
+                raw.forEach(item => {
+                    const id = Number.parseInt(item?.id, 10);
+                    if (!Number.isNaN(id) && id > 0 && !unique.has(id)) {
+                        unique.set(id, {
+                            id,
+                            name: item?.name || `Товар ${id}`,
+                            date: item?.date || null
+                        });
+                    }
+                });
+
+                return Array.from(unique.values());
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function setCompareItems(items) {
+            if (!items.length) {
+                localStorage.removeItem(COMPARE_STORAGE_KEY);
+                return;
+            }
+            localStorage.setItem(COMPARE_STORAGE_KEY, JSON.stringify(items));
+        }
+
         document.querySelectorAll('[data-product-id]').forEach(button => {
             button.addEventListener('click', function() {
-                const productId = this.getAttribute('data-product-id');
+                const productId = Number.parseInt(this.getAttribute('data-product-id'), 10);
                 let productName = this.getAttribute('data-product-name');
+
+                if (Number.isNaN(productId) || productId <= 0) return;
                 
                 if (!productName) {
                     const productCard = this.closest('.product-card');
@@ -575,16 +609,16 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                 }
                 
                 if (productName) {
-                    let compareItems = JSON.parse(localStorage.getItem('compareItems')) || [];
+                    let compareItems = getCompareItems();
                     
-                    const exists = compareItems.some(item => item.id == productId);
+                    const exists = compareItems.some(item => item.id === productId);
                     if (!exists) {
                         compareItems.push({
                             id: productId,
                             name: productName,
                             date: new Date().toISOString()
                         });
-                        localStorage.setItem('compareItems', JSON.stringify(compareItems));
+                        setCompareItems(compareItems);
                         
                         const originalText = this.textContent;
                         this.textContent = '✓ Добавлено';
@@ -606,19 +640,21 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
         const compareBtn = document.querySelector('.btn-compare');
         if (compareBtn) {
             compareBtn.addEventListener('click', function() {
-                const productId = this.getAttribute('data-product-id');
+                const productId = Number.parseInt(this.getAttribute('data-product-id'), 10);
                 const productName = document.querySelector('.product-title').textContent.trim();
+
+                if (Number.isNaN(productId) || productId <= 0) return;
+
+                let compareItems = getCompareItems();
                 
-                let compareItems = JSON.parse(localStorage.getItem('compareItems')) || [];
-                
-                const exists = compareItems.some(item => item.id == productId);
+                const exists = compareItems.some(item => item.id === productId);
                 if (!exists) {
                     compareItems.push({
                         id: productId,
                         name: productName,
                         date: new Date().toISOString()
                     });
-                    localStorage.setItem('compareItems', JSON.stringify(compareItems));
+                    setCompareItems(compareItems);
                     
                     const originalText = this.textContent;
                     this.textContent = '✓ Добавлено';

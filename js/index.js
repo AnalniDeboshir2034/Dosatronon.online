@@ -129,30 +129,64 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 2. ФУНКЦИОНАЛ СРАВНЕНИЯ ТОВАРОВ
     
+    const COMPARE_STORAGE_KEY = 'compareItems';
+
+    function getCompareItems() {
+        try {
+            const raw = JSON.parse(localStorage.getItem(COMPARE_STORAGE_KEY)) || [];
+            const unique = new Map();
+
+            raw.forEach(item => {
+                const id = Number.parseInt(item?.id, 10);
+                if (!Number.isNaN(id) && id > 0 && !unique.has(id)) {
+                    unique.set(id, {
+                        id,
+                        name: item?.name || `Товар ${id}`,
+                        date: item?.date || null
+                    });
+                }
+            });
+
+            return Array.from(unique.values());
+        } catch (error) {
+            return [];
+        }
+    }
+
+    function setCompareItems(items) {
+        if (!items.length) {
+            localStorage.removeItem(COMPARE_STORAGE_KEY);
+            return;
+        }
+        localStorage.setItem(COMPARE_STORAGE_KEY, JSON.stringify(items));
+    }
+
     const compareButtons = document.querySelectorAll('.btn-secondary[data-product-id]');
     compareButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.stopPropagation();
-            const productId = this.getAttribute('data-product-id');
+            const productId = Number.parseInt(this.getAttribute('data-product-id'), 10);
             const productName = this.getAttribute('data-product-name');
-            
-            let compareItems = JSON.parse(localStorage.getItem('compareItems')) || [];
-            const exists = compareItems.some(item => item.id == productId);
+
+            if (Number.isNaN(productId) || productId <= 0) return;
+
+            let compareItems = getCompareItems();
+            const exists = compareItems.some(item => item.id === productId);
             
             if (!exists) {
                 compareItems.push({ 
-                    id: productId, 
+                    id: productId,
                     name: productName, 
                     date: new Date().toISOString() 
                 });
-                localStorage.setItem('compareItems', JSON.stringify(compareItems));
+                setCompareItems(compareItems);
                 this.textContent = '✓ В сравнении';
                 this.classList.add('btn-success');
                 this.classList.remove('btn-secondary');
                 showNotification(`Товар "${productName}" добавлен в сравнение!`);
             } else {
-                compareItems = compareItems.filter(item => item.id != productId);
-                localStorage.setItem('compareItems', JSON.stringify(compareItems));
+                compareItems = compareItems.filter(item => item.id !== productId);
+                setCompareItems(compareItems);
                 this.textContent = 'В сравнение';
                 this.classList.remove('btn-success');
                 this.classList.add('btn-secondary');
@@ -163,13 +197,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Функция обновления кнопок сравнения
     function updateCompareButtons() {
-        const compareItems = JSON.parse(localStorage.getItem('compareItems')) || [];
+        const compareItems = getCompareItems();
         compareButtons.forEach(button => {
-            const productId = button.getAttribute('data-product-id');
-            if (compareItems.some(item => item.id == productId)) {
+            const productId = Number.parseInt(button.getAttribute('data-product-id'), 10);
+            if (compareItems.some(item => item.id === productId)) {
                 button.textContent = '✓ В сравнении';
                 button.classList.add('btn-success');
                 button.classList.remove('btn-secondary');
+            } else {
+                button.textContent = 'В сравнение';
+                button.classList.remove('btn-success');
+                button.classList.add('btn-secondary');
             }
         });
     }
