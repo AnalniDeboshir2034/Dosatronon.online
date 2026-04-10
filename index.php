@@ -155,17 +155,13 @@ $favicon = getContent('favicon');
 
   gtag('config', 'G-P2N10VB842');
 </script>
-<meta charset="UTF-8">
-<link rel="icon" href="<?php echo $favicon; ?>" type="image/x-icon">
-<link rel="shortcut icon" href="<?php echo $meta_desc; ?>" type="image/x-icon">
-<title><?php echo $page_title; ?></title>
-<meta name="yandex-verification" content="c6fb951d49ab9bac" />
-<meta name="description" content="<?php echo $meta_desc; ?>">
-<meta name="keywords" content="<?php echo $meta_keys; ?>">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="/cs/style.css">
-<link rel="stylesheet" href="/cs/index.css">
-<!-- Yandex.Metrika counter -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P2N10VB842');
+</script>
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
         m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -178,6 +174,17 @@ $favicon = getContent('favicon');
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/108454352" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
+<meta charset="UTF-8">
+<link rel="icon" href="<?php echo $favicon; ?>" type="image/x-icon">
+<link rel="shortcut icon" href="<?php echo $meta_desc; ?>" type="image/x-icon">
+<title><?php echo $page_title; ?></title>
+<meta name="yandex-verification" content="c6fb951d49ab9bac" />
+<meta name="description" content="<?php echo $meta_desc; ?>">
+<meta name="keywords" content="<?php echo $meta_keys; ?>">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/cs/style.css">
+<link rel="stylesheet" href="/cs/index.css">
+
 <script src="/j/script.js?v=<?php echo filemtime($_SERVER['DOCUMENT_ROOT'] . '/j/script.js'); ?>" defer></script>
 <script src="/j/index.js" ></script>
 <script src="/j/contacts.js"></script>

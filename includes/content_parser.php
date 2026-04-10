@@ -153,4 +153,18 @@ function saveContent($section, $new_content) {
         error_log("Save error: " . $e->getMessage());
         throw new Exception("Ошибка: " . $e->getMessage());
     }
+    function displayFormattedContent($section, $default = '') {
+    $text = getContentSection($section, $default);
+    
+
+    $text = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $text);
+    $text = preg_replace('/\*(.*?)\*/', '<em>$1</em>', $text);
+    $text = preg_replace('/__(.*?)__/', '<u>$1</u>', $text);
+    
+
+    $text = nl2br($text);
+    
+    return $text;
+}
+}
 ?>

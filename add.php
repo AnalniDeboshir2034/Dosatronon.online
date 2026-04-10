@@ -7,28 +7,55 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-// Функция для сохранения файлов на сервер
-function saveFile($file) {
+function saveFile($file, $type = 'image') {
     if ($file['error'] !== UPLOAD_ERR_OK) {
+        if ($file['error'] == UPLOAD_ERR_INI_SIZE || $file['error'] == UPLOAD_ERR_FORM_SIZE) {
+            throw new Exception("Файл слишком большой");
+        }
         return null;
+    }
+    
+    // Проверка размера файла (5MB)
+    $maxSize = 5 * 1024 * 1024;
+    if ($file['size'] > $maxSize) {
+        throw new Exception("Файл слишком большой. Максимум 5MB");
     }
     
     $uploadDir = 'uploads/';
     if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
+        if (!mkdir($uploadDir, 0755, true)) {
+            throw new Exception("Не удалось создать папку для загрузки");
+        }
     }
     
+    // Используем PHP для создания безопасного имени (без REGEXP_REPLACE)
     $originalName = basename($file['name']);
-    $safeName = uniqid() . '_' . preg_replace('/[^a-zA-Z0-9\._-]/', '_', $originalName);
-    $destination = $uploadDir . $safeName;
+    
+    // Удаляем небезопасные символы с помощью PHP preg_replace
+    $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', $originalName);
+    
+    // Добавляем уникальный префикс чтобы избежать перезаписи
+    $uniqueName = uniqid() . '_' . time() . '_' . $safeName;
+    
+    // Ограничиваем длину имени (для совместимости с файловой системой)
+    if (strlen($uniqueName) > 255) {
+        $extension = pathinfo($safeName, PATHINFO_EXTENSION);
+        $uniqueName = uniqid() . '_' . time() . '.' . $extension;
+    }
+    
+    $destination = $uploadDir . $uniqueName;
+    
+    // Проверяем, является ли файл загруженным через HTTP POST
+    if (!is_uploaded_file($file['tmp_name'])) {
+        throw new Exception("Возможная атака через загрузку файла");
+    }
     
     if (move_uploaded_file($file['tmp_name'], $destination)) {
-        return $safeName;
+        return $uniqueName; // Возвращаем только имя файла, без пути
     }
     
     return null;
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Получаем данные из формы

@@ -15,6 +15,27 @@ $favicon=getContent('favicon');
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P2N10VB842"></script>
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P2N10VB842');
+</script>
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108454352', 'ym');
+
+    ym(108454352, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/108454352" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <link rel="icon" href="<?php echo $favicon; ?>" type="image/x-icon">
     <link rel="shortcut icon" href="<?php echo $meta_desc; ?>" type="image/x-icon">
@@ -26,6 +47,7 @@ $favicon=getContent('favicon');
     <link rel="stylesheet" href="cs/privacy.css">
     <script src="j/script.js?v=<?php echo filemtime('j/script.js'); ?>" defer></script> 
 </head>
+
 <body>
 <?php include "includes/header.php"; ?>
 <section class="policy-content">
@@ -33,7 +55,6 @@ $favicon=getContent('favicon');
         <h1 class="section-title">Политика обработки персональных данных</h1>
         <div class="content-wrapper">
             
-            <!-- Раздел 1: Общие положения -->
             <section class="policy-section">
                 <h2>1. Общие положения</h2>
                 <p>Настоящая политика обработки персональных данных составлена в соответствии с требованиями Федерального закона от 27.07.2006. № 152-ФЗ «О персональных данных» (далее — Закон о персональных данных) и определяет порядок обработки персональных данных и меры по обеспечению безопасности персональных данных, предпринимаемые Dosatron.online (далее — Оператор).</p>

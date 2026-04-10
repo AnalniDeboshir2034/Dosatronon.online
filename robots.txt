@@ -1,15 +1,32 @@
 User-agent: *
+Allow: /
+
+# technical and service routes
 Disallow: /api/
 Disallow: /includes/
-Disallow: /.git/
-Disallow: /.vscode/
-Disallow:/filling/
+Disallow: /uploads/
+Disallow: /adminpanel
+Disallow: /admin_reviews
+Disallow: /content_editor
+Disallow: /view_stats
+Disallow: /edit
+Disallow: /add
+Disallow: /delete
+Disallow: /edit_filtr
+Disallow: /filtr
+Disallow: /generator
+Disallow: /login
+Disallow: /download_log
 
-Allow: /css/
-Allow: /js/
+# duplicated and non-landing pages
+Disallow: /compare
+Disallow: /srav
+Disallow: /*?*
+
+# allow static assets for rendering
+Allow: /cs/
+Allow: /j/
 Allow: /img/
-Allow: /products/
-Allow: /pdfs/
-Allow: /diagrams/
 
+Host: dosatron.online
 Sitemap: https://dosatron.online/sitemap.xml

@@ -370,3 +370,1580 @@ Email: maks2014612@gmail.com
 )
 
 
+2025-12-30 14:53:00 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Пабло Иббиета
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375257302324
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => maks2014612@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Пабло Иббиета
+Email: maks2014612@gmail.com
+Телефон: +375257302324
+Сообщение: 
+
+Дата: 30.12.2025 14:52:59
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 44240
+    [time] => Array
+        (
+            [start] => 1767095580
+            [finish] => 1767095580.6686
+            [duration] => 0.66862297058105
+            [processing] => 0
+            [date_start] => 2025-12-30T14:53:00+03:00
+            [date_finish] => 2025-12-30T14:53:00+03:00
+            [operating_reset_at] => 1767096180
+            [operating] => 0.53397393226624
+        )
+
+)
+
+
+2026-01-05 11:34:42 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => фыв
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375296052273
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => meow@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: фыв
+Email: meow@gmail.com
+Телефон: +375296052273
+Сообщение: asdasdasdasd
+
+Дата: 05.01.2026 11:34:41
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 44316
+    [time] => Array
+        (
+            [start] => 1767602081
+            [finish] => 1767602082.2285
+            [duration] => 1.2285280227661
+            [processing] => 1
+            [date_start] => 2026-01-05T11:34:41+03:00
+            [date_finish] => 2026-01-05T11:34:42+03:00
+            [operating_reset_at] => 1767602681
+            [operating] => 0.42671799659729
+        )
+
+)
+
+
+2026-01-08 16:37:02 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Билы для шпарчана
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375 (37) 52-95-77
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => dhwuwb0@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Билы для шпарчана
+Email: dhwuwb0@gmail.com
+Телефон: +375 (37) 52-95-77
+Сообщение: фывфывфы
+
+Дата: 08.01.2026 16:37:02
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 44430
+    [time] => Array
+        (
+            [start] => 1767879422
+            [finish] => 1767879422.9694
+            [duration] => 0.96938610076904
+            [processing] => 0
+            [date_start] => 2026-01-08T16:37:02+03:00
+            [date_finish] => 2026-01-08T16:37:02+03:00
+            [operating_reset_at] => 1767880022
+            [operating] => 0.39912915229797
+        )
+
+)
+
+
+2026-01-09 14:39:31 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => ппапа
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375 (37) 53-33-72
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => vertigoboostv@yandex.ru
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: ппапа
+Email: vertigoboostv@yandex.ru
+Телефон: +375 (37) 53-33-72
+Сообщение: 
+
+Дата: 09.01.2026 14:39:30
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 44462
+    [time] => Array
+        (
+            [start] => 1767958770
+            [finish] => 1767958771.1136
+            [duration] => 1.1135649681091
+            [processing] => 1
+            [date_start] => 2026-01-09T14:39:30+03:00
+            [date_finish] => 2026-01-09T14:39:31+03:00
+            [operating_reset_at] => 1767959370
+            [operating] => 0.41926217079163
+        )
+
+)
+
+
+2026-01-12 12:16:39 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Билы для шпарчана
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375 (37) 53-75-37
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => c7torg@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Билы для шпарчана
+Email: c7torg@gmail.com
+Телефон: +375 (37) 53-75-37
+Сообщение: 123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв123123123123123фыв1231231231
+
+Дата: 12.01.2026 12:16:38
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 44512
+    [time] => Array
+        (
+            [start] => 1768209398
+            [finish] => 1768209399.0137
+            [duration] => 1.0136840343475
+            [processing] => 1
+            [date_start] => 2026-01-12T12:16:38+03:00
+            [date_finish] => 2026-01-12T12:16:39+03:00
+            [operating_reset_at] => 1768209998
+            [operating] => 0.63731694221497
+        )
+
+)
+
+
+2026-01-12 12:17:26 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Максим
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375 (37) 52-96-05
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => aleksfinski@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Максим
+Email: aleksfinski@gmail.com
+Телефон: +375 (37) 52-96-05
+Сообщение: Чучело мяучидл
+
+
+
+
+А
+А
+А
+А
+А
+А
+А
+А
+А
+А
+А
+А
+А
+А
+
+А
+
+Дата: 12.01.2026 12:17:26
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 44514
+    [time] => Array
+        (
+            [start] => 1768209446
+            [finish] => 1768209446.7035
+            [duration] => 0.70346188545227
+            [processing] => 0
+            [date_start] => 2026-01-12T12:17:26+03:00
+            [date_finish] => 2026-01-12T12:17:26+03:00
+            [operating_reset_at] => 1768210046
+            [operating] => 1.1662681102753
+        )
+
+)
+
+
+2026-01-19 10:00:03 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Билы для шпарчана
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => 80296052273
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => c7torg@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Билы для шпарчана
+Email: c7torg@gmail.com
+Телефон: 80296052273
+Сообщение: asdasd
+
+Дата: 19.01.2026 10:00:02
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 45048
+    [time] => Array
+        (
+            [start] => 1768806002
+            [finish] => 1768806003.6762
+            [duration] => 1.6762459278107
+            [processing] => 1
+            [date_start] => 2026-01-19T10:00:02+03:00
+            [date_finish] => 2026-01-19T10:00:03+03:00
+            [operating_reset_at] => 1768806602
+            [operating] => 0.92852783203125
+        )
+
+)
+
+
+2026-01-19 12:36:13 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Билы для шпарчана
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375 (37) 52-95-77
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => c7torg@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Билы для шпарчана
+Email: c7torg@gmail.com
+Телефон: +375 (37) 52-95-77
+Сообщение: asdasdasdasdasdasdasdasd
+
+Дата: 19.01.2026 12:36:12
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 45094
+    [time] => Array
+        (
+            [start] => 1768815372
+            [finish] => 1768815373.4634
+            [duration] => 1.4634010791779
+            [processing] => 1
+            [date_start] => 2026-01-19T12:36:12+03:00
+            [date_finish] => 2026-01-19T12:36:13+03:00
+            [operating_reset_at] => 1768815972
+            [operating] => 0.55871796607971
+        )
+
+)
+
+
+2026-01-19 15:54:05 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Билы для шпарчана
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375296052273
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => c7torg@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Билы для шпарчана
+Email: c7torg@gmail.com
+Телефон: +375296052273
+Сообщение: asdasdasdasdasdasdsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssaaaaaaaaaaaaaa
+
+Дата: 19.01.2026 15:54:04
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 45116
+    [time] => Array
+        (
+            [start] => 1768827244
+            [finish] => 1768827245.2692
+            [duration] => 1.2691659927368
+            [processing] => 1
+            [date_start] => 2026-01-19T15:54:04+03:00
+            [date_finish] => 2026-01-19T15:54:05+03:00
+            [operating_reset_at] => 1768827844
+            [operating] => 0.65845608711243
+        )
+
+)
+
+
+2026-01-21 10:05:12 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Билы для шпарчана
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375296052273
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => c7torg@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Билы для шпарчана
+Email: c7torg@gmail.com
+Телефон: +375296052273
+Сообщение: asdasda
+
+Дата: 21.01.2026 10:05:12
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 45252
+    [time] => Array
+        (
+            [start] => 1768979112
+            [finish] => 1768979112.9661
+            [duration] => 0.96609711647034
+            [processing] => 0
+            [date_start] => 2026-01-21T10:05:12+03:00
+            [date_finish] => 2026-01-21T10:05:12+03:00
+            [operating_reset_at] => 1768979712
+            [operating] => 0.52398991584778
+        )
+
+)
+
+
+2026-01-21 10:26:06 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Билы для шпарчана
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375296052273
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => c7torg@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Билы для шпарчана
+Email: c7torg@gmail.com
+Телефон: +375296052273
+Сообщение: asd
+
+Дата: 21.01.2026 10:26:05
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 45264
+    [time] => Array
+        (
+            [start] => 1768980365
+            [finish] => 1768980366.4448
+            [duration] => 1.4448029994965
+            [processing] => 1
+            [date_start] => 2026-01-21T10:26:05+03:00
+            [date_finish] => 2026-01-21T10:26:06+03:00
+            [operating_reset_at] => 1768980965
+            [operating] => 0.61261200904846
+        )
+
+)
+
+
+2026-01-21 22:11:17 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Кирилл*+
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +7 987 755 68 34
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => vertigoboostv@yandex.ru
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Кирилл*+
+Email: vertigoboostv@yandex.ru
+Телефон: +7 987 755 68 34
+Сообщение: фыв
+
+Дата: 21.01.2026 22:11:15
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 45342
+    [time] => Array
+        (
+            [start] => 1769022675
+            [finish] => 1769022677.9422
+            [duration] => 2.9421598911285
+            [processing] => 2
+            [date_start] => 2026-01-21T22:11:15+03:00
+            [date_finish] => 2026-01-21T22:11:17+03:00
+            [operating_reset_at] => 1769023275
+            [operating] => 2.0069050788879
+        )
+
+)
+
+
+2026-01-23 14:02:49 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Денис
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375 (29) 566-86-56
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => lapko_v@mail.ru
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Денис
+Email: lapko_v@mail.ru
+Телефон: +375 (29) 566-86-56
+Сообщение: 
+
+Дата: 23.01.2026 14:02:48
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 45480
+    [time] => Array
+        (
+            [start] => 1769166168
+            [finish] => 1769166169.2602
+            [duration] => 1.2602469921112
+            [processing] => 1
+            [date_start] => 2026-01-23T14:02:48+03:00
+            [date_finish] => 2026-01-23T14:02:49+03:00
+            [operating_reset_at] => 1769166768
+            [operating] => 0.6100549697876
+        )
+
+)
+
+
+2026-03-14 08:33:19 | HTTP: 401
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Кирилл*+
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +7 (987) 755-68-34
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => pudge_ghoul@mail.ru
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Кирилл*+
+Email: pudge_ghoul@mail.ru
+Телефон: +7 (987) 755-68-34
+Сообщение: sad
+
+Дата: 14.03.2026 08:33:19
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [error] => INVALID_CREDENTIALS
+    [error_description] => Invalid request credentials
+)
+
+
+2026-03-14 08:35:07 | HTTP: 401
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Кирилл
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +7 987 755 68 34
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => vertigoboostv@yandex.ru
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Кирилл
+Email: vertigoboostv@yandex.ru
+Телефон: +7 987 755 68 34
+Сообщение: sdf
+
+Дата: 14.03.2026 08:35:07
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [error] => INVALID_CREDENTIALS
+    [error_description] => Invalid request credentials
+)
+
+
+2026-03-21 18:00:19 | HTTP: 401
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Максим Финский
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375296052273
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => aleksfinski@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Максим Финский
+Email: aleksfinski@gmail.com
+Телефон: +375296052273
+Сообщение: 123
+
+Дата: 21.03.2026 18:00:19
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [error] => INVALID_CREDENTIALS
+    [error_description] => Invalid request credentials
+)
+
+
+2026-03-22 20:44:59 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Максим Финский
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375257302324
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => aleksfinski@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Максим Финский
+Email: aleksfinski@gmail.com
+Телефон: +375257302324
+Сообщение: 123123
+
+Дата: 22.03.2026 20:44:58
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 49970
+    [time] => Array
+        (
+            [start] => 1774201498
+            [finish] => 1774201499.394
+            [duration] => 1.3940389156342
+            [processing] => 1
+            [date_start] => 2026-03-22T20:44:58+03:00
+            [date_finish] => 2026-03-22T20:44:59+03:00
+            [operating_reset_at] => 1774202098
+            [operating] => 0.39700603485107
+        )
+
+)
+
+
+2026-03-22 20:45:50 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Максим Финский
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => 1321231231
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => aleksfinski@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Максим Финский
+Email: aleksfinski@gmail.com
+Телефон: 1321231231
+Сообщение: 12313123
+
+Дата: 22.03.2026 20:45:50
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 49972
+    [time] => Array
+        (
+            [start] => 1774201550
+            [finish] => 1774201550.827
+            [duration] => 0.82697796821594
+            [processing] => 0
+            [date_start] => 2026-03-22T20:45:50+03:00
+            [date_finish] => 2026-03-22T20:45:50+03:00
+            [operating_reset_at] => 1774202150
+            [operating] => 0.77132797241211
+        )
+
+)
+
+
+2026-04-03 09:50:49 | HTTP: 401
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Дозатрон D3GL2 VF
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => 375445402094
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => k7.marketing7@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Дозатрон D3GL2 VF
+Email: k7.marketing7@gmail.com
+Телефон: 375445402094
+Сообщение: мяу
+
+Дата: 03.04.2026 09:50:48
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [error] => INVALID_CREDENTIALS
+    [error_description] => Invalid request credentials
+)
+
+
+2026-04-03 11:50:23 | HTTP: 401
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Дозатрон D3GL3000 VF
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375296052273
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => c7torg@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Дозатрон D3GL3000 VF
+Email: c7torg@gmail.com
+Телефон: +375296052273
+Сообщение: asasd
+
+Дата: 03.04.2026 11:50:23
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [error] => INVALID_CREDENTIALS
+    [error_description] => Invalid request credentials
+)
+
+
+2026-04-03 13:04:56 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Дозатрон D3GL3000 VF
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375296052273
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => c7torg@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Дозатрон D3GL3000 VF
+Email: c7torg@gmail.com
+Телефон: +375296052273
+Сообщение: 2312123123
+
+Дата: 03.04.2026 13:04:55
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 51476
+    [time] => Array
+        (
+            [start] => 1775210695
+            [finish] => 1775210696.4492
+            [duration] => 1.449187040329
+            [processing] => 1
+            [date_start] => 2026-04-03T13:04:55+03:00
+            [date_finish] => 2026-04-03T13:04:56+03:00
+            [operating_reset_at] => 1775211295
+            [operating] => 1.6725580692291
+        )
+
+)
+
+
+2026-04-03 13:05:39 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Дозатрон D3GL3000 VF
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375296052273
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => c7torg@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Дозатрон D3GL3000 VF
+Email: c7torg@gmail.com
+Телефон: +375296052273
+Сообщение: asasda
+
+Дата: 03.04.2026 13:05:39
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 51478
+    [time] => Array
+        (
+            [start] => 1775210739
+            [finish] => 1775210739.5663
+            [duration] => 0.56628799438477
+            [processing] => 0
+            [date_start] => 2026-04-03T13:05:39+03:00
+            [date_finish] => 2026-04-03T13:05:39+03:00
+            [operating_reset_at] => 1775211339
+            [operating] => 2.0759310722351
+        )
+
+)
+
+
+2026-04-03 13:48:16 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Дозатрон D3GL2 BPVF
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => 375445402094
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => k7.marketing7@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Дозатрон D3GL2 BPVF
+Email: k7.marketing7@gmail.com
+Телефон: 375445402094
+Сообщение: итес
+
+Дата: 03.04.2026 13:48:16
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 51500
+    [time] => Array
+        (
+            [start] => 1775213296
+            [finish] => 1775213296.6055
+            [duration] => 0.60553097724915
+            [processing] => 0
+            [date_start] => 2026-04-03T13:48:16+03:00
+            [date_finish] => 2026-04-03T13:48:16+03:00
+            [operating_reset_at] => 1775213896
+            [operating] => 0.51062512397766
+        )
+
+)
+
+
+2026-04-04 13:02:22 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => тесто
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => 87545454848446
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => test@mail.ru
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: тесто
+Email: test@mail.ru
+Телефон: 87545454848446
+Сообщение: hahahashsv
+
+Дата: 04.04.2026 13:02:20
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 51568
+    [time] => Array
+        (
+            [start] => 1775296940
+            [finish] => 1775296942.4728
+            [duration] => 2.472815990448
+            [processing] => 2
+            [date_start] => 2026-04-04T13:02:20+03:00
+            [date_finish] => 2026-04-04T13:02:22+03:00
+            [operating_reset_at] => 1775297540
+            [operating] => 1.9892859458923
+        )
+
+)
+
+
+2026-04-04 13:02:23 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => тесто
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => 87545454848446
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => test@mail.ru
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: тесто
+Email: test@mail.ru
+Телефон: 87545454848446
+Сообщение: hahahashsv
+
+Дата: 04.04.2026 13:02:22
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 51570
+    [time] => Array
+        (
+            [start] => 1775296942
+            [finish] => 1775296943.6764
+            [duration] => 1.6764140129089
+            [processing] => 1
+            [date_start] => 2026-04-04T13:02:22+03:00
+            [date_finish] => 2026-04-04T13:02:23+03:00
+            [operating_reset_at] => 1775297542
+            [operating] => 3.0283191204071
+        )
+
+)
+
+
+2026-04-06 12:33:33 | HTTP: 200
+Данные: Array
+(
+    [fields] => Array
+        (
+            [TITLE] => Заявка с сайта Dosatron
+            [NAME] => Дозатрон D3GL3000 VF
+            [PHONE] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => +375296052273
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [EMAIL] => Array
+                (
+                    [0] => Array
+                        (
+                            [VALUE] => c7torg@gmail.com
+                            [VALUE_TYPE] => WORK
+                        )
+
+                )
+
+            [SOURCE_ID] => WEB
+            [SOURCE_DESCRIPTION] => Контактная форма сайта
+            [ASSIGNED_BY_ID] => 1
+            [STATUS_ID] => NEW
+            [COMMENTS] => Имя: Дозатрон D3GL3000 VF
+Email: c7torg@gmail.com
+Телефон: +375296052273
+Сообщение: asd
+
+Дата: 06.04.2026 12:33:32
+            [UF_CRM_SITE] => dosa
+            [UTM_SOURCE] => direct
+            [UTM_MEDIUM] => contact_form
+        )
+
+)
+
+Ответ: Array
+(
+    [result] => 51650
+    [time] => Array
+        (
+            [start] => 1775468012
+            [finish] => 1775468013.3769
+            [duration] => 1.3768970966339
+            [processing] => 1
+            [date_start] => 2026-04-06T12:33:32+03:00
+            [date_finish] => 2026-04-06T12:33:33+03:00
+            [operating_reset_at] => 1775468612
+            [operating] => 0.51914095878601
+        )
+
+)
+
+

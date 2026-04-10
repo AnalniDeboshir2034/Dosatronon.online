@@ -1,0 +1,27 @@
+RewriteEngine On
+
+# HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# product/4?id=4 → /product/4
+RewriteCond %{THE_REQUEST} \s/product/([0-9]+)\?id=\1 [NC]
+RewriteRule ^ /product/%1? [R=301,L]
+
+# product.php?id=4 → /product/4
+RewriteCond %{THE_REQUEST} \s/product\.php\?id=([0-9]+) [NC]
+RewriteRule ^ /product/%1? [R=301,L]
+
+# /product/4 → product.php?id=4
+RewriteRule ^product/([0-9]+)/?$ product.php?id=$1 [L,QSA]
+
+# catalog?filter=D25 → /catalog/D25
+RewriteCond %{THE_REQUEST} \s/catalog\?filter=([A-Za-z0-9\-]+) [NC]
+RewriteRule ^ /catalog/%1? [R=301,L]
+
+# /catalog/D25 → catalog.php?filter=D25
+RewriteRule ^catalog/([A-Za-z0-9\-]+)/?$ catalog.php?filter=$1 [L,QSA]
+
+# Убираем .php
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([^/]+)/?$ $1.php [L]

@@ -65,11 +65,11 @@ function getProductUrl($product) {
         return $cache[$id];
     }
     
-    // Если есть slug в БД и он не пустой
+    // Если есть slug в БД
     if (!empty($product['slug'])) {
         $url = "/product/{$product['slug']}";
     } else {
-        // Если нет slug - показываем с ID (временно)
+        // Генерируем из названия + id
         $slug = generateSlug($product['name'] ?? '');
         $url = "/product/{$id}-{$slug}";
     }

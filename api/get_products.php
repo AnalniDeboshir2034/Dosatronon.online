@@ -3,10 +3,9 @@
 header('Content-Type: application/json');
 
 $host = 'localhost';
-$user = 'a7comby_dosatron_user';
-$pass = 'dosatron_user';
-$db_name = 'a7comby_dosatron';
-
+$user = 'a7comby_dosatronon';
+$pass = 'a7comby_dosatronon';
+$db_name = 'a7comby_dosatronon';
 
 $mysqli = new mysqli($host, $user, $pass, $db_name);
 if ($mysqli->connect_error) {
