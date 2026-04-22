@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once 'includes/forslug.php';
+require_once 'includes/water_treatment.php';
 include 'includes/content_parser.php';
 
 $host = 'localhost';
@@ -46,67 +47,78 @@ function findFile($dbPath) {
 $product_id = null;
 $product = null;
 $slug = null;
+$waterTreatmentProduct = loadWaterTreatmentProduct();
+$isWaterTreatmentProduct = false;
 
 if (isset($_GET['slug']) && !empty($_GET['slug'])) {
     $slug = trim($_GET['slug']);
+    if (is_array($waterTreatmentProduct) && $slug === ($waterTreatmentProduct['slug'] ?? '')) {
+        $isWaterTreatmentProduct = true;
+        $product = $waterTreatmentProduct;
+        $product['img_found'] = findFile($product['main_img'] ?? '');
+        $product['diag_found'] = null;
+        $product['pdf_found'] = null;
+    }
     
-    $sql = "SELECT *, slug FROM medicator WHERE slug = ?";
-    $stmt = $mysqli->prepare($sql);
-    if ($stmt) {
-        $stmt->bind_param("s", $slug);
-        $stmt->execute();
-        $stmt->store_result();
-        
-        if ($stmt->num_rows > 0) {
-            $meta = $stmt->result_metadata();
-            $fields = array();
-            $fieldReferences = array();
+    if (!$isWaterTreatmentProduct) {
+        $sql = "SELECT *, slug FROM medicator WHERE slug = ?";
+        $stmt = $mysqli->prepare($sql);
+        if ($stmt) {
+            $stmt->bind_param("s", $slug);
+            $stmt->execute();
+            $stmt->store_result();
             
-            while ($field = $meta->fetch_field()) {
-                $fields[$field->name] = null;
-                $fieldReferences[] = &$fields[$field->name];
-            }
-            
-            call_user_func_array(array($stmt, 'bind_result'), $fieldReferences);
-            
-            if ($stmt->fetch()) {
-                $product = array();
-                foreach ($fields as $key => $value) {
-                    $product[$key] = $value;
+            if ($stmt->num_rows > 0) {
+                $meta = $stmt->result_metadata();
+                $fields = array();
+                $fieldReferences = array();
+                
+                while ($field = $meta->fetch_field()) {
+                    $fields[$field->name] = null;
+                    $fieldReferences[] = &$fields[$field->name];
                 }
                 
-                $product['img_found'] = findFile($product['img'] ?? '');
-                $product['diag_found'] = findFile($product['diag'] ?? '');
-                $product['pdf_found'] = findFile($product['pdf'] ?? '');
+                call_user_func_array(array($stmt, 'bind_result'), $fieldReferences);
                 
-                $today = date('Y-m-d');
-                $check_views = $mysqli->prepare("SELECT id, view_count FROM product_views WHERE product_id = ? AND view_date = ?");
-                $check_views->bind_param("is", $product['id'], $today);
-                $check_views->execute();
-                $check_views->store_result();
-                
-                if ($check_views->num_rows > 0) {
-                    $check_views->bind_result($view_id, $view_count);
-                    $check_views->fetch();
-                    $update_views = $mysqli->prepare("UPDATE product_views SET view_count = view_count + 1 WHERE id = ?");
-                    $update_views->bind_param("i", $view_id);
-                    $update_views->execute();
-                    $update_views->close();
-                } else {
-                    $insert_views = $mysqli->prepare("INSERT INTO product_views (product_id, product_name, view_date, view_count) VALUES (?, ?, ?, 1)");
-                    $insert_views->bind_param("iss", $product['id'], $product['name'], $today);
-                    $insert_views->execute();
-                    $insert_views->close();
+                if ($stmt->fetch()) {
+                    $product = array();
+                    foreach ($fields as $key => $value) {
+                        $product[$key] = $value;
+                    }
+                    
+                    $product['img_found'] = findFile($product['img'] ?? '');
+                    $product['diag_found'] = findFile($product['diag'] ?? '');
+                    $product['pdf_found'] = findFile($product['pdf'] ?? '');
+                    
+                    $today = date('Y-m-d');
+                    $check_views = $mysqli->prepare("SELECT id, view_count FROM product_views WHERE product_id = ? AND view_date = ?");
+                    $check_views->bind_param("is", $product['id'], $today);
+                    $check_views->execute();
+                    $check_views->store_result();
+                    
+                    if ($check_views->num_rows > 0) {
+                        $check_views->bind_result($view_id, $view_count);
+                        $check_views->fetch();
+                        $update_views = $mysqli->prepare("UPDATE product_views SET view_count = view_count + 1 WHERE id = ?");
+                        $update_views->bind_param("i", $view_id);
+                        $update_views->execute();
+                        $update_views->close();
+                    } else {
+                        $insert_views = $mysqli->prepare("INSERT INTO product_views (product_id, product_name, view_date, view_count) VALUES (?, ?, ?, 1)");
+                        $insert_views->bind_param("iss", $product['id'], $product['name'], $today);
+                        $insert_views->execute();
+                        $insert_views->close();
+                    }
+                    $check_views->close();
                 }
-                $check_views->close();
             }
+            
+            $stmt->close();
         }
-        
-        $stmt->close();
     }
 }
 
-if (!$product && isset($_GET['id']) && !empty($_GET['id'])) {
+if (!$product && !$isWaterTreatmentProduct && isset($_GET['id']) && !empty($_GET['id'])) {
     $product_id = intval($_GET['id']);
     
     $sql = "SELECT *, slug FROM medicator WHERE id = ?";
@@ -170,7 +182,7 @@ if (!$product && isset($_GET['id']) && !empty($_GET['id'])) {
     }
 }
 
-if (!$product && $slug && is_numeric($slug)) {
+if (!$product && !$isWaterTreatmentProduct && $slug && is_numeric($slug)) {
     $product_id = intval($slug);
     
     $sql = "SELECT slug FROM medicator WHERE id = ?";
@@ -201,38 +213,49 @@ if (!$product) {
 }
 
 $similar_products = array();
-$current_product_id = $product['id'];
+if (!$isWaterTreatmentProduct) {
+    $current_product_id = $product['id'];
+    $similar_sql = "SELECT *, slug FROM medicator WHERE id != ? ORDER BY RAND() LIMIT 6";
+    $similar_stmt = $mysqli->prepare($similar_sql);
 
-$similar_sql = "SELECT *, slug FROM medicator WHERE id != ? ORDER BY RAND() LIMIT 6";
-$similar_stmt = $mysqli->prepare($similar_sql);
-
-if ($similar_stmt) {
-    $similar_stmt->bind_param("i", $current_product_id);
-    $similar_stmt->execute();
-    $similar_stmt->store_result();
-    
-    $meta = $similar_stmt->result_metadata();
-    $fields = array();
-    $fieldReferences = array();
-    
-    while ($field = $meta->fetch_field()) {
-        $fields[$field->name] = null;
-        $fieldReferences[] = &$fields[$field->name];
-    }
-    
-    call_user_func_array(array($similar_stmt, 'bind_result'), $fieldReferences);
-    
-    while ($similar_stmt->fetch()) {
-        $similar_product = array();
-        foreach ($fields as $key => $value) {
-            $similar_product[$key] = $value;
+    if ($similar_stmt) {
+        $similar_stmt->bind_param("i", $current_product_id);
+        $similar_stmt->execute();
+        $similar_stmt->store_result();
+        
+        $meta = $similar_stmt->result_metadata();
+        $fields = array();
+        $fieldReferences = array();
+        
+        while ($field = $meta->fetch_field()) {
+            $fields[$field->name] = null;
+            $fieldReferences[] = &$fields[$field->name];
         }
         
-        $similar_product['img_found'] = findFile($similar_product['img'] ?? '');
-        $similar_products[] = $similar_product;
+        call_user_func_array(array($similar_stmt, 'bind_result'), $fieldReferences);
+        
+        while ($similar_stmt->fetch()) {
+            $similar_product = array();
+            foreach ($fields as $key => $value) {
+                $similar_product[$key] = $value;
+            }
+            
+            $similar_product['img_found'] = findFile($similar_product['img'] ?? '');
+            $similar_products[] = $similar_product;
+        }
+        
+        $similar_stmt->close();
     }
-    
-    $similar_stmt->close();
+} else {
+    $similar_sql = "SELECT *, slug FROM medicator ORDER BY RAND() LIMIT 6";
+    $similar_result = $mysqli->query($similar_sql);
+    if ($similar_result) {
+        while ($row = $similar_result->fetch_assoc()) {
+            $row['img_found'] = findFile($row['img'] ?? '');
+            $similar_products[] = $row;
+        }
+        $similar_result->free();
+    }
 }
 
 function getContent($section) {
@@ -330,15 +353,17 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                         </div>
                         
                         <div class="actions-bar">
+                            <?php if (!$isWaterTreatmentProduct): ?>
                             <button class="btn btn-compare" data-product-id="<?php echo $product['id']; ?>">
                                 <span style="margin-right: 8px;">⚖️</span>
                                 Добавить к сравнению
                             </button>
+                            <?php endif; ?>
                             <a href="/contacts#contactFormSplit" class="btn btn-request">
                                 <span style="margin-right: 8px;">📧</span>
                                 Заказать
                             </a>
-                            <?php if ($product['pdf_found']): ?>
+                            <?php if (!$isWaterTreatmentProduct && $product['pdf_found']): ?>
                                 <a href="/<?php echo htmlspecialchars($product['pdf_found']); ?>" 
                                    class="btn btn-download" 
                                    target="_blank"
@@ -346,7 +371,7 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                                     <span style="margin-right: 8px;">📄</span>
                                     Скачать паспорт
                                 </a>
-                            <?php else: ?>
+                            <?php elseif (!$isWaterTreatmentProduct): ?>
                                 <button class="btn btn-secondary">
                                     <span style="margin-right: 8px;">📄</span>
                                     Паспорт отсутствует
@@ -378,12 +403,24 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                     <div>
                         <h1 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h1>
                         <p class="product-subtitle">
-                            Профессиональный дозатор для систем полива и внесения удобрений
+                            <?php if ($isWaterTreatmentProduct): ?>
+                                Комплексный узел фильтрации и контроля подачи воды
+                            <?php else: ?>
+                                Профессиональный дозатор для систем полива и внесения удобрений
+                            <?php endif; ?>
                         </p>
                         
                         <div class="tech-specs">
                             <h2>Технические характеристики</h2>
                             <div class="specs-grid">
+                                <?php if ($isWaterTreatmentProduct): ?>
+                                    <?php foreach (($product['table_rows'] ?? []) as $row): ?>
+                                    <div class="spec-card<?php echo (($row['label'] ?? '') === 'давление воды, устанавливаемое регулятором, кгс/см') ? ' full-width' : ''; ?>">
+                                        <span class="spec-label"><?php echo htmlspecialchars((string)($row['label'] ?? '')); ?></span>
+                                        <span class="spec-value"><?php echo htmlspecialchars((string)($row['value'] ?? '')); ?></span>
+                                    </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
                                 <?php if (!empty($product['d_dosing']) && $product['d_dosing'] != '-'): ?>
                                 <div class="spec-card">
                                     <span class="spec-label">Диапазон дозирования</span>
@@ -438,6 +475,7 @@ $html_title = $product ? htmlspecialchars($product['name']) . ' | ' . $page_titl
                                     <span class="spec-label">Дополнительные характеристики</span>
                                     <span class="spec-value"><?php echo htmlspecialchars($product['dop']); ?></span>
                                 </div>
+                                <?php endif; ?>
                                 <?php endif; ?>
                             </div>
                         </div>

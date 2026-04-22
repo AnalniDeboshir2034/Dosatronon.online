@@ -39,47 +39,6 @@ RewriteRule ^product/([a-z0-9\-]+)/?$ product.php?slug=$1 [L,QSA]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.php -f
-RewriteRule ^([^/]+)/?$ $1.php [L]RewriteEngine On
-
-# HTTPS
-RewriteCond %{HTTPS} off
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
-
-# ---------- РЕДИРЕКТЫ СТАРЫХ ФОРМАТОВ ----------
-
-# catalog?filter=D25 → /catalog/D25
-RewriteCond %{THE_REQUEST} \s/catalog\?filter=([A-Za-z0-9\-]+) [NC]
-RewriteRule ^ /catalog/%1? [R=301,L]
-
-# catalog?search=query → /catalog/search/query
-RewriteCond %{THE_REQUEST} \s/catalog\?search=([^\s&]+) [NC]
-RewriteRule ^ /catalog/search/%1? [R=301,L]
-
-# product.php?id=4 → редирект через PHP (убрано из .htaccess)
-# product/4 → редирект через PHP (убрано из .htaccess)
-
-# ---------- ОСНОВНЫЕ ПРАВИЛА ----------
-
-# Обработка поиска из query string
-RewriteCond %{QUERY_STRING} ^search=(.*)$
-RewriteRule ^catalog/?$ catalog.php?search=%1 [L,QSA]
-
-# Главная каталога
-RewriteRule ^catalog/?$ catalog.php [L,QSA]
-
-# Поиск с ЧПУ: /catalog/search/DIA
-RewriteRule ^catalog/search/([^/]+)/?$ catalog.php?search=$1 [L,QSA]
-
-# Фильтр каталога: /catalog/D25
-RewriteRule ^catalog/([A-Za-z0-9\-]+)/?$ catalog.php?filter=$1 [L,QSA]
-
-# ТОЛЬКО СЛАГ для продуктов: /product/dosatron-dia4al-vf
-RewriteRule ^product/([a-z0-9\-]+)/?$ product.php?slug=$1 [L,QSA]
-
-# ---------- УБИРАЕМ .php (В САМОМ КОНЦЕ!) ----------
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}.php -f
 RewriteRule ^([^/]+)/?$ $1.php [L]
 
 # php -- BEGIN cPanel-generated handler, do not edit

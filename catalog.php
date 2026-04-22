@@ -2,6 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 require_once 'includes/forslug.php';
+require_once 'includes/water_treatment.php';
 include 'includes/content_parser.php';
 
 $host = 'localhost';
@@ -64,6 +65,27 @@ if ($filter_result) {
     $filter_result->free();
 }
 
+$waterTreatmentProduct = loadWaterTreatmentProduct();
+$waterFilterSlug = 'uzel-vodopodgotovki';
+$waterMatchesSearchQuery = static function ($name, $query) {
+    if ($query === '') {
+        return true;
+    }
+    if (function_exists('mb_stripos')) {
+        return mb_stripos((string)$name, (string)$query, 0, 'UTF-8') !== false;
+    }
+    return stripos((string)$name, (string)$query) !== false;
+};
+if (is_array($waterTreatmentProduct)) {
+    $filter_data[] = [
+        'id' => 0,
+        'name' => $waterTreatmentProduct['name'],
+        'slug' => $waterFilterSlug,
+        'description' => $waterTreatmentProduct['opis'] ?? '',
+        'sort_order' => 99999
+    ];
+}
+
 $filter_description = '';
 if ($selected_filter != 'all') {
     foreach ($filter_data as $filter) {
@@ -72,6 +94,10 @@ if ($selected_filter != 'all') {
             break;
         }
     }
+}
+
+if ($selected_filter === $waterFilterSlug && is_array($waterTreatmentProduct)) {
+    $filter_description = (string)($waterTreatmentProduct['opis'] ?? '');
 }
 
 if ($search_mode) {
@@ -182,6 +208,15 @@ if ($search_mode) {
             }
             $result->free();
         }
+    }
+}
+
+if (is_array($waterTreatmentProduct)) {
+    $waterTreatmentProduct['img_found'] = findFile($waterTreatmentProduct['main_img'] ?? '');
+    $waterMatchesFilter = ($selected_filter === 'all' || $selected_filter === $waterFilterSlug);
+    $waterMatchesSearch = !$search_mode || $waterMatchesSearchQuery($waterTreatmentProduct['name'], $search_query);
+    if ($waterMatchesFilter && $waterMatchesSearch) {
+        $products[] = $waterTreatmentProduct;
     }
 }
 
@@ -309,6 +344,9 @@ $favicon = getContent('favicon');
                         $stmt->fetch();
                         $stmt->close();
                     }
+                    if (is_array($waterTreatmentProduct) && (!$search_mode || $waterMatchesSearchQuery($waterTreatmentProduct['name'], $search_query))) {
+                        $all_count++;
+                    }
                     ?>
                     <a href="<?php echo $all_url; ?>" 
                        class="filter-item <?php echo $selected_filter == 'all' ? 'active' : ''; ?>">
@@ -324,25 +362,31 @@ $favicon = getContent('favicon');
                         
                         $is_active = ($selected_filter == $filter['slug']);
                         
-                        $count_sql = "SELECT COUNT(*) as count FROM medicator WHERE filtr LIKE ?";
-                        $params = ["%" . $filter['slug'] . "%"];
-                        $types = "s";
-                        
-                        if ($search_mode) {
-                            $count_sql .= " AND (name LIKE ? OR d_dosing LIKE ? OR performance LIKE ? OR filtr LIKE ?)";
-                            $search_param = "%" . $search_query . "%";
-                            $params = array_merge($params, [$search_param, $search_param, $search_param, $search_param]);
-                            $types .= "ssss";
-                        }
-                        
                         $count = 0;
-                        $stmt = $mysqli->prepare($count_sql);
-                        if ($stmt) {
-                            $stmt->bind_param($types, ...$params);
-                            $stmt->execute();
-                            $stmt->bind_result($count);
-                            $stmt->fetch();
-                            $stmt->close();
+                        if ($filter['slug'] === $waterFilterSlug) {
+                            if (is_array($waterTreatmentProduct)) {
+                                $count = (!$search_mode || $waterMatchesSearchQuery($waterTreatmentProduct['name'], $search_query)) ? 1 : 0;
+                            }
+                        } else {
+                            $count_sql = "SELECT COUNT(*) as count FROM medicator WHERE filtr LIKE ?";
+                            $params = ["%" . $filter['slug'] . "%"];
+                            $types = "s";
+                            
+                            if ($search_mode) {
+                                $count_sql .= " AND (name LIKE ? OR d_dosing LIKE ? OR performance LIKE ? OR filtr LIKE ?)";
+                                $search_param = "%" . $search_query . "%";
+                                $params = array_merge($params, [$search_param, $search_param, $search_param, $search_param]);
+                                $types .= "ssss";
+                            }
+                            
+                            $stmt = $mysqli->prepare($count_sql);
+                            if ($stmt) {
+                                $stmt->bind_param($types, ...$params);
+                                $stmt->execute();
+                                $stmt->bind_result($count);
+                                $stmt->fetch();
+                                $stmt->close();
+                            }
                         }
                     ?>
                         <a href="<?php echo $filter_url; ?>" 
@@ -391,13 +435,14 @@ $favicon = getContent('favicon');
                 <div class="catalog-grid" id="productsGrid">
                     <?php if (count($products) > 0): ?>
                         <?php foreach ($products as $product): ?>
+                        <?php $isWaterTreatment = (($product['type'] ?? '') === 'water-treatment'); ?>
                         <div class="product-card" 
                              data-product-name="<?php echo htmlspecialchars($product['name']); ?>" 
-                             data-product-dosing="<?php echo htmlspecialchars($product['d_dosing']); ?>"
-                             data-product-performance="<?php echo htmlspecialchars($product['performance']); ?>"
+                             data-product-dosing="<?php echo htmlspecialchars($product['d_dosing'] ?? ''); ?>"
+                             data-product-performance="<?php echo htmlspecialchars($product['performance'] ?? ''); ?>"
                              data-product-filter="<?php echo htmlspecialchars($product['filtr'] ?? ''); ?>">
                             <div class="product-card__image">
-                                <?php if ($product['img_found']): ?>
+                                <?php if (!empty($product['img_found'])): ?>
                                     <img src="/<?php echo htmlspecialchars($product['img_found']); ?>" 
                                          alt="<?php echo htmlspecialchars($product['name']); ?>"
                                          loading="lazy">
@@ -423,12 +468,14 @@ $favicon = getContent('favicon');
                                 <?php endif; ?>
                                 
                                 <h3 class="product-card__title">
-                                    <a href="<?php echo getProductUrl($product); ?>" style="color: inherit; text-decoration: none;">
+                                    <a href="<?php echo $isWaterTreatment ? '/product/' . rawurlencode($product['slug']) : getProductUrl($product); ?>" style="color: inherit; text-decoration: none;">
                                         <?php echo htmlspecialchars($product['name']); ?>
                                     </a>
                                 </h3>
                                 <p class="product-card__desc">
-                                    <?php if (!empty($product['d_dosing'])): ?>
+                                    <?php if ($isWaterTreatment): ?>
+                                        <?php echo htmlspecialchars(getExcerpt($product['opis'] ?? '', 130)); ?>
+                                    <?php elseif (!empty($product['d_dosing'])): ?>
                                         <strong>Дозировка:</strong> <?php echo htmlspecialchars($product['d_dosing']); ?><br>
                                     <?php endif; ?>
                                     <?php if (!empty($product['performance'])): ?>
@@ -439,12 +486,14 @@ $favicon = getContent('favicon');
                                     <?php endif; ?>
                                 </p>
                                 <div class="product-card__actions">
+                                    <?php if (!$isWaterTreatment): ?>
                                     <button class="btn btn-secondary" 
                                             data-product-id="<?php echo $product['id']; ?>"
                                             data-product-name="<?php echo htmlspecialchars($product['name']); ?>">
                                         В сравнение
                                     </button>
-                                    <a href="<?php echo getProductUrl($product); ?>" class="btn btn-primary">Подробнее</a>
+                                    <?php endif; ?>
+                                    <a href="<?php echo $isWaterTreatment ? '/product/' . rawurlencode($product['slug']) : getProductUrl($product); ?>" class="btn btn-primary">Подробнее</a>
                                 </div>
                             </div>
                         </div>
